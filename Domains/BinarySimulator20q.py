@@ -6,7 +6,7 @@ from Utils.config import *
 from Utils.domainUtil import DomainUtil
 
 
-class Simulator20q (Domain):
+class BinarySimulator20q (Domain):
 
     # global varaible
     field_blacklist = ['name', 'degree']
@@ -56,7 +56,7 @@ class Simulator20q (Domain):
     # state: state
 
     def __init__(self):
-        super(Simulator20q, self).__init__()
+        super(BinarySimulator20q, self).__init__()
         # resetting the game
         self.person_inmind = None
 

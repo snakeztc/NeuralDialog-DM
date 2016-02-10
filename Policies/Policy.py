@@ -27,10 +27,14 @@ class EpsilonGreedyPolicy(Policy):
 
     def choose_action(self, Qs):
         if self.random_state.random_sample() < self.epsilon:
-            return self.random_state.randint(0, len(Qs))
+            random_a = self.random_state.randint(0, Qs.shape[1])
+            return random_a
         else:
             return np.argmax(Qs)
 
     def __init__(self, epsilon):
         super(EpsilonGreedyPolicy, self).__init__()
+        self.epsilon = epsilon
+
+    def set_epsilon(self, epsilon):
         self.epsilon = epsilon

@@ -8,6 +8,8 @@ class EvalAgent(object):
 
     def eval(self, num_trail=100, discount=True):
         rewards = np.zeros(num_trail)
+        win_cnt = 0.0
+
         for i in range(0, num_trail):
             s = self.agent.domain.s0()
             local_r = 0.0
@@ -17,7 +19,9 @@ class EvalAgent(object):
                 s = ns
                 local_r += (self.agent.domain.discount_factor ** local_step) * r
                 local_step += 1
-                if terminal or local_step >= self.agent.domain.episodeCap:
+                if terminal or local_step >= self.agent.domain.episode_cap:
+                    if r == 10:
+                        win_cnt += 1.0
                     break
 
             if not discount:
@@ -25,9 +29,10 @@ class EvalAgent(object):
 
             rewards[i] = local_r
 
-        print rewards
+        #print rewards
         print "mean of reward is " + str(np.mean(rewards))
         print "median of reward is " + str(np.median(rewards))
         print "Std of rewrad is " + str(np.std(rewards))
+        print "Success rate is " + str(win_cnt/num_trail)
 
         return np.mean(rewards), rewards
