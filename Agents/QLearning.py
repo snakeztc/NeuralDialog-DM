@@ -24,7 +24,7 @@ class QLearning(Agent):
 
     def __init__(self, domain, representation, seed=1):
         super(QLearning, self).__init__(domain, representation, seed)
-        self.learning_policy = EpsilonGreedyPolicy(0.1)
+        self.learning_policy = EpsilonGreedyPolicy(0.1, seed)
         self.learning_rate = 0.1
         self.cache = {}
 

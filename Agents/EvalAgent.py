@@ -1,6 +1,7 @@
 import numpy as np
 
 class EvalAgent(object):
+
     agent = None
 
     def __init__(self, agent):

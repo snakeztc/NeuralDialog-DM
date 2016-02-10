@@ -1,4 +1,3 @@
-import random
 import re
 import numpy as np
 from Domain import Domain
@@ -55,14 +54,14 @@ class Simulator20q (Domain):
     # lookup: field -> filed_value -> set(person)
     # state: state
 
-    def __init__(self):
-        super(Simulator20q, self).__init__()
+    def __init__(self, seed=1):
+        super(Simulator20q, self).__init__(seed)
         # resetting the game
         self.person_inmind = None
 
     def init_user(self):
         # initialize the user here
-        selected_key = random.choice(self.corpus.keys())
+        selected_key = self.random_state.choice(self.corpus.keys())
         # selected_key = self.corpus.keys()[30]
         selected_person = self.corpus.get(selected_key)
         # print "Choose " + selected_person.get('name')
@@ -95,7 +94,7 @@ class Simulator20q (Domain):
                 filters.append((self.slot_names[idx], self.slot_values[idx][int(value)-2]))
         results = list(self.search(filters))
         if results:
-            person = self.corpus.get(random.choice(results))
+            person = self.corpus.get(self.random_state.choice(results))
             name = person.get(u'name')
             return ["I guess this person is " + name]
         else:
@@ -146,7 +145,7 @@ class Simulator20q (Domain):
             chosen_answer = self.person_inmind.get(self.slot_names[aID])
             if chosen_answer:
                 if type(chosen_answer) == list:
-                    chosen_answer = random.choice(chosen_answer)
+                    chosen_answer = self.random_state.choice(chosen_answer)
                 ns[0, aID] = self.slot_values[aID].index(chosen_answer) + 2 # the value starts at 2
             else:
                 ns[0, aID] = self.unknown

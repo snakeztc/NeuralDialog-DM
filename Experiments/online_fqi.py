@@ -11,12 +11,13 @@ import pydot
 
 
 def run():
-    sim20_evn = Simulator20q()
-    #sim20_evn = BinarySimulator20q()
 
     # load the data from file
     seed = 1
-    test_interval = 200
+    sim20_evn = Simulator20q(seed)
+    #sim20_evn = BinarySimulator20q(seed)
+
+    test_interval = 500
     sample_size = np.arange(test_interval, 2001, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
@@ -57,13 +58,13 @@ def run():
         feature_names.append('unasked-'+str(idx))
         feature_names.append('unknown-'+str(idx))
         feature_names.append('known-'+str(idx))
-    for idx in range(0, sim20_evn.episode_cap-1):
-        feature_names.append('turn-'+str(idx))
+    feature_names.append('turn')
     feature_names.append('in')
     feature_names.append('done')
-    feature_names.append('act')
+    for idx in range(0, sim20_evn.actions_num):
+        feature_names.append('a-'+str(idx))
 
-    dotfile = StringIO.StringIO()
+    dotfile = StringIO()
     tree.export_graphviz(agent.representation.model, out_file = dotfile, feature_names=feature_names)
     pydot.graph_from_dot_data(dotfile.getvalue()).write_png("dtree2.png")
     dotfile.close()

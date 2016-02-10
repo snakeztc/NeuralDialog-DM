@@ -27,13 +27,13 @@ class Domain(object):
     # A seeded numpy random number generator
     random_state = None
 
-    def __init__(self):
+    def __init__(self, seed=1):
         self.logger = logging.getLogger("hrl.Domains." + self.__class__.__name__)
         self.statespace_dims = len(self.statespace_limits)
         # To make sure type of discount_factor is float. This will later on be used in
         self.discount_factor = float(self.discount_factor)
         # a new stream of random numbers for each domain
-        self.random_state = np.random.RandomState()
+        self.random_state = np.random.RandomState(seed)
         if not self.continuous in self.statespace_type:
             self.states_num = int(np.prod(self.statespace_limits[:, 1] - self.statespace_limits[:, 0]))
         else:

@@ -37,7 +37,7 @@ class OnlineFQI(Agent):
     def __init__(self, domain, representation, seed=1):
         super(OnlineFQI, self).__init__(domain, representation, seed)
         epsilon = 0.3
-        self.learning_policy = EpsilonGreedyPolicy(epsilon)
+        self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.experience = np.zeros((0, self.domain.statespace_dims*2+2))
         self.update_frequency = 100
         self.learner = FQI(domain, representation, seed)

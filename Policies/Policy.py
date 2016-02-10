@@ -3,10 +3,10 @@ import numpy as np
 
 
 class Policy(object):
-    def __init__(self):
+    def __init__(self, seed=1):
         self.logger = logging.getLogger("hrl.Policy." + self.__class__.__name__)
         # a new stream of random numbers for each domain
-        self.random_state = np.random.RandomState()
+        self.random_state = np.random.RandomState(seed)
 
     def choose_action(self, Qs):
         raise NotImplementedError("Implement the policy")
@@ -32,8 +32,8 @@ class EpsilonGreedyPolicy(Policy):
         else:
             return np.argmax(Qs)
 
-    def __init__(self, epsilon):
-        super(EpsilonGreedyPolicy, self).__init__()
+    def __init__(self, epsilon, seed):
+        super(EpsilonGreedyPolicy, self).__init__(seed)
         self.epsilon = epsilon
 
     def set_epsilon(self, epsilon):

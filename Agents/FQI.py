@@ -39,7 +39,7 @@ class FQI(BatchAgent):
                 print "Residual is " + str(resd)
 
             #model = KNeighborsRegressor(n_neighbors=2, n_jobs=-1)
-            self.representation.model = tree.DecisionTreeRegressor()
+            self.representation.model = tree.DecisionTreeRegressor(random_state=self.random_state)
             #if not self.representation.model:
             #    self.representation.model = linear_model.SGDRegressor(alpha=0.01, warm_start=True)
             self.representation.model.fit(X, y)
