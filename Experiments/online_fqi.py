@@ -1,8 +1,9 @@
 from Domains.Simulator20q import Simulator20q
+from Domains.BinarySimulator20q import BinarySimulator20q
 from Agents.OnlineFQI import OnlineFQI
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
-from Representations.ApproxRep import ApproxRep
+from Representations.WhApproxRep import WhApproxRep
 import numpy as np
 from sklearn.externals.six import StringIO
 from sklearn import tree
@@ -11,6 +12,7 @@ import pydot
 
 def run():
     sim20_evn = Simulator20q()
+    #sim20_evn = BinarySimulator20q()
 
     # load the data from file
     seed = 1
@@ -20,7 +22,7 @@ def run():
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
-    representation = ApproxRep(sim20_evn, seed = seed)
+    representation = WhApproxRep(sim20_evn, seed = seed)
     agent = OnlineFQI(domain=sim20_evn, representation=representation)
     test_trial = 100
     print "Test trail number is " + str(test_trial)

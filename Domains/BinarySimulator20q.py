@@ -9,7 +9,7 @@ from Utils.domainUtil import DomainUtil
 class BinarySimulator20q (Domain):
 
     # global varaible
-    field_blacklist = ['name', 'degree']
+    field_blacklist = ['name']
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
     print "construct meta info for corpus"
@@ -28,9 +28,9 @@ class BinarySimulator20q (Domain):
     loss_reward = -10.0
     step_reward = -1.0
     win_reward = 10.0
-    episode_cap = 9
+    episode_cap = 20
     discount_factor = 0.99
-    actions_num = slot_count + 1
+    actions_num = sum([len(val) for val in slot_values]) + 1
 
     # raw state is
     # [slot_0 slot_1 ... turn_cnt informed]
@@ -39,7 +39,6 @@ class BinarySimulator20q (Domain):
     # create state_space_limit
     statespace_limits = np.zeros((slot_count, 2))
     for d in range(0, slot_count):
-        #statespace_limits[d, 1] = all_slot_dim.get(slot_names[d]) + 2 ## init 0 unknown 1
         statespace_limits[d, 1] = 3
     # add the extra dimension for turn count
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
@@ -97,7 +96,6 @@ class BinarySimulator20q (Domain):
         if results:
             person = self.corpus.get(random.choice(results))
             name = person.get(u'name')
-            name = re.match("\"(.*)\"@en", name).group(1)
             return ["I guess this person is " + name]
         else:
             print "No results!!!!"
@@ -144,9 +142,10 @@ class BinarySimulator20q (Domain):
 
         # a is a question
         if self.is_question(aID):
-            answer = self.person_inmind.get(self.slot_names[aID])
-            if answer:
-                chosen_answer = random.choice(answer)
+            chosen_answer = self.person_inmind.get(self.slot_names[aID])
+            if chosen_answer:
+                if type(chosen_answer) == list:
+                    chosen_answer = random.choice(chosen_answer)
                 ns[0, aID] = self.slot_values[aID].index(chosen_answer) + 2 # the value starts at 2
             else:
                 ns[0, aID] = self.unknown
@@ -158,7 +157,6 @@ class BinarySimulator20q (Domain):
             str_a = self.get_inform(s)
             name = re.match("I guess this person is (.*)", str_a[0]).group(1)
             user_name = self.person_inmind.get(u'name')
-            user_name = re.match("\"(.*)\"@en", user_name).group(1)
             if name == user_name:
                 reward = self.win_reward
             else:

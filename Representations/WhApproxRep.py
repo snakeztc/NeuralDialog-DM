@@ -3,12 +3,12 @@ from Representation import Representation
 
 
 
-class ApproxRep(Representation):
+class WhApproxRep(Representation):
 
     state_feature_base = None
 
     def __init__(self, domain, seed=1):
-        super(ApproxRep, self).__init__(domain, seed)
+        super(WhApproxRep, self).__init__(domain, seed)
         # initialize the model
         self.model = None
         self.state_features_num = 0
@@ -31,7 +31,6 @@ class ApproxRep(Representation):
         #phi = self.phi_s(s)
         #phi_sa = np.column_stack((phi, aID))
         #return phi_sa
-
         """
         phi = self.phi_s(s)
         phi_sa = np.zeros((phi.shape[0], phi.shape[1] * self.actions_num))
@@ -52,9 +51,9 @@ class ApproxRep(Representation):
 
     def phi_s(self, s):
         phi = np.copy(s)
-        temp_phi = phi[:, 0:-2]
-        temp_phi[temp_phi > 1] = 2
-        phi[:, 0:-2] = temp_phi
+        #temp_phi = phi[:, 0:-2]
+        #temp_phi[temp_phi > 1] = 2
+        #phi[:, 0:-2] = temp_phi
         return self.expand_state_space(phi, self.domain.statespace_limits, self.domain.statespace_type)
 
 
