@@ -1,3 +1,4 @@
+import random
 import re
 import numpy as np
 from Domain import Domain
@@ -5,7 +6,7 @@ from Utils.config import *
 from Utils.domainUtil import DomainUtil
 
 
-class Simulator20q (Domain):
+class BinarySimulator20q (Domain):
 
     # global varaible
     field_blacklist = ['name']
@@ -27,9 +28,9 @@ class Simulator20q (Domain):
     loss_reward = -10.0
     step_reward = -1.0
     win_reward = 10.0
-    episode_cap = 9
+    episode_cap = 20
     discount_factor = 0.99
-    actions_num = slot_count + 1
+    actions_num = sum([len(val) for val in slot_values]) + 1
 
     # raw state is
     # [slot_0 slot_1 ... turn_cnt informed]
@@ -38,7 +39,6 @@ class Simulator20q (Domain):
     # create state_space_limit
     statespace_limits = np.zeros((slot_count, 2))
     for d in range(0, slot_count):
-        #statespace_limits[d, 1] = all_slot_dim.get(slot_names[d]) + 2 ## init 0 unknown 1
         statespace_limits[d, 1] = 3
     # add the extra dimension for turn count
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
@@ -54,14 +54,14 @@ class Simulator20q (Domain):
     # lookup: field -> filed_value -> set(person)
     # state: state
 
-    def __init__(self, seed=1):
-        super(Simulator20q, self).__init__(seed)
+    def __init__(self):
+        super(BinarySimulator20q, self).__init__()
         # resetting the game
         self.person_inmind = None
 
     def init_user(self):
         # initialize the user here
-        selected_key = self.random_state.choice(self.corpus.keys())
+        selected_key = random.choice(self.corpus.keys())
         # selected_key = self.corpus.keys()[30]
         selected_person = self.corpus.get(selected_key)
         # print "Choose " + selected_person.get('name')
@@ -94,7 +94,7 @@ class Simulator20q (Domain):
                 filters.append((self.slot_names[idx], self.slot_values[idx][int(value)-2]))
         results = list(self.search(filters))
         if results:
-            person = self.corpus.get(self.random_state.choice(results))
+            person = self.corpus.get(random.choice(results))
             name = person.get(u'name')
             return ["I guess this person is " + name]
         else:
@@ -145,7 +145,7 @@ class Simulator20q (Domain):
             chosen_answer = self.person_inmind.get(self.slot_names[aID])
             if chosen_answer:
                 if type(chosen_answer) == list:
-                    chosen_answer = self.random_state.choice(chosen_answer)
+                    chosen_answer = random.choice(chosen_answer)
                 ns[0, aID] = self.slot_values[aID].index(chosen_answer) + 2 # the value starts at 2
             else:
                 ns[0, aID] = self.unknown
