@@ -13,6 +13,8 @@ class Representation(object):
     logger = None
     # A seeded numpy random number generator
     random_state = None
+    # state_base
+    base = None
 
     def __init__(self, domain, seed=1):
 
@@ -33,12 +35,14 @@ class Representation(object):
         raise NotImplementedError("Implement phi")
 
     def expand_state_space(self, s, state_limit, state_type):
-        phi = np.zeros((s.shape[0], np.sum(state_limit[:, 1] - state_limit[:, 0])))
-        base = np.append(0, np.cumsum(state_limit[:, 1] - state_limit[:, 0]))
+        phi = np.zeros((s.shape[0], self.state_features_num))
         num_var = s.shape[1]
         for var_idx in range(0, num_var):
-            for value_idx in range(int(state_limit[var_idx, 0]), int(state_limit[var_idx, 1])):
-                mask = np.where(s[:, var_idx] == (value_idx + state_limit[var_idx, 0]))
-                phi[mask, base[var_idx] + value_idx] = 1
+            if state_type[var_idx] == self.domain.categorical:
+                for value_idx in range(int(state_limit[var_idx, 0]), int(state_limit[var_idx, 1])):
+                    mask = np.where(s[:, var_idx] == (value_idx + state_limit[var_idx, 0]))
+                    phi[mask, self.base[var_idx] + value_idx] = 1
+            else:
+                phi[:, self.base[var_idx]] = s[:, var_idx]
         return phi
 

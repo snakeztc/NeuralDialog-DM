@@ -12,13 +12,19 @@ class WhApproxRep(Representation):
         # initialize the model
         self.model = None
         self.state_features_num = 0
+        # get state_feature_num
         for idx, type in enumerate(self.domain.statespace_type):
             if type == self.domain.categorical:
                 self.state_features_num += (self.domain.statespace_limits[idx, 1] - self.domain.statespace_limits[idx, 0])
             else:
                 self.state_features_num += 1
-        self.state_features_num += domain.actions_num
         self.state_features_num = int(self.state_features_num)
+        # get state base
+        diff = self.domain.statespace_limits[:, 1] - self.domain.statespace_limits[:, 0]
+        for row_idx in range(0, diff.size):
+            if self.domain.statespace_type[row_idx] != self.domain.categorical:
+                diff[row_idx] = 1
+        self.base = np.append([0], np.cumsum(diff))
 
     def phi_sa(self, s, aID):
         """
@@ -51,9 +57,9 @@ class WhApproxRep(Representation):
 
     def phi_s(self, s):
         phi = np.copy(s)
-        #temp_phi = phi[:, 0:-2]
-        #temp_phi[temp_phi > 1] = 2
-        #phi[:, 0:-2] = temp_phi
+        temp_phi = phi[:, 0:-2]
+        temp_phi[temp_phi > 1] = 2
+        phi[:, 0:-2] = temp_phi
         return self.expand_state_space(phi, self.domain.statespace_limits, self.domain.statespace_type)
 
 

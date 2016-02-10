@@ -39,8 +39,8 @@ class Simulator20q (Domain):
     # create state_space_limit
     statespace_limits = np.zeros((slot_count, 2))
     for d in range(0, slot_count):
-        statespace_limits[d, 1] = all_slot_dim.get(slot_names[d]) + 2 ## init 0 unknown 1
-        #statespace_limits[d, 1] = 3
+        #statespace_limits[d, 1] = all_slot_dim.get(slot_names[d]) + 2 ## init 0 unknown 1
+        statespace_limits[d, 1] = 3
     # add the extra dimension for turn count
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
     statespace_limits = np.vstack((statespace_limits, [0, 1]))

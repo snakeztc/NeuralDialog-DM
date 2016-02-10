@@ -16,8 +16,8 @@ def run():
 
     # load the data from file
     seed = 1
-    test_interval = 100
-    sample_size = np.arange(100, 2000, test_interval)
+    test_interval = 200
+    sample_size = np.arange(test_interval, 2001, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
@@ -51,6 +51,7 @@ def run():
             if terminal or bench_cnt >= len(sample_size):
                 break
 
+
     feature_names = []
     for idx in range(0, sim20_evn.slot_count):
         feature_names.append('unasked-'+str(idx))
@@ -60,13 +61,13 @@ def run():
         feature_names.append('turn-'+str(idx))
     feature_names.append('in')
     feature_names.append('done')
-    for idx in range(0, sim20_evn.actions_num):
-        feature_names.append('a-'+str(idx))
+    feature_names.append('act')
 
-    dotfile = StringIO()
+    dotfile = StringIO.StringIO()
     tree.export_graphviz(agent.representation.model, out_file = dotfile, feature_names=feature_names)
     pydot.graph_from_dot_data(dotfile.getvalue()).write_png("dtree2.png")
     dotfile.close()
+
     #print agent.representation.model.coef_
 
 if __name__ == '__main__':
