@@ -34,7 +34,6 @@ def run():
 
     while bench_cnt < len(sample_size):
         epi_cnt += 1
-        #print "episode " + str(epi_cnt)
         s = sim20_evn.s0()
         while True:
             (r, ns, terminal) = agent.learn(s, performance_run=False)
@@ -49,7 +48,6 @@ def run():
 
             if terminal or bench_cnt >= len(sample_size):
                 break
-
 
     feature_names = []
     for idx in range(0, sim20_evn.slot_count):

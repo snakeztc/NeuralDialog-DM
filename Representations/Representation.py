@@ -27,14 +27,26 @@ class Representation(object):
     def Qs(self, s):
         raise NotImplementedError("Implement Qs")
 
+    def Qs_phi_s(self, phi_s):
+        raise NotImplementedError("Implement Qs_phi")
+
     def Q(self, s, aID):
         raise NotImplementedError("Implement the q-funciton")
+
+    def Q_phi_sa(self, phi_sa):
+        raise NotImplementedError("Implement the Q phisa")
 
     def phi_sa(self, s, aID):
         raise NotImplementedError("Implement phi_sa")
 
+    def phi_a(self, aID):
+        raise NotImplementedError("Implement phi_a")
+
     def phi_s(self, s):
         raise NotImplementedError("Implement phi")
+
+    def phi_s_phi_a(self, phi_s, phi_a):
+        raise NotImplementedError("Implement phi_s_phi_a")
 
     def expand_state_space(self, s, state_type):
         phi = np.zeros((s.shape[0], self.state_features_num))
