@@ -2,17 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5f205f89-a1d7-41c9-a7a4-173417943a5c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Experiments/binary_online_fqi.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Representations/BinaryApproxRep.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/Domains/test_simulator20q.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/dtree2.png" afterPath="$PROJECT_DIR$/Experiments/dtree2.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/Agent.py" afterPath="$PROJECT_DIR$/Agents/Agent.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/EvalAgent.py" afterPath="$PROJECT_DIR$/Agents/EvalAgent.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/FQI.py" afterPath="$PROJECT_DIR$/Agents/FQI.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.ipynb_checkpoints/SimulatorTester-checkpoint.ipynb" afterPath="$PROJECT_DIR$/.ipynb_checkpoints/SimulatorTester-checkpoint.ipynb" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/OnlineFQI.py" afterPath="$PROJECT_DIR$/Agents/OnlineFQI.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/QLearning.py" afterPath="$PROJECT_DIR$/Agents/QLearning.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domains/BinarySimulator20q.py" afterPath="$PROJECT_DIR$/Domains/BinarySimulator20q.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domains/Domain.py" afterPath="$PROJECT_DIR$/Domains/Domain.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domains/Simulator20q.py" afterPath="$PROJECT_DIR$/Domains/Simulator20q.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/online_fqi.py" afterPath="$PROJECT_DIR$/Experiments/online_fqi.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Policies/Policy.py" afterPath="$PROJECT_DIR$/Policies/Policy.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SimulatorTester.ipynb" afterPath="$PROJECT_DIR$/SimulatorTester.ipynb" />
     </list>
     <ignored path="NeuralDM.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -30,7 +30,8 @@
     <SUITE FILE_PATH="coverage/NeuralDM$OnlineFQI.coverage" NAME="OnlineFQI Coverage Results" MODIFIED="1454793994884" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Agents" />
     <SUITE FILE_PATH="coverage/NeuralDM$Simulator20q.coverage" NAME="Simulator20q Coverage Results" MODIFIED="1455074836078" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NeuralDM$Nosetest_TestRepresentation_test_expand_state_space.coverage" NAME="Nosetest TestRepresentation.test_expand_state_space Coverage Results" MODIFIED="1454793991882" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Representations" />
-    <SUITE FILE_PATH="coverage/NeuralDM$online_fqi.coverage" NAME="online_fqi Coverage Results" MODIFIED="1455082253050" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
+    <SUITE FILE_PATH="coverage/NeuralDM$binary_online_fqi.coverage" NAME="binary_online_fqi Coverage Results" MODIFIED="1455161539866" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
+    <SUITE FILE_PATH="coverage/NeuralDM$online_fqi.coverage" NAME="online_fqi Coverage Results" MODIFIED="1455160833180" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -41,11 +42,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="online_fqi.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Experiments/online_fqi.py">
+      <file leaf-file-name="Simulator20q.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Domains/Simulator20q.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.2439024">
-              <caret line="17" column="40" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7" column="18" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="18" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+                <element signature="e#4111#4303#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="binary_online_fqi.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Experiments/binary_online_fqi.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.6918819">
+              <caret line="47" column="70" selection-start-line="47" selection-start-column="70" selection-end-line="47" selection-end-column="70" />
               <folding>
                 <element signature="e#0#45#0" expanded="true" />
               </folding>
@@ -86,19 +100,21 @@
         <option value="$PROJECT_DIR$/Agents/BatchAgent.py" />
         <option value="$PROJECT_DIR$/Domains/test_simulator20q.py" />
         <option value="$PROJECT_DIR$/Representations/test_representation.py" />
-        <option value="$PROJECT_DIR$/Domains/BinarySimulator20q.py" />
         <option value="$PROJECT_DIR$/Representations/ApproxRep.py" />
         <option value="$PROJECT_DIR$/Representations/Representation.py" />
         <option value="$PROJECT_DIR$/Representations/WhApproxRep.py" />
         <option value="$PROJECT_DIR$/Agents/Agent.py" />
         <option value="$PROJECT_DIR$/Agents/EvalAgent.py" />
-        <option value="$PROJECT_DIR$/Agents/OnlineFQI.py" />
         <option value="$PROJECT_DIR$/Policies/Policy.py" />
         <option value="$PROJECT_DIR$/Agents/FQI.py" />
         <option value="$PROJECT_DIR$/Agents/QLearning.py" />
-        <option value="$PROJECT_DIR$/Domains/Domain.py" />
         <option value="$PROJECT_DIR$/Domains/Simulator20q.py" />
+        <option value="$PROJECT_DIR$/Domains/Domain.py" />
         <option value="$PROJECT_DIR$/Experiments/online_fqi.py" />
+        <option value="$PROJECT_DIR$/Representations/BinaryApproxRep.py" />
+        <option value="$PROJECT_DIR$/Domains/BinarySimulator20q.py" />
+        <option value="$PROJECT_DIR$/Agents/OnlineFQI.py" />
+        <option value="$PROJECT_DIR$/Experiments/binary_online_fqi.py" />
       </list>
     </option>
   </component>
@@ -108,9 +124,9 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="5" />
+    <option name="x" value="71" />
     <option name="y" value="23" />
-    <option name="width" value="1431" />
+    <option name="width" value="1289" />
     <option name="height" value="847" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -182,7 +198,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Policies" />
+              <option name="myItemId" value="Experiments" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -196,7 +212,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Experiments" />
+              <option name="myItemId" value="Domains" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -226,16 +242,18 @@
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Experiments" />
+      <recent name="$PROJECT_DIR$/Representations" />
+      <recent name="$PROJECT_DIR$/Domains" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/Utils" />
       <recent name="$PROJECT_DIR$/Domains" />
       <recent name="$PROJECT_DIR$" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/Domains" />
-    </key>
   </component>
-  <component name="RunManager" selected="Python.online_fqi">
+  <component name="RunManager" selected="Python.binary_online_fqi">
     <configuration default="false" name="Simulator20q" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -308,6 +326,24 @@
       <module name="NeuralDM" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Agents/OnlineFQI.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <method />
+    </configuration>
+    <configuration default="false" name="binary_online_fqi" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Experiments" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="NeuralDM" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Experiments/binary_online_fqi.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <method />
@@ -505,18 +541,20 @@
       <option name="USE_KEYWORD" value="false" />
       <method />
     </configuration>
-    <list size="4">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Python.Simulator20q" />
       <item index="1" class="java.lang.String" itemvalue="Python.online_fqi" />
       <item index="2" class="java.lang.String" itemvalue="Python tests.Nosetest TestRepresentation.test_expand_state_space" />
       <item index="3" class="java.lang.String" itemvalue="Python.OnlineFQI" />
+      <item index="4" class="java.lang.String" itemvalue="Python.binary_online_fqi" />
     </list>
     <recent_temporary>
-      <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="Python.online_fqi" />
-        <item index="1" class="java.lang.String" itemvalue="Python.Simulator20q" />
-        <item index="2" class="java.lang.String" itemvalue="Python.OnlineFQI" />
-        <item index="3" class="java.lang.String" itemvalue="Python tests.Nosetest TestRepresentation.test_expand_state_space" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Python.binary_online_fqi" />
+        <item index="1" class="java.lang.String" itemvalue="Python.online_fqi" />
+        <item index="2" class="java.lang.String" itemvalue="Python.Simulator20q" />
+        <item index="3" class="java.lang.String" itemvalue="Python.OnlineFQI" />
+        <item index="4" class="java.lang.String" itemvalue="Python tests.Nosetest TestRepresentation.test_expand_state_space" />
       </list>
     </recent_temporary>
   </component>
@@ -543,7 +581,13 @@
       <option name="project" value="LOCAL" />
       <updated>1455081388230</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="seeded every random generator">
+      <created>1455082280471</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1455082280471</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -567,23 +611,23 @@
     </history-entry>
   </component>
   <component name="ToolWindowManager">
-    <frame x="5" y="23" width="1431" height="847" extended-state="6" />
+    <frame x="71" y="23" width="1289" height="847" extended-state="0" />
     <editor active="true" />
     <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22854851" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38289472" sideWeight="0.20489511" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29271522" sideWeight="0.4888112" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34081903" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.69139075" sideWeight="0.55804193" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3258278" sideWeight="0.4944056" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20086393" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32847682" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24570674" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29194188" sideWeight="0.4888112" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34081903" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4359313" sideWeight="0.55804193" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3258278" sideWeight="0.4944056" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.46225166" sideWeight="0.7951049" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21136063" sideWeight="0.7951049" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -625,10 +669,18 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="change approx to wh" />
     <MESSAGE value="finish representation for categorical and discrete value" />
-    <option name="LAST_COMMIT_MESSAGE" value="finish representation for categorical and discrete value" />
+    <MESSAGE value="seeded every random generator" />
+    <option name="LAST_COMMIT_MESSAGE" value="seeded every random generator" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/Domains/BinarySimulator20q.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="206" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -639,11 +691,21 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="197" />
+      <option name="time" value="208" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Experiments/online_fqi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="14" selection-start-line="15" selection-start-column="14" selection-end-line="15" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Domains/Simulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -877,13 +939,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Domains/test_simulator20q.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/lib/python2.7/unittest/case.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.59351623">
@@ -925,22 +980,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Domains/BinarySimulator20q.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Representations/WhApproxRep.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Agents/Agent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.47151276">
@@ -953,7 +992,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.65767634">
           <caret line="35" column="55" selection-start-line="35" selection-start-column="55" selection-end-line="35" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -961,14 +999,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.70726913">
           <caret line="27" column="32" selection-start-line="27" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/OnlineFQI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9024896">
-          <caret line="32" column="65" selection-start-line="32" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1007,16 +1037,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Domains/Domain.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.086444005">
-          <caret line="34" column="56" selection-start-line="34" selection-start-column="56" selection-end-line="34" selection-end-column="56" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="59" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="59" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experiments/online_fqi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#45#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/OnlineFQI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.3909775">
+          <caret line="40" column="66" selection-start-line="40" selection-start-column="66" selection-end-line="40" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Representations/WhApproxRep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.97744364">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Domains/Simulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5912863">
-          <caret line="57" column="47" selection-start-line="57" selection-start-column="47" selection-end-line="57" selection-end-column="47" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="18" selection-start-line="7" selection-start-column="6" selection-end-line="7" selection-end-column="18" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
             <element signature="e#4111#4303#0" expanded="false" />
@@ -1024,10 +1080,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/online_fqi.py">
+    <entry file="file://$PROJECT_DIR$/Domains/BinarySimulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2439024">
-          <caret line="17" column="40" selection-start-line="17" selection-start-column="40" selection-end-line="17" selection-end-column="40" />
+        <state vertical-scroll-proportion="-15.666667">
+          <caret line="49" column="40" selection-start-line="49" selection-start-column="40" selection-end-line="49" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+            <element signature="e#2272#2546#0" expanded="false" />
+            <element signature="e#2574#2819#0" expanded="false" />
+            <element signature="e#3020#3342#0" expanded="false" />
+            <element signature="e#4172#4324#0" expanded="false" />
+            <element signature="e#4365#4646#0" expanded="false" />
+            <element signature="e#4689#4900#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Representations/BinaryApproxRep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experiments/binary_online_fqi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6918819">
+          <caret line="47" column="70" selection-start-line="47" selection-start-column="70" selection-end-line="47" selection-end-column="70" />
           <folding>
             <element signature="e#0#45#0" expanded="true" />
           </folding>

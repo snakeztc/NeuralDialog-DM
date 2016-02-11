@@ -3,7 +3,7 @@ from Domains.BinarySimulator20q import BinarySimulator20q
 from Agents.OnlineFQI import OnlineFQI
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
-from Representations.WhApproxRep import WhApproxRep
+from Representations.BinaryApproxRep import BinaryApproxRep
 import numpy as np
 from sklearn.externals.six import StringIO
 from sklearn import tree
@@ -14,8 +14,7 @@ def run():
 
     # load the data from file
     seed = 100
-    sim20_evn = Simulator20q(seed)
-    #sim20_evn = BinarySimulator20q(seed)
+    sim20_evn = BinarySimulator20q(seed)
 
     test_interval = 200
     sample_size = np.arange(test_interval, 2001, test_interval)
@@ -23,16 +22,16 @@ def run():
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
-    representation = WhApproxRep(sim20_evn, seed = seed)
+    representation = BinaryApproxRep(sim20_evn, seed = seed)
     agent = OnlineFQI(domain=sim20_evn, representation=representation)
     test_trial = 100
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(500)
 
     print "evaluation at 0"
-    test_agent =QLearning(Simulator20q(), agent.representation)
+    test_agent =QLearning(BinaryApproxRep(seed), agent.representation)
     eval_agent = EvalAgent(test_agent)
-    (eval_performance[bench_cnt], rewards) = eval_agent.eval(100, discount=True)
+    (eval_performance[bench_cnt], rewards) = eval_agent.eval(1, discount=True)
 
     while bench_cnt < len(sample_size):
         epi_cnt += 1
@@ -44,7 +43,7 @@ def run():
             s = ns
             if step_cnt == sample_size[bench_cnt]:
                 print "evaluation at " + str(agent.experience.shape[0])
-                test_agent =QLearning(Simulator20q(), agent.representation)
+                test_agent =QLearning(BinaryApproxRep(seed), agent.representation)
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
                 bench_cnt += 1
