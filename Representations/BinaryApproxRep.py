@@ -1,6 +1,6 @@
 import numpy as np
 from Representation import Representation
-
+import time
 
 
 class BinaryApproxRep(Representation):
@@ -33,7 +33,10 @@ class BinaryApproxRep(Representation):
         :param aID: the action index
         :return: the feature vector
         """
+        #time1 = time.time()
         phi_s = self.phi_s(s)
+        #time2 = time.time()
+        #print '%s function took %0.3f ms' % ("expand", (time2-time1)*1000.0)
         phi_a = np.zeros((phi_s.shape[0], self.domain.actions_num))
         indices = [v+i*phi_a.shape[1] for i, v, in enumerate(aID)]
         phi_a.flat[indices] = 1

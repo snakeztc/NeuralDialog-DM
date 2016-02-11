@@ -25,12 +25,12 @@ def run():
     agent = OnlineFQI(domain=sim20_evn, representation=representation)
     test_trial = 100
     print "Test trail number is " + str(test_trial)
-    print "Test interval is " + str(500)
+    print "Test interval is " + str(test_interval)
 
     print "evaluation at 0"
     test_agent =QLearning(BinarySimulator20q(seed), agent.representation)
     eval_agent = EvalAgent(test_agent)
-    (eval_performance[bench_cnt], rewards) = eval_agent.eval(1, discount=True)
+    (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
 
     while bench_cnt < len(sample_size):
         epi_cnt += 1
@@ -42,7 +42,7 @@ def run():
             s = ns
             if step_cnt == sample_size[bench_cnt]:
                 print "evaluation at " + str(agent.experience.shape[0])
-                test_agent =QLearning(BinaryApproxRep(seed), agent.representation)
+                test_agent =QLearning(BinarySimulator20q(seed), agent.representation)
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
                 bench_cnt += 1
