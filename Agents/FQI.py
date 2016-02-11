@@ -20,17 +20,23 @@ class FQI(BatchAgent):
             reduced_exp_table = experiences
 
         # experience is in (s, a, r, ns)
-        states = reduced_exp_table[:, 0:self.domain.statespace_size]
-        actions = reduced_exp_table[:, self.domain.statespace_size]
-        rewards = reduced_exp_table[:, self.domain.statespace_size+1]
-        next_states = reduced_exp_table[:, self.domain.statespace_size+2:]
-        X = self.representation.phi_sa(states, actions)
+        #states = reduced_exp_table[:, 0:self.domain.statespace_size]
+        #actions = reduced_exp_table[:, self.domain.statespace_size]
+        #rewards = reduced_exp_table[:, self.domain.statespace_size+1]
+        #next_states = reduced_exp_table[:, self.domain.statespace_size+2:]
+        #X = self.representation.phi_sa(states, actions)
+        # experience is in (phi_sa, r, phi_ns)
+        phi_sa_size = self.representation.state_features_num + self.domain.actions_num
+        X = reduced_exp_table[:, 0:phi_sa_size]
+        rewards = reduced_exp_table[:, phi_sa_size]
+        phi_ns = reduced_exp_table[:,phi_sa_size+1:]
 
         for i in range(0, max_iter):
             if self.show_resd:
-                old_qs = self.representation.Q(states, actions).ravel()
+                old_qs = self.representation.Q_phi_sa(X).ravel()
 
-            nqs = self.representation.Qs(next_states)
+            #nqs = self.representation.Qs(next_states)
+            nqs = self.representation.Qs_phi_s(phi_ns)
             best_nqs = np.amax(nqs, axis=1).ravel()
             y = rewards+ self.domain.discount_factor * best_nqs
 

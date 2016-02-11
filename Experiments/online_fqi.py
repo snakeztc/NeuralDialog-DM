@@ -69,8 +69,7 @@ def run():
     pydot.graph_from_dot_data(dotfile.getvalue()).write_png("dtree2.png")
     dotfile.close()
 
-    #print agent.representation.model.coef_
-
+    print agent.representation.model.feature_importances_
 if __name__ == '__main__':
     run()
 

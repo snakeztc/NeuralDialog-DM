@@ -49,24 +49,6 @@ def run():
             if terminal or bench_cnt >= len(sample_size):
                 break
 
-    feature_names = []
-    for idx in range(0, sim20_evn.slot_count):
-        feature_names.append('unasked-'+str(idx))
-        feature_names.append('unknown-'+str(idx))
-        feature_names.append('known-'+str(idx))
-    feature_names.append('turn')
-    feature_names.append('in')
-    feature_names.append('done')
-    for idx in range(0, sim20_evn.actions_num):
-        feature_names.append('a-'+str(idx))
-
-    dotfile = StringIO()
-    tree.export_graphviz(agent.representation.model, out_file = dotfile, feature_names=feature_names)
-    pydot.graph_from_dot_data(dotfile.getvalue()).write_png("dtree2.png")
-    dotfile.close()
-
-    #print agent.representation.model.coef_
-
 if __name__ == '__main__':
     run()
 
