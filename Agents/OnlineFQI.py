@@ -34,14 +34,14 @@ class OnlineFQI(Agent):
 
         return r, ns, terminal
 
-    def __init__(self, domain, representation, seed=1):
+    def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10, max_iter=10):
         super(OnlineFQI, self).__init__(domain, representation, seed)
-        epsilon = 0.3
+        epsilon = epsilon
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.experience = np.zeros((0, self.domain.statespace_size*2+2))
-        self.update_frequency = 100
+        self.update_frequency = update_frequency
         self.learner = FQI(domain, representation, seed)
-        self.max_iter = 20
+        self.max_iter = max_iter
         print "Using epsilon " + str(epsilon)
         print "update_frequency " + str(self.update_frequency)
         print "FQI max_iter is " + str(self.max_iter)

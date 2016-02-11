@@ -4,25 +4,25 @@ from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
 from Representations.BinaryApproxRep import BinaryApproxRep
 import numpy as np
-from sklearn.externals.six import StringIO
-from sklearn import tree
-import pydot
-
 
 def run():
-
     # load the data from file
     seed = 100
     sim20_evn = BinarySimulator20q(seed)
 
-    test_interval = 200
+    test_interval = 500
     sample_size = np.arange(test_interval, 2001, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
+    epsilon = 0.3
+    max_iter = 10
+    update_frequency = 100
+
     representation = BinaryApproxRep(sim20_evn, seed = seed)
-    agent = OnlineFQI(domain=sim20_evn, representation=representation)
+    agent = OnlineFQI(domain=sim20_evn, representation=representation, epsilon=epsilon,
+                      max_iter=max_iter, update_frequency=update_frequency)
     test_trial = 100
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(test_interval)

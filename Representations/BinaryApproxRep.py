@@ -41,7 +41,7 @@ class BinaryApproxRep(Representation):
     def phi_a(self, aID):
         if np.isscalar(aID):
             phi_a = np.zeros((1, self.domain.actions_num))
-            phi_a[aID] = 1
+            phi_a[0, aID] = 1
         else:
             phi_a = np.zeros((aID.shape[0], self.domain.actions_num))
             indices = [v+i*phi_a.shape[1] for i, v, in enumerate(aID)]
@@ -74,8 +74,9 @@ class BinaryApproxRep(Representation):
     def Qs_phi_s(self, phi_s):
         qs = np.zeros((phi_s.shape[0], self.domain.actions_num))
         actions = self.domain.possible_actions()
+        base_aIDs = np.ones((phi_s.shape[0], 1))
         for idx, aID in enumerate(actions):
-            temp_aIDs = np.ones((phi_s.shape[0], 1)) * aID
+            temp_aIDs = base_aIDs * aID
             phi_sa = self.phi_s_phi_a(phi_s, self.phi_a(temp_aIDs))
             qs[:, idx] = self.Q_phi_sa(phi_sa)
         return qs

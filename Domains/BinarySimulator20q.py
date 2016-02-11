@@ -66,8 +66,8 @@ class BinarySimulator20q (Domain):
 
     def init_user(self):
         # initialize the user here
-        selected_key = random.choice(self.corpus.keys())
-        # selected_key = self.corpus.keys()[30]
+        #selected_key = random.choice(self.corpus.keys())
+        selected_key = self.corpus.keys()[30]
         selected_person = self.corpus.get(selected_key)
         # print "Choose " + selected_person.get('name')
         return selected_person
