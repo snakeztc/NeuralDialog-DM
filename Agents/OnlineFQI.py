@@ -18,11 +18,11 @@ class OnlineFQI(Agent):
         (r, ns, terminal) = self.domain.step(s, aID)
 
         if not performance_run:
-            experience = np.zeros((1, self.domain.statespace_dims * 2 + 2))
-            experience[:, 0:self.domain.statespace_dims] = np.copy(s)
-            experience[:, self.domain.statespace_dims] = aID
-            experience[:, self.domain.statespace_dims+1] = r
-            experience[:, self.domain.statespace_dims+2:] = np.copy(ns)
+            experience = np.zeros((1, self.domain.statespace_size * 2 + 2))
+            experience[:, 0:self.domain.statespace_size] = np.copy(s)
+            experience[:, self.domain.statespace_size] = aID
+            experience[:, self.domain.statespace_size+1] = r
+            experience[:, self.domain.statespace_size+2:] = np.copy(ns)
             if self.experience.shape[0] > 0:
                 self.experience = np.vstack((self.experience, experience))
             else:

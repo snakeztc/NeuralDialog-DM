@@ -5,8 +5,6 @@ from Representation import Representation
 
 class WhApproxRep(Representation):
 
-    state_feature_base = None
-
     def __init__(self, domain, seed=1):
         super(WhApproxRep, self).__init__(domain, seed)
         # initialize the model
@@ -48,9 +46,8 @@ class WhApproxRep(Representation):
         """
         phi_s = self.phi_s(s)
         phi_a = np.zeros((phi_s.shape[0], self.domain.actions_num))
-        for idx in range(0, self.domain.actions_num):
-            mask = np.where(aID == idx)
-            phi_a[mask, idx] = 1
+        indices = [v+i*phi_a.shape[1] for i, v, in enumerate(aID)]
+        phi_a.flat[indices] = 1
         phi_sa = np.column_stack((phi_s, phi_a))
         return phi_sa
 
@@ -60,7 +57,7 @@ class WhApproxRep(Representation):
         temp_phi = phi[:, 0:-2]
         temp_phi[temp_phi > 1] = 2
         phi[:, 0:-2] = temp_phi
-        return self.expand_state_space(phi, self.domain.statespace_limits, self.domain.statespace_type)
+        return self.expand_state_space(phi, self.domain.statespace_type)
 
 
     def Q(self, s, aID):

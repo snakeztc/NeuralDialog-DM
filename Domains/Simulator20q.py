@@ -42,7 +42,7 @@ class Simulator20q (Domain):
         statespace_limits[d, 1] = 3
     # add the extra dimension for turn count
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
-    statespace_limits = np.vstack((statespace_limits, [0, 1]))
+    statespace_limits = np.vstack((statespace_limits, [0, 2]))
 
     statespace_type = [Domain.categorical] * slot_count
     statespace_type.extend([Domain.discrete, Domain.categorical])

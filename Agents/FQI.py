@@ -20,10 +20,10 @@ class FQI(BatchAgent):
             reduced_exp_table = experiences
 
         # experience is in (s, a, r, ns)
-        states = reduced_exp_table[:, 0:self.domain.statespace_dims]
-        actions = reduced_exp_table[:, self.domain.statespace_dims]
-        rewards = reduced_exp_table[:, self.domain.statespace_dims+1]
-        next_states = reduced_exp_table[:, self.domain.statespace_dims+2:]
+        states = reduced_exp_table[:, 0:self.domain.statespace_size]
+        actions = reduced_exp_table[:, self.domain.statespace_size]
+        rewards = reduced_exp_table[:, self.domain.statespace_size+1]
+        next_states = reduced_exp_table[:, self.domain.statespace_size+2:]
         X = self.representation.phi_sa(states, actions)
 
         for i in range(0, max_iter):

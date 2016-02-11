@@ -33,7 +33,7 @@ class BinarySimulator20q (Domain):
     loss_reward = -10.0
     step_reward = -1.0
     win_reward = 10.0
-    episode_cap = 40
+    episode_cap = 20
     discount_factor = 0.99
     actions_num = slot_value_count + 1 # each value has a question and 1 inform
 
@@ -43,11 +43,11 @@ class BinarySimulator20q (Domain):
 
     # create state_space_limit
     statespace_limits = np.zeros((slot_value_count, 2))
-    for d in range(0, slot_count):
+    for d in range(0, slot_value_count):
         statespace_limits[d, 1] = 4
     # add the extra dimension for turn count
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
-    statespace_limits = np.vstack((statespace_limits, [0, 1]))
+    statespace_limits = np.vstack((statespace_limits, [0, 2]))
     # turn count is discrete and informed is categorical
     statespace_type = [Domain.categorical] * slot_value_count
     statespace_type.extend([Domain.discrete, Domain.categorical])

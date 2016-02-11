@@ -1,4 +1,3 @@
-from Domains.Simulator20q import Simulator20q
 from Domains.BinarySimulator20q import BinarySimulator20q
 from Agents.OnlineFQI import OnlineFQI
 from Agents.QLearning import QLearning
@@ -29,7 +28,7 @@ def run():
     print "Test interval is " + str(500)
 
     print "evaluation at 0"
-    test_agent =QLearning(BinaryApproxRep(seed), agent.representation)
+    test_agent =QLearning(BinarySimulator20q(seed), agent.representation)
     eval_agent = EvalAgent(test_agent)
     (eval_performance[bench_cnt], rewards) = eval_agent.eval(1, discount=True)
 

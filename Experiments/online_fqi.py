@@ -30,7 +30,7 @@ def run():
     print "Test interval is " + str(500)
 
     print "evaluation at 0"
-    test_agent =QLearning(Simulator20q(), agent.representation)
+    test_agent =QLearning(Simulator20q(seed), agent.representation)
     eval_agent = EvalAgent(test_agent)
     (eval_performance[bench_cnt], rewards) = eval_agent.eval(100, discount=True)
 
@@ -44,7 +44,7 @@ def run():
             s = ns
             if step_cnt == sample_size[bench_cnt]:
                 print "evaluation at " + str(agent.experience.shape[0])
-                test_agent =QLearning(Simulator20q(), agent.representation)
+                test_agent =QLearning(Simulator20q(seed), agent.representation)
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
                 bench_cnt += 1
