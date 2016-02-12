@@ -8,7 +8,9 @@ from Utils.domainUtil import DomainUtil
 class Simulator20q (Domain):
 
     # global varaible
-    field_blacklist = ['name']
+    #field_blacklist = ['name']
+    field_blacklist = ['name', 'degree', 'profession', 'birthplace', 'nationality',
+                       'deathplace', 'education', 'spouse', 'gender']
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
     print "construct meta info for corpus"
@@ -62,7 +64,7 @@ class Simulator20q (Domain):
     def init_user(self):
         # initialize the user here
         selected_key = self.random_state.choice(self.corpus.keys())
-        # selected_key = self.corpus.keys()[30]
+        #selected_key = self.corpus.keys()[30]
         selected_person = self.corpus.get(selected_key)
         # print "Choose " + selected_person.get('name')
         return selected_person

@@ -7,7 +7,7 @@ from sklearn import tree
 
 class FQI(BatchAgent):
     show_resd = False
-    mini_batch_size = 1000
+    mini_batch_size = 5000
     print "mini_batch size is " + str(mini_batch_size)
 
     def __init__(self, domain, representation, seed=1):
@@ -29,7 +29,6 @@ class FQI(BatchAgent):
             if self.show_resd:
                 old_qs = self.representation.Q_phi_sa(X).ravel()
 
-            #nqs = self.representation.Qs(next_states)
             nqs = self.representation.Qs_phi_s(phi_ns)
             best_nqs = np.amax(nqs, axis=1).ravel()
             y = rewards+ self.domain.discount_factor * best_nqs
@@ -39,6 +38,8 @@ class FQI(BatchAgent):
                 print "Residual is " + str(resd)
 
             #self.representation.model = tree.DecisionTreeRegressor(random_state=self.random_state)
+            #self.representation.model.fit(X, y)
             if not self.representation.model:
+                print "Model created"
                 self.representation.model = linear_model.SGDRegressor(alpha=0.01)
             self.representation.model.partial_fit(X, y)

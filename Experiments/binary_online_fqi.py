@@ -17,13 +17,13 @@ def run():
     bench_cnt = 0
     epi_cnt = 0
     epsilon = 0.3
-    max_iter = 10
+    max_iter = 20
     update_frequency = 100
 
     representation = BinaryApproxRep(sim20_evn, seed = seed)
     agent = OnlineFQI(domain=sim20_evn, representation=representation, epsilon=epsilon,
                       max_iter=max_iter, update_frequency=update_frequency)
-    test_trial = 100
+    test_trial = 50
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(test_interval)
 

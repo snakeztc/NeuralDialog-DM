@@ -9,7 +9,8 @@ from Utils.domainUtil import DomainUtil
 class BinarySimulator20q (Domain):
 
     # global varaible
-    field_blacklist = ['name']
+    field_blacklist = ['name', 'degree', 'profession', 'birthplace', 'nationality',
+                       'deathplace', 'education', 'spouse', 'gender']
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
     print "construct meta info for corpus"
@@ -33,7 +34,7 @@ class BinarySimulator20q (Domain):
     loss_reward = -10.0
     step_reward = -1.0
     win_reward = 10.0
-    episode_cap = 20
+    episode_cap = 50
     discount_factor = 0.99
     actions_num = slot_value_count + 1 # each value has a question and 1 inform
 
@@ -52,7 +53,9 @@ class BinarySimulator20q (Domain):
     statespace_type = [Domain.categorical] * slot_value_count
     statespace_type.extend([Domain.discrete, Domain.categorical])
 
+    print "Total values " + str(slot_value_count)
     print "Done initializing"
+    print "*************************"
 
     # field_dim: field -> modality
     # field_dict: filed -> list(field_value)
@@ -66,8 +69,8 @@ class BinarySimulator20q (Domain):
 
     def init_user(self):
         # initialize the user here
-        #selected_key = random.choice(self.corpus.keys())
-        selected_key = self.corpus.keys()[30]
+        selected_key = random.choice(self.corpus.keys())
+        #selected_key = self.corpus.keys()[1]
         selected_person = self.corpus.get(selected_key)
         # print "Choose " + selected_person.get('name')
         return selected_person
