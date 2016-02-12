@@ -27,7 +27,7 @@ class DomainUtil:
     @staticmethod
     def load_model(path):
         corpus = json.load(open(path, 'r'))
-        corpus = { key:value for key, value in corpus.items() if random.random() < 0.1 }
+        corpus = { key:value for key, value in corpus.items() if random.random() < 0.5 }
         return corpus
 
     @staticmethod

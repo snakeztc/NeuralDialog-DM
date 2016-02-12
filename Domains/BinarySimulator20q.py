@@ -34,7 +34,7 @@ class BinarySimulator20q (Domain):
     loss_reward = -10.0
     step_reward = -1.0
     win_reward = 10.0
-    episode_cap = 50
+    episode_cap = 200
     discount_factor = 0.99
     actions_num = slot_value_count + 1 # each value has a question and 1 inform
 

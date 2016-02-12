@@ -1,8 +1,6 @@
 import numpy as np
 from BatchAgent import BatchAgent
-from sklearn.neighbors import KNeighborsRegressor
 from sklearn import linear_model
-from sklearn import tree
 
 
 class FQI(BatchAgent):
