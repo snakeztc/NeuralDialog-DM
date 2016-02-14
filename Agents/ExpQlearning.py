@@ -27,11 +27,14 @@ class ExpQLearning(Agent):
             self.experience[self.exp_head, phi_s_size] = aID
             self.experience[self.exp_head, phi_s_size+1] = r
             self.experience[self.exp_head, phi_s_size+2:] = self.representation.phi_s(ns)
+            self.priority[self.exp_head] = np.max([r, 0.0]) + 1.0 #np.min([np.abs(r),2.0])
             # increment the write head
             self.exp_head += 1
 
             if self.exp_head > self.mini_batch and (self.exp_head % self.update_frequency) == 0:
-                mini_batch_exp = self.experience[self.random_state.choice(self.exp_head, self.mini_batch), :]
+                prob = self.priority[0:self.exp_head] / np.sum(self.priority[0:self.exp_head])
+                mini_batch_exp = self.experience[self.random_state.choice(a=self.exp_head,
+                                                                          size=self.mini_batch, p=prob, replace=False), :]
                 self.learner.learn(mini_batch_exp)
 
         return r, ns, terminal
@@ -45,6 +48,7 @@ class ExpQLearning(Agent):
         self.exp_head = 0
         self.learner = DNNfqi(domain=domain, representation=representation)
         self.experience = np.zeros((self.exp_size, self.representation.state_features_num * 2 + 2))
+        self.priority = np.zeros(self.exp_size)
         print "Using epsilon " + str(epsilon)
         print "Update_frequency " + str(self.update_frequency)
         print "Mini-batch size is " + str(self.mini_batch)

@@ -4,6 +4,7 @@ from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
 from Representations.BinaryCompactRep import BinaryCompactRep
 import numpy as np
+import matplotlib.pyplot as plt
 
 def run():
     # load the data from file
@@ -12,7 +13,7 @@ def run():
     test_sim20_evn = BinarySimulator20q(seed)
 
     test_interval = 5000
-    sample_size = np.arange(test_interval, 300000, test_interval)
+    sample_size = np.arange(0, 30000, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
@@ -34,6 +35,7 @@ def run():
     test_agent = QLearning(test_sim20_evn, agent.representation)
     eval_agent = EvalAgent(test_agent)
     (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
+    bench_cnt += 1
 
     while bench_cnt < len(sample_size):
         epi_cnt += 1
@@ -54,6 +56,10 @@ def run():
 
             if terminal or bench_cnt >= len(sample_size):
                 break
+
+    plt.figure()
+    plt.plot(sample_size, eval_performance)
+    plt.show()
 
 if __name__ == '__main__':
     run()

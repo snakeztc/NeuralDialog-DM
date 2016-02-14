@@ -1,9 +1,8 @@
-import random
-import re
 import numpy as np
 from Domain import Domain
 from Utils.config import *
 from Utils.domainUtil import DomainUtil
+from scipy.stats import norm
 
 
 class BinarySimulator20q (Domain):
@@ -37,6 +36,7 @@ class BinarySimulator20q (Domain):
     yes = 2.0
     no = 3.0
     loss_reward = -10.0
+    wrong_guess_reward = -2.0
     step_reward = -1.0
     win_reward = 10.0
     episode_cap = 30
@@ -75,8 +75,11 @@ class BinarySimulator20q (Domain):
 
     def init_user(self):
         # initialize the user here
-        #selected_key = random.choice(self.corpus.keys())
-        selected_key = self.corpus.keys()[10]
+        prob = norm.pdf(np.linspace(-2, 2, 100))
+        # normalize it
+        prob = prob / np.sum(prob)
+        selected_key = self.random_state.choice(self.corpus.keys(), p=prob)
+        #selected_key = self.corpus.keys()[10]
         selected_person = self.corpus.get(selected_key)
         return selected_key, selected_person
 
@@ -85,7 +88,7 @@ class BinarySimulator20q (Domain):
         # extra 1 dimension for informed or not
         # vector = np.zeros(len(self.fields)+2)
         (self.person_inmind_key, self.person_inmind) = self.init_user()
-        return np.zeros((1, self.statespace_size))
+        return np.ones((1, self.statespace_size)) * self.unasked
 
     ########## Actions #############
     def get_inform(self, s):
@@ -151,7 +154,7 @@ class BinarySimulator20q (Domain):
                         if qd[0] == self.question_data[aID][0]:
                             ns[0, q_id] = self.unknown
 
-            if ns[0, -2] > self.episode_cap:
+            if ns[0, -2] >= self.episode_cap:
                 reward = self.loss_reward
         else:
             # a is the inform
@@ -163,9 +166,7 @@ class BinarySimulator20q (Domain):
                     # has informed
                     ns[0, -1] = 1
                 else:
-                     reward = self.loss_reward
-                    #slope = (self.win_reward + 26.03)/ (len(self.corpus)-1)
-                    #reward = (self.win_reward + slope) - (slope * len(results))
+                    reward = self.wrong_guess_reward
             else:
                 print "ERROR"
                 print "internal corruption"
