@@ -22,7 +22,7 @@ class EvalAgent(object):
                 local_r += (self.agent.domain.discount_factor ** local_step) * r
                 local_step += 1
                 if terminal or local_step >= self.agent.domain.episode_cap:
-                    if r == 10:
+                    if r == self.agent.domain.win_reward:
                         win_cnt += 1.0
                     break
 
