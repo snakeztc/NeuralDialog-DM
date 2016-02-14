@@ -27,7 +27,7 @@ class ExpQLearning(Agent):
             self.experience[self.exp_head, phi_s_size] = aID
             self.experience[self.exp_head, phi_s_size+1] = r
             self.experience[self.exp_head, phi_s_size+2:] = self.representation.phi_s(ns)
-            self.priority[self.exp_head] = np.max([r, 0.0]) + 1.0 #np.min([np.abs(r),2.0])
+            self.priority[self.exp_head] = np.min([np.abs(r),5.0]) + 1.0
             # increment the write head
             self.exp_head += 1
 

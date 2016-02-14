@@ -13,21 +13,23 @@ def run():
     test_sim20_evn = BinarySimulator20q(seed)
 
     test_interval = 5000
-    sample_size = np.arange(0, 30000, test_interval)
+    sample_size = np.arange(0, 200000, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
     epsilon = 1.0
     ep_decay = 0.99
+    ep_min = 0.2
     exp_size = 30000
-    mini_batch = 32
-    update_frequency = 100
+    mini_batch = 64
+    update_frequency = 30
+    test_trial = 200
+
 
     representation = BinaryCompactRep(sim20_evn, seed = seed)
     agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                          update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch)
-    test_trial = 50
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(test_interval)
 
@@ -40,7 +42,7 @@ def run():
     while bench_cnt < len(sample_size):
         epi_cnt += 1
         s = sim20_evn.s0()
-        cur_epsilon = max(epsilon * (ep_decay ** epi_cnt), 0.1)
+        cur_epsilon = max(epsilon * (ep_decay ** epi_cnt), ep_min)
         while True:
             # set the current epslion
             agent.learning_policy.set_epsilon(epsilon=cur_epsilon)

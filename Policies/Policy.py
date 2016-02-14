@@ -11,6 +11,12 @@ class Policy(object):
     def choose_action(self, Qs):
         raise NotImplementedError("Implement the policy")
 
+    def rargmax(self, vector):
+        """ Argmax that chooses randomly among eligible maximum indices. """
+        m = np.amax(vector)
+        indices = np.nonzero(vector.ravel() == m)[0]
+        return self.random_state.choice(indices)
+
 
 class RandomPolicy(Policy):
     def choose_action(self, Qs):
@@ -19,7 +25,7 @@ class RandomPolicy(Policy):
 
 class GreedyPolicy(Policy):
     def choose_action(self, Qs):
-        return np.argmax(Qs)
+        return self.rargmax(Qs)
 
 
 class EpsilonGreedyPolicy(Policy):
@@ -30,7 +36,7 @@ class EpsilonGreedyPolicy(Policy):
             random_a = self.random_state.randint(0, Qs.shape[1])
             return random_a
         else:
-            return np.argmax(Qs)
+            return self.rargmax(Qs)
 
     def __init__(self, epsilon, seed):
         super(EpsilonGreedyPolicy, self).__init__(seed)

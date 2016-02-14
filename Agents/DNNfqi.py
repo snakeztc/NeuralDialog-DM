@@ -40,7 +40,7 @@ class DNNfqi(BatchAgent):
         print "Model output dimension " + str(self.domain.actions_num)
 
         model = Sequential()
-        model.add(Dense(512, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
+        model.add(Dense(128, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
 

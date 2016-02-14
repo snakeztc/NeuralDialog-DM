@@ -6,7 +6,6 @@ from scipy.stats import norm
 
 
 class BinarySimulator20q (Domain):
-
     # global varaible
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
@@ -30,15 +29,20 @@ class BinarySimulator20q (Domain):
     question_count = len(question_data)
     print slot_names
 
+    # user prior prob
+    prob = 1.0/(np.arange(1,101) * np.log(1.78*np.arange(1,101)))
+    prob = prob/np.sum(prob)
+    #prob = np.ones(100) / 100
+
     # 20Q related
     unasked = 0.0
     unknown = 1.0
     yes = 2.0
     no = 3.0
-    loss_reward = -10.0
-    wrong_guess_reward = -2.0
-    step_reward = -1.0
-    win_reward = 10.0
+    loss_reward = -20.0
+    wrong_guess_reward = -10.0
+    step_reward = -0.1
+    win_reward = 20.0
     episode_cap = 30
     discount_factor = 0.99
     actions_num = question_count + 1 # each value has a question and 1 inform
@@ -75,11 +79,7 @@ class BinarySimulator20q (Domain):
 
     def init_user(self):
         # initialize the user here
-        prob = norm.pdf(np.linspace(-2, 2, 100))
-        # normalize it
-        prob = prob / np.sum(prob)
-        selected_key = self.random_state.choice(self.corpus.keys(), p=prob)
-        #selected_key = self.corpus.keys()[10]
+        selected_key = self.random_state.choice(self.corpus.keys(), p=self.prob)
         selected_person = self.corpus.get(selected_key)
         return selected_key, selected_person
 
@@ -166,7 +166,8 @@ class BinarySimulator20q (Domain):
                     # has informed
                     ns[0, -1] = 1
                 else:
-                    reward = self.wrong_guess_reward
+                    slope = (self.wrong_guess_reward - self.win_reward) / len(self.corpus)
+                    reward = len(results) * slope
             else:
                 print "ERROR"
                 print "internal corruption"
