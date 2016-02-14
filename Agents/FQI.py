@@ -1,6 +1,6 @@
 import numpy as np
 from BatchAgent import BatchAgent
-from sklearn import linear_model
+from sklearn import tree
 
 
 class FQI(BatchAgent):
@@ -35,9 +35,5 @@ class FQI(BatchAgent):
                 resd = np.mean(np.abs(y - old_qs))
                 print "Residual is " + str(resd)
 
-            #self.representation.model = tree.DecisionTreeRegressor(random_state=self.random_state)
-            #self.representation.model.fit(X, y)
-            if not self.representation.model:
-                print "Model created"
-                self.representation.model = linear_model.SGDRegressor(alpha=0.01)
-            self.representation.model.partial_fit(X, y)
+            self.representation.model = tree.DecisionTreeRegressor(random_state=self.random_state)
+            self.representation.model.fit(X, y)

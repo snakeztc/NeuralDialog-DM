@@ -36,20 +36,24 @@ class DNNfqi(BatchAgent):
         self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def init_model(self):
-        model = Sequential()
-        model.add(Dense(512, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
-        model.add(Activation('relu'))
-        #model.add(Dropout(0.2)) I'm not using dropout, but maybe you wanna give it a try?
+        print "Model input dimension " + str(self.representation.state_features_num)
+        print "Model output dimension " + str(self.domain.actions_num)
 
-        model.add(Dense(256, init='lecun_uniform'))
+        model = Sequential()
+        model.add(Dense(128, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
         model.add(Activation('relu'))
+        model.add(Dropout(0.2))
+
+        #model.add(Dense(64, init='lecun_uniform'))
+        #model.add(Activation('relu'))
         #model.add(Dropout(0.2))
 
         model.add(Dense(self.domain.actions_num, init='lecun_uniform'))
         model.add(Activation('linear')) #linear output so we can have range of real-valued outputs
 
-        sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-        model.compile(loss='mse', optimizer=sgd)
+        #opt = RMSprop(clipvalue=1.0)
+        opt = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=False, clipvalue=1.0)
+        model.compile(loss='mse', optimizer=opt)
         print "Model created"
         return model
 

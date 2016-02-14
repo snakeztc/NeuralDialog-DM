@@ -60,6 +60,6 @@ class Representation(object):
                 indices = all_indices[:, var_idx]
                 flat_phi[indices] = 1
             else:
-                phi[:, self.base[var_idx]] = s[:, var_idx]
+                phi[:, self.base[var_idx]] = s[:, var_idx] / self.domain.episode_cap
         return phi
 

@@ -9,7 +9,8 @@ from Utils.domainUtil import DomainUtil
 class BinarySimulator20q (Domain):
 
     # global varaible
-    field_blacklist = ['name', 'degree', 'profession', 'birthplace', 'nationality',
+    #field_blacklist = ['name']
+    field_blacklist = ['degree', 'profession', 'birthplace', 'nationality',
                        'deathplace', 'education', 'spouse', 'gender']
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
@@ -34,7 +35,7 @@ class BinarySimulator20q (Domain):
     loss_reward = -10.0
     step_reward = -1.0
     win_reward = 10.0
-    episode_cap = 200
+    episode_cap = 50
     discount_factor = 0.99
     actions_num = slot_value_count + 1 # each value has a question and 1 inform
 
@@ -69,8 +70,8 @@ class BinarySimulator20q (Domain):
 
     def init_user(self):
         # initialize the user here
-        selected_key = random.choice(self.corpus.keys())
-        #selected_key = self.corpus.keys()[1]
+        #selected_key = random.choice(self.corpus.keys())
+        selected_key = self.corpus.keys()[0]
         selected_person = self.corpus.get(selected_key)
         # print "Choose " + selected_person.get('name')
         return selected_person
@@ -117,6 +118,7 @@ class BinarySimulator20q (Domain):
             name = person.get(u'name')
             return ["I guess this person is " + name]
         else:
+            print filters
             print "No results!!!!"
             return None
 
@@ -149,6 +151,23 @@ class BinarySimulator20q (Domain):
         else:
             return False
 
+    def set_slot_yes(self, s, slot_id, aID):
+        # set every unasked ones to be no
+        begin_idx = 0
+        if slot_id > 0:
+            begin_idx = self.slot_value_basecntt[slot_id-1]
+        s[0, begin_idx:self.slot_value_basecntt[slot_id]] = self.no
+        s[0, aID] = self.yes
+        return s
+
+    def set_slot_unknown(self, s, slot_id):
+        # set every one to unknown
+        begin_idx = 0
+        if slot_id > 0:
+            begin_idx = self.slot_value_basecntt[slot_id-1]
+        s[0, begin_idx:self.slot_value_basecntt[slot_id]] = self.unknown
+        return s
+
     ########## String Actions #############
 
     def step(self, s, aID):
@@ -162,25 +181,19 @@ class BinarySimulator20q (Domain):
 
         # a is a question
         if self.is_question(aID):
-            slot_id = self.value_id_2_slot_id(aID)
-            chosen_answer = self.person_inmind.get(self.slot_names[slot_id])
-            if chosen_answer:
-                if type(chosen_answer) != list:
-                    chosen_answer = [chosen_answer]
-                asked_value = self.flat_slot_value[aID]
-                if asked_value in chosen_answer:
-                    ns[0, aID] = self.yes
-                    # set every unasked ones to be no
-                    begin_idx = 0
-                    if slot_id > 0:
-                        begin_idx = self.slot_value_basecntt[slot_id-1]
-                    for idx in range(begin_idx, self.slot_value_basecntt[slot_id]):
-                        if ns[0, idx] == self.unasked:
-                            ns[0, idx] = self.no
+            if ns[0, aID] == self.unasked:
+                slot_id = self.value_id_2_slot_id(aID)
+                chosen_answer = self.person_inmind.get(self.slot_names[slot_id])
+                if chosen_answer:
+                    if type(chosen_answer) != list:
+                        chosen_answer = [chosen_answer]
+                    asked_value = self.flat_slot_value[aID]
+                    if asked_value in chosen_answer:
+                        self.set_slot_yes(ns, slot_id, aID)
+                    else:
+                        ns[0, aID] = self.no
                 else:
-                    ns[0, aID] = self.no
-            else:
-                ns[0, aID] = self.unknown
+                    self.set_slot_unknown(ns, slot_id)
 
             if ns[0, -2] > self.episode_cap:
                 reward = self.loss_reward

@@ -1,18 +1,18 @@
-from Domains.BinarySimulator20q import BinarySimulator20q
+from Domains.Simulator20q import Simulator20q
 from Agents.ExpQLearning import ExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
-from Representations.BinaryCompactRep import BinaryCompactRep
+from Representations.WhCompactRep import WhCompactRep
 import numpy as np
 
 def run():
     # load the data from file
     seed = 100
-    sim20_evn = BinarySimulator20q(seed)
-    test_sim20_evn = BinarySimulator20q(seed)
+    sim20_evn = Simulator20q(seed)
+    test_sim20_env = Simulator20q(seed)
 
     test_interval = 5000
-    sample_size = np.arange(test_interval, 300000, test_interval)
+    sample_size = np.arange(test_interval, 3000000, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
@@ -21,9 +21,9 @@ def run():
     ep_decay = 0.99
     exp_size = 30000
     mini_batch = 32
-    update_frequency = 100
+    update_frequency = 10
 
-    representation = BinaryCompactRep(sim20_evn, seed = seed)
+    representation = WhCompactRep(sim20_evn, seed = seed)
     agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                          update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch)
     test_trial = 50
@@ -31,7 +31,7 @@ def run():
     print "Test interval is " + str(test_interval)
 
     print "evaluation at 0"
-    test_agent = QLearning(test_sim20_evn, agent.representation)
+    test_agent = QLearning(test_sim20_env, agent.representation)
     eval_agent = EvalAgent(test_agent)
     (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
 
@@ -47,7 +47,7 @@ def run():
             s = ns
             if step_cnt == sample_size[bench_cnt]:
                 print "evaluation at " + str(step_cnt)
-                test_agent = QLearning(test_sim20_evn, agent.representation)
+                test_agent = QLearning(test_sim20_env, agent.representation)
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
                 bench_cnt += 1
