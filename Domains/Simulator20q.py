@@ -8,7 +8,9 @@ from Utils.domainUtil import DomainUtil
 class Simulator20q (Domain):
 
     # global varaible
-    field_blacklist = ['name']
+    #field_blacklist = ['name']
+    field_blacklist = ['name', 'birthplace', 'birthday', 'spouse']
+    field_whitelist = ['degree', 'gender', 'profession', 'nationality', 'birthplace']
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
     print "construct meta info for corpus"
@@ -16,10 +18,11 @@ class Simulator20q (Domain):
     (all_slot_dict, all_slot_dim) = DomainUtil.get_fields(corpus)
     lookup = DomainUtil.get_lookup(corpus, all_slot_dict)
     # the valid slot system can ask
-    slot_names = [field for field in all_slot_dict.keys() if field not in field_blacklist]
+    slot_names = [field for field in all_slot_dict.keys() if field in field_whitelist]
     slot_values = [all_slot_dict.get(field) for field in slot_names]
     slot_count = len(slot_names)
     print slot_names
+    print slot_values
 
     # 20Q related
     unasked = 0.0
@@ -42,7 +45,7 @@ class Simulator20q (Domain):
         statespace_limits[d, 1] = 3
     # add the extra dimension for turn count
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
-    statespace_limits = np.vstack((statespace_limits, [0, 1]))
+    statespace_limits = np.vstack((statespace_limits, [0, 2]))
 
     statespace_type = [Domain.categorical] * slot_count
     statespace_type.extend([Domain.discrete, Domain.categorical])
@@ -62,7 +65,7 @@ class Simulator20q (Domain):
     def init_user(self):
         # initialize the user here
         selected_key = self.random_state.choice(self.corpus.keys())
-        # selected_key = self.corpus.keys()[30]
+        #selected_key = self.corpus.keys()[30]
         selected_person = self.corpus.get(selected_key)
         # print "Choose " + selected_person.get('name')
         return selected_person
@@ -142,13 +145,14 @@ class Simulator20q (Domain):
 
         # a is a question
         if self.is_question(aID):
-            chosen_answer = self.person_inmind.get(self.slot_names[aID])
-            if chosen_answer:
-                if type(chosen_answer) == list:
-                    chosen_answer = self.random_state.choice(chosen_answer)
-                ns[0, aID] = self.slot_values[aID].index(chosen_answer) + 2 # the value starts at 2
-            else:
-                ns[0, aID] = self.unknown
+            if ns[0, aID] == self.unasked:
+                chosen_answer = self.person_inmind.get(self.slot_names[aID])
+                if chosen_answer:
+                    if type(chosen_answer) == list:
+                        chosen_answer = self.random_state.choice(chosen_answer)
+                    ns[0, aID] = self.slot_values[aID].index(chosen_answer) + 2 # the value starts at 2
+                else:
+                    ns[0, aID] = self.unknown
 
             if ns[0, -2] > self.episode_cap:
                 reward = self.loss_reward

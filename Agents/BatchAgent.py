@@ -16,6 +16,12 @@ class BatchAgent(object):
         self.representation = representation
 
     def learn(self, experiences, max_iter=20):
+        """
+        Sadly, we have to use the representation in terms of phi_sa r phi_ns
+        :param experiences:
+        :param max_iter: The max number of iteration
+        :return: Nothing
+        """
         raise NotImplementedError("Implement batch learning")
 
 

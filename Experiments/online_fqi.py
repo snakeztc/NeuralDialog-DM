@@ -1,5 +1,4 @@
 from Domains.Simulator20q import Simulator20q
-from Domains.BinarySimulator20q import BinarySimulator20q
 from Agents.OnlineFQI import OnlineFQI
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
@@ -13,11 +12,11 @@ import pydot
 def run():
 
     # load the data from file
-    seed = 1
+    seed = 100
     sim20_evn = Simulator20q(seed)
     #sim20_evn = BinarySimulator20q(seed)
 
-    test_interval = 500
+    test_interval = 200
     sample_size = np.arange(test_interval, 2001, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
@@ -30,7 +29,7 @@ def run():
     print "Test interval is " + str(500)
 
     print "evaluation at 0"
-    test_agent =QLearning(Simulator20q(), agent.representation)
+    test_agent =QLearning(sim20_evn, agent.representation)
     eval_agent = EvalAgent(test_agent)
     (eval_performance[bench_cnt], rewards) = eval_agent.eval(100, discount=True)
 
@@ -44,7 +43,7 @@ def run():
             s = ns
             if step_cnt == sample_size[bench_cnt]:
                 print "evaluation at " + str(agent.experience.shape[0])
-                test_agent =QLearning(Simulator20q(), agent.representation)
+                test_agent =QLearning(sim20_evn, agent.representation)
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
                 bench_cnt += 1
@@ -69,8 +68,7 @@ def run():
     pydot.graph_from_dot_data(dotfile.getvalue()).write_png("dtree2.png")
     dotfile.close()
 
-    #print agent.representation.model.coef_
-
+    print agent.representation.model.feature_importances_
 if __name__ == '__main__':
     run()
 

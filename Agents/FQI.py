@@ -1,13 +1,11 @@
 import numpy as np
 from BatchAgent import BatchAgent
-from sklearn.neighbors import KNeighborsRegressor
-from sklearn import linear_model
 from sklearn import tree
 
 
 class FQI(BatchAgent):
     show_resd = False
-    mini_batch_size = 3000
+    mini_batch_size = 5000
     print "mini_batch size is " + str(mini_batch_size)
 
     def __init__(self, domain, representation, seed=1):
@@ -19,18 +17,17 @@ class FQI(BatchAgent):
         else:
             reduced_exp_table = experiences
 
-        # experience is in (s, a, r, ns)
-        states = reduced_exp_table[:, 0:self.domain.statespace_dims]
-        actions = reduced_exp_table[:, self.domain.statespace_dims]
-        rewards = reduced_exp_table[:, self.domain.statespace_dims+1]
-        next_states = reduced_exp_table[:, self.domain.statespace_dims+2:]
-        X = self.representation.phi_sa(states, actions)
+        # experience is in (phi_sa, r, phi_ns)
+        phi_sa_size = self.representation.state_features_num + self.domain.actions_num
+        X = reduced_exp_table[:, 0:phi_sa_size]
+        rewards = reduced_exp_table[:, phi_sa_size]
+        phi_ns = reduced_exp_table[:,phi_sa_size+1:]
 
         for i in range(0, max_iter):
             if self.show_resd:
-                old_qs = self.representation.Q(states, actions).ravel()
+                old_qs = self.representation.Q_phi_sa(X).ravel()
 
-            nqs = self.representation.Qs(next_states)
+            nqs = self.representation.Qs_phi_s(phi_ns)
             best_nqs = np.amax(nqs, axis=1).ravel()
             y = rewards+ self.domain.discount_factor * best_nqs
 
@@ -38,8 +35,5 @@ class FQI(BatchAgent):
                 resd = np.mean(np.abs(y - old_qs))
                 print "Residual is " + str(resd)
 
-            #model = KNeighborsRegressor(n_neighbors=2, n_jobs=-1)
             self.representation.model = tree.DecisionTreeRegressor(random_state=self.random_state)
-            #if not self.representation.model:
-            #    self.representation.model = linear_model.SGDRegressor(alpha=0.01, warm_start=True)
             self.representation.model.fit(X, y)

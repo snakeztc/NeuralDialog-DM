@@ -1,12 +1,14 @@
 import numpy as np
 from Representation import Representation
+import time
 
 
+class BinaryApproxRep(Representation):
 
-class WhApproxRep(Representation):
+    state_feature_base = None
 
     def __init__(self, domain, seed=1):
-        super(WhApproxRep, self).__init__(domain, seed)
+        super(BinaryApproxRep, self).__init__(domain, seed)
         # initialize the model
         self.model = None
         self.state_features_num = 0
@@ -48,9 +50,6 @@ class WhApproxRep(Representation):
 
     def phi_s(self, s):
         phi = np.copy(s)
-        temp_phi = phi[:, 0:-2]
-        temp_phi[temp_phi > 1] = 2
-        phi[:, 0:-2] = temp_phi
         return self.expand_state_space(phi, self.domain.statespace_type)
 
     def phi_s_phi_a(self, phi_s, phi_a):
@@ -75,9 +74,14 @@ class WhApproxRep(Representation):
     def Qs_phi_s(self, phi_s):
         qs = np.zeros((phi_s.shape[0], self.domain.actions_num))
         actions = self.domain.possible_actions()
+        base_aIDs = np.ones((phi_s.shape[0], 1))
         for idx, aID in enumerate(actions):
-            temp_aIDs = np.ones((phi_s.shape[0], 1)) * aID
+            temp_aIDs = base_aIDs * aID
             phi_sa = self.phi_s_phi_a(phi_s, self.phi_a(temp_aIDs))
             qs[:, idx] = self.Q_phi_sa(phi_sa)
         return qs
+
+
+
+
 

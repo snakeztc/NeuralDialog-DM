@@ -18,11 +18,11 @@ class OnlineFQI(Agent):
         (r, ns, terminal) = self.domain.step(s, aID)
 
         if not performance_run:
-            experience = np.zeros((1, self.domain.statespace_dims * 2 + 2))
-            experience[:, 0:self.domain.statespace_dims] = np.copy(s)
-            experience[:, self.domain.statespace_dims] = aID
-            experience[:, self.domain.statespace_dims+1] = r
-            experience[:, self.domain.statespace_dims+2:] = np.copy(ns)
+            phi_sa_size = self.representation.state_features_num + self.domain.actions_num
+            experience = np.zeros((1, self.representation.state_features_num*2 + self.domain.actions_num + 1))
+            experience[:, 0:phi_sa_size] = self.representation.phi_sa(s, aID)
+            experience[:, phi_sa_size] = r
+            experience[:, phi_sa_size+1:] = self.representation.phi_s(ns)
             if self.experience.shape[0] > 0:
                 self.experience = np.vstack((self.experience, experience))
             else:
@@ -34,14 +34,14 @@ class OnlineFQI(Agent):
 
         return r, ns, terminal
 
-    def __init__(self, domain, representation, seed=1):
+    def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10, max_iter=10):
         super(OnlineFQI, self).__init__(domain, representation, seed)
-        epsilon = 0.3
+        epsilon = epsilon
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
-        self.experience = np.zeros((0, self.domain.statespace_dims*2+2))
-        self.update_frequency = 100
+        self.experience = np.zeros((0, self.domain.statespace_size*2+2))
+        self.update_frequency = update_frequency
         self.learner = FQI(domain, representation, seed)
-        self.max_iter = 20
+        self.max_iter = max_iter
         print "Using epsilon " + str(epsilon)
         print "update_frequency " + str(self.update_frequency)
         print "FQI max_iter is " + str(self.max_iter)
