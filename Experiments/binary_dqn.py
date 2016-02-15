@@ -5,12 +5,12 @@ from Agents.EvalAgent import EvalAgent
 from Representations.BinaryCompactRep import BinaryCompactRep
 import numpy as np
 import matplotlib.pyplot as plt
+from Utils.config import *
 
 def run():
     # load the data from file
-    seed = 100
-    sim20_evn = BinarySimulator20q(seed)
-    test_sim20_evn = BinarySimulator20q(seed)
+    sim20_evn = BinarySimulator20q(global_seed)
+    test_sim20_evn = BinarySimulator20q(global_seed)
 
     test_interval = 5000
     sample_size = np.arange(0, 200000, test_interval)
@@ -23,11 +23,11 @@ def run():
     ep_min = 0.2
     exp_size = 30000
     mini_batch = 64
-    update_frequency = 30
+    update_frequency = 32
     test_trial = 200
 
 
-    representation = BinaryCompactRep(sim20_evn, seed = seed)
+    representation = BinaryCompactRep(sim20_evn, seed = global_seed)
     agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                          update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch)
     print "Test trail number is " + str(test_trial)

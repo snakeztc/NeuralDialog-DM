@@ -30,9 +30,9 @@ class BinarySimulator20q (Domain):
     print slot_names
 
     # user prior prob
-    prob = 1.0/(np.arange(1,101) * np.log(1.78*np.arange(1,101)))
-    prob = prob/np.sum(prob)
-    #prob = np.ones(100) / 100
+    prob = 1.0 / (np.arange(1,len(corpus)+1) * np.log(1.78*np.arange(1,len(corpus)+1)))
+    prob = prob / np.sum(prob)
+    #prob = np.ones(len(corpus)) / len(corpus)
 
     # 20Q related
     unasked = 0.0
