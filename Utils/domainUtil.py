@@ -1,7 +1,24 @@
 import json
+import pickle as p
+import random
 
 
 class DomainUtil:
+    @staticmethod
+    def remove_duplicate(raw_list):
+        new_list = []
+        for l in raw_list:
+            if not l in new_list:
+                new_list.append(l)
+        return new_list
+
+    @staticmethod
+    def get_actions(path):
+        raw_data = p.load(open(path))
+        questions = raw_data.get("questions")
+        question_sets = raw_data.get("question_sets")
+        return [(q[0], q[1], qs) for q, qs in zip(questions, question_sets)]
+
     @staticmethod
     def get_fields(corpus):
         # get all the fields in the corpus
@@ -26,6 +43,7 @@ class DomainUtil:
     @staticmethod
     def load_model(path):
         corpus = json.load(open(path, 'r'))
+        print "A domain with " + str(len(corpus)) + " people."
         return corpus
 
     @staticmethod
