@@ -11,6 +11,15 @@ class Policy(object):
     def choose_action(self, Qs):
         raise NotImplementedError("Implement the policy")
 
+    def rargmax(self, Qs):
+        """ Argmax that chooses randomly among eligible maximum indices. """
+        return self.random_state.choice(np.argwhere(Qs.ravel() == np.amax(Qs)).ravel())
+
+    def boltzmann(self, Qs, T):
+        exp_Qs = np.exp(Qs / T)
+        prob = exp_Qs / np.sum(exp_Qs)
+        sel = self.random_state.choice(np.arange(Qs.shape[1]), p=prob.ravel())
+        return sel
 
 class RandomPolicy(Policy):
     def choose_action(self, Qs):
@@ -19,18 +28,17 @@ class RandomPolicy(Policy):
 
 class GreedyPolicy(Policy):
     def choose_action(self, Qs):
-        return np.argmax(Qs)
-
+        return self.boltzmann(Qs, 1.0)
+        #return self.rargmax(Qs)
 
 class EpsilonGreedyPolicy(Policy):
     epsilon = 0.1
-
     def choose_action(self, Qs):
         if self.random_state.random_sample() < self.epsilon:
-            random_a = self.random_state.randint(0, Qs.shape[1])
-            return random_a
+            return self.random_state.randint(0, Qs.shape[1])
         else:
-            return np.argmax(Qs)
+            #return self.boltzmann(Qs, 1.0)
+            return self.rargmax(Qs)
 
     def __init__(self, epsilon, seed):
         super(EpsilonGreedyPolicy, self).__init__(seed)

@@ -1,9 +1,12 @@
+from Utils.config import *
 import numpy as np
+np.random.seed(global_seed)
 from BatchAgent import BatchAgent
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
 from keras.optimizers import SGD
+from keras.regularizers import l2, activity_l2
 
 
 class DNNfqi(BatchAgent):
@@ -44,15 +47,15 @@ class DNNfqi(BatchAgent):
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
 
-        #model.add(Dense(64, init='lecun_uniform'))
-        #model.add(Activation('relu'))
-        #model.add(Dropout(0.2))
+        model.add(Dense(128, init='lecun_uniform'))
+        model.add(Activation('relu'))
+        model.add(Dropout(0.2))
 
         model.add(Dense(self.domain.actions_num, init='lecun_uniform'))
         model.add(Activation('linear')) #linear output so we can have range of real-valued outputs
 
-        #opt = RMSprop(clipvalue=1.0)
-        opt = SGD(lr=0.001, decay=1e-6, momentum=0.9, nesterov=False, clipvalue=1.0)
+        opt = RMSprop(clipvalue=1.0)
+        #opt = SGD(lr=0.01, decay=1e-6, clipvalue=1.0)
         model.compile(loss='mse', optimizer=opt)
         print "Model created"
         return model
