@@ -15,16 +15,23 @@ class QLearning(Agent):
         else:
             aID = self.learning_policy.choose_action(Qs)
 
-        (r, ns, terminal) = self.domain.step(s, aID)
+        (r, ns, terminal, res) = self.domain.step(s, aID)
+
+        if self.verbose:
+            if self.domain.is_question(aID):
+                print self.domain.question_data[aID]
+            else:
+                print "Inform"
+            print res
+
 
         if not performance_run:
             self.logger.info("Learning here for tabular")
 
         return r, ns, terminal
 
-    def __init__(self, domain, representation, seed=1):
+    def __init__(self, domain, representation, seed=1, verbose=False):
         super(QLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(0.1, seed)
         self.learning_rate = 0.1
-        self.cache = {}
-
+        self.verbose = verbose

@@ -15,7 +15,7 @@ class ExpQLearning(Agent):
         else:
             aID = self.learning_policy.choose_action(Qs)
 
-        (r, ns, terminal) = self.domain.step(s, aID)
+        (r, ns, terminal, res) = self.domain.step(s, aID)
 
         if not performance_run:
             # check if exp_head is larger than buffer size

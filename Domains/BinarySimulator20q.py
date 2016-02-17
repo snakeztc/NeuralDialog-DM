@@ -46,10 +46,10 @@ class BinarySimulator20q (Domain):
     unknown = 1.0
     yes = 2.0
     no = 3.0
-    loss_reward = -20.0
+    loss_reward = -10.0
     wrong_guess_reward = -10.0
-    step_reward = -0.1
-    win_reward = 20.0
+    step_reward = -0.5
+    win_reward = 10.0
     episode_cap = 30
     discount_factor = 0.99
     actions_num = question_count + 1 # each value has a question and 1 inform
@@ -98,6 +98,10 @@ class BinarySimulator20q (Domain):
         return np.ones((1, self.statespace_size)) * self.unasked
 
     ########## Actions #############
+    def get_stractions(self):
+        return self.question_data.append('Inform')
+
+
     def get_inform(self, s):
         filters = []
         for q_id in range(0, self.question_count):
@@ -138,6 +142,9 @@ class BinarySimulator20q (Domain):
         # increment the counter
         ns[0, -2] = s[0, -2] + 1
 
+        # a response string
+        resp = None
+
         # a is a question
         if self.is_question(aID):
             slot_name = self.question_data[aID][0]
@@ -153,13 +160,16 @@ class BinarySimulator20q (Domain):
                         if ca in asked_set:
                             matched = True
                             ns[0, aID] = self.yes
+                            resp = "yes"
                             break
                     if not matched:
                         ns[0, aID] = self.no
+                        resp = "no"
                 else:
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == self.question_data[aID][0]:
                             ns[0, q_id] = self.unknown
+                            resp = "I don't know"
 
             if ns[0, -2] >= self.episode_cap:
                 reward = self.loss_reward
@@ -172,16 +182,18 @@ class BinarySimulator20q (Domain):
                     reward = self.win_reward
                     # has informed
                     ns[0, -1] = 1
+                    resp = "Correct"
                 else:
                     slope = (self.wrong_guess_reward - self.win_reward) / len(self.corpus)
                     reward = len(results) * slope
-                    ns[0, -1] = 1
+                    #reward = self.wrong_guess_reward
+                    resp = "Wrong"
             else:
                 print "ERROR"
                 print "internal corruption"
                 exit()
 
-        return reward, ns, self.is_terminal(ns)
+        return reward, ns, self.is_terminal(ns), resp
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns

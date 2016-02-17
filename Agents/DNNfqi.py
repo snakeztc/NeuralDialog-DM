@@ -6,6 +6,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
 from keras.optimizers import SGD
+from keras.regularizers import l2, activity_l2
 
 
 class DNNfqi(BatchAgent):
