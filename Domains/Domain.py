@@ -4,6 +4,10 @@ import numpy as np
 
 
 class Domain(object):
+    # NL interface
+    vocabs = None
+    nb_words = 0
+
     categorical = 1
     discrete = 2
     continuous = 3

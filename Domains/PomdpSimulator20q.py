@@ -4,7 +4,7 @@ from Utils.config import *
 from Utils.domainUtil import DomainUtil
 
 
-class BinarySimulator20q (Domain):
+class PomdpSimulator20q (Domain):
     # global varaible
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
@@ -83,7 +83,7 @@ class BinarySimulator20q (Domain):
     # state: state
 
     def __init__(self, seed):
-        super(BinarySimulator20q, self).__init__(seed)
+        super(PomdpSimulator20q, self).__init__(seed)
 
         # resetting the game
         self.person_inmind = None
@@ -110,7 +110,6 @@ class BinarySimulator20q (Domain):
             index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
             self.index_response[resp] = index_tokens
 
-
     def init_user(self):
         # initialize the user here
         selected_key = self.random_state.choice(self.corpus.keys(), p=self.prob)
@@ -121,8 +120,9 @@ class BinarySimulator20q (Domain):
         # extra 1 dimension for the number of question asked
         # extra 1 dimension for informed or not
         # vector = np.zeros(len(self.fields)+2)
+        # (hidden_state, observation)
         (self.person_inmind_key, self.person_inmind) = self.init_user()
-        return np.ones((1, self.statespace_size)) * self.unasked
+        return np.ones((1, self.statespace_size)) * self.unasked, [self.eos]
 
     def get_inform(self, s):
         filters = []
@@ -153,9 +153,12 @@ class BinarySimulator20q (Domain):
             return False
 
     # Main Logic
-    def step(self, s, aID):
+    def step(self, all_s, aID):
         # return reward, ns, terminal, observation (user string)
         # a is index
+        s = all_s[0]
+        hist = all_s[1]
+
         reward = self.step_reward
         ns = np.copy(s)
 
@@ -163,10 +166,12 @@ class BinarySimulator20q (Domain):
         ns[0, -2] = s[0, -2] + 1
 
         # the response string
+        agent_utt = None
         resp = self.index_response.get("I have told you")
 
         # a is a question
         if self.is_question(aID):
+            agent_utt = self.index_question[aID]
             slot_name = self.question_data[aID][0]
             asked_set = self.question_data[aID][2]
             if ns[0, aID] == self.unasked:
@@ -198,6 +203,8 @@ class BinarySimulator20q (Domain):
             results = self.get_inform(s)
             if self.person_inmind_key in results:
                 guess = self.random_state.choice(results)
+                agent_utt = self.index_inform.get(guess)
+
                 if self.person_inmind_key == guess:
                     reward = self.win_reward
                     # has informed
@@ -210,8 +217,12 @@ class BinarySimulator20q (Domain):
             else:
                 print "ERROR: internal corruption"
                 exit()
-
-        return reward, ns, self.is_terminal(ns), resp
+        # append the agent action and user response to the dialog hist
+        hist.extend(agent_utt)
+        hist.append(self.eos)
+        hist.extend(resp)
+        hist.append(self.eos)
+        return reward, (ns, hist), self.is_terminal(ns)
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns

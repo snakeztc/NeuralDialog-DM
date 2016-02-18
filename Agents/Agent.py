@@ -23,6 +23,6 @@ class Agent(object):
         Agent takes in a state and make step
         :param s: the state
         :param performance_run: if take exploration
-        :return: r, ns, terminal (boolean)
+        :return: r, ns, terminal (boolean), observation (response from env)
         """
         raise NotImplementedError("implement learning algorithm")

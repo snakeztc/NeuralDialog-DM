@@ -1,5 +1,5 @@
-from Domains.BinarySimulator20q import BinarySimulator20q
-from Agents.ExpQLearning import ExpQLearning
+from Domains.PomdpSimulator20q import PomdpSimulator20q
+from Agents.LstmExpQLearning import LstmExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
 from Representations.BinaryCompactRep import BinaryCompactRep
@@ -10,8 +10,8 @@ from Utils.config import *
 
 def run():
     # load the data from file
-    sim20_evn = BinarySimulator20q(global_seed)
-    test_sim20_evn = BinarySimulator20q(global_seed)
+    sim20_evn = PomdpSimulator20q(global_seed)
+    test_sim20_evn = PomdpSimulator20q(global_seed)
 
     test_interval = 1000
     sample_size = np.arange(0, 15000, test_interval)
@@ -28,7 +28,7 @@ def run():
     test_trial = 200
 
     representation = BinaryCompactRep(sim20_evn, seed = global_seed)
-    agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
+    agent = LstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                          update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch)
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(test_interval)
