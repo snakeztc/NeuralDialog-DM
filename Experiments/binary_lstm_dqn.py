@@ -7,13 +7,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from Utils.config import *
 
+
 def run():
     # load the data from file
     sim20_evn = BinarySimulator20q(global_seed)
     test_sim20_evn = BinarySimulator20q(global_seed)
 
     test_interval = 1000
-    sample_size = np.arange(0, 20000, test_interval)
+    sample_size = np.arange(0, 15000, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
@@ -22,7 +23,7 @@ def run():
     ep_decay = 0.99
     ep_min = 0.2
     exp_size = 30000
-    mini_batch = 64
+    mini_batch = 32
     update_frequency = 32
     test_trial = 200
 

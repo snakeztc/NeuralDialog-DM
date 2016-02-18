@@ -55,7 +55,6 @@ class DNNfqi(BatchAgent):
         model.add(Activation('linear')) #linear output so we can have range of real-valued outputs
 
         opt = RMSprop(clipvalue=1.0)
-        #opt = SGD(lr=0.01, decay=1e-6, clipvalue=1.0)
         model.compile(loss='mse', optimizer=opt)
         print "Model created"
         return model

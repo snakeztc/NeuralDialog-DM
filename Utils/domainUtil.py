@@ -1,9 +1,34 @@
 import json
 import pickle as p
 import random
+import numpy as np
+from scipy.stats import norm
 
 
 class DomainUtil:
+    @staticmethod
+    def get_vocab(all_utt):
+        vocabs = []
+        for utt in all_utt:
+            tokens = utt.split(" ")
+            vocabs.extend(tokens)
+        vocabs = list(set(vocabs))
+        vocabs.append("EOS")
+        return vocabs
+
+    @staticmethod
+    def get_prior_dist(mode, corpus_size):
+        if mode == 'uniform':
+            return np.ones(corpus_size) / corpus_size
+        elif mode == 'gaussian':
+            prob = norm.pdf(np.linspace(-2, 2, corpus_size), scale = 1.0)
+            return prob / np.sum(prob)
+        elif mode == 'zipf':
+            prob = 1.0 / (np.arange(1,corpus_size+1) * np.log(1.78*np.arange(1,corpus_size+1)))
+            return prob / np.sum(prob)
+        else:
+            return None
+
     @staticmethod
     def remove_duplicate(raw_list):
         new_list = []

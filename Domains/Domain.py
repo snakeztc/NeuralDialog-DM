@@ -47,7 +47,7 @@ class Domain(object):
         :param s: the state vector
         :param aID: the action index
         :return: The tuple (r, ns, t, p_actions) =
-            (Reward [value], next observed state, isTerminal [boolean], response (string from user))
+            (Reward [value], next observed state, isTerminal [boolean], observation (string from environment))
         """
         raise NotImplementedError("Any domain needs to implement step function")
 

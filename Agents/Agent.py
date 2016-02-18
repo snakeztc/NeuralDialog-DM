@@ -19,4 +19,10 @@ class Agent(object):
         self.performance_policy = GreedyPolicy(seed)
 
     def learn(self, s, performance_run=False):
+        """
+        Agent takes in a state and make step
+        :param s: the state
+        :param performance_run: if take exploration
+        :return: r, ns, terminal (boolean)
+        """
         raise NotImplementedError("implement learning algorithm")

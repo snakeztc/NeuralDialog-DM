@@ -2,26 +2,38 @@ import numpy as np
 from Domain import Domain
 from Utils.config import *
 from Utils.domainUtil import DomainUtil
-from scipy.stats import norm
 
 
 class BinarySimulator20q (Domain):
     # global varaible
     print "loading model"
     corpus = DomainUtil.load_model(corpus_path)
-    # a list of tuples (slot_name, question, question_set)
+
+    # a list of tuples (slot_name, question, true_value_set)
     question_data = DomainUtil.get_actions(action_path)
+    str_questions = [qd[1].replace("?", " ?") for qd in question_data]
+    str_informs = {key: "I guess the character is " + person.get('name').replace(' ', '_') for key, person in corpus.iteritems()}
+    str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
+
+    # find the vocab size of this world
+    all_utt = str_questions + str_informs.values() + str_response
+    vocabs = DomainUtil.get_vocab(all_utt)
+    nb_words = len(vocabs)
+    print "Vocabulary size is " + str(nb_words)
+
     print "construct meta info for corpus"
     # filed_dict filed->list of value and field dim is the size of values
     (all_slot_dict, all_slot_dim) = DomainUtil.get_fields(corpus)
     lookup = DomainUtil.get_lookup(corpus, all_slot_dict)
-    # a list -> a set of valid person keys
+
+    # a list -> a set of valid person keys for each quesiton
     valid_set = []
     for qd in question_data:
         q_set = set()
         for value in qd[2]:
             q_set = q_set.union(lookup.get(qd[0]).get(value))
         valid_set.append(q_set)
+
     # the valid slot system can ask
     slot_names = DomainUtil.remove_duplicate([qd[0] for qd in question_data])
     slot_values = [all_slot_dict.get(field) for field in slot_names]
@@ -29,17 +41,8 @@ class BinarySimulator20q (Domain):
     question_count = len(question_data)
     print slot_names
 
-    # user prior prob
-    # Zipf Distribution
-    #prob = 1.0 / (np.arange(1,len(corpus)+1) * np.log(1.78*np.arange(1,len(corpus)+1)))
-    #prob = prob / np.sum(prob)
-
-    # Gaussian Distribution
-    #prob = norm.pdf(np.linspace(-2, 2, len(corpus)), scale = 1.0)
-    #prob = prob / np.sum(prob)
-
-    # Uniform distribution
-    prob = np.ones(len(corpus)) / len(corpus)
+    # prior distribution
+    prob = DomainUtil.get_prior_dist('uniform', len(corpus))
 
     # 20Q related
     unasked = 0.0
@@ -80,9 +83,32 @@ class BinarySimulator20q (Domain):
 
     def __init__(self, seed):
         super(BinarySimulator20q, self).__init__(seed)
+
         # resetting the game
         self.person_inmind = None
         self.person_inmind_key = None
+
+        # convert each possible question into a index list
+        self.index_question = []
+        for q in self.str_questions:
+            tokens = q.split(" ")
+            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            self.index_question.append(index_tokens)
+
+        # convert each possible inform into index list save in a dictionary
+        self.index_inform = {}
+        for key, inform in self.str_informs.iteritems():
+            tokens = inform.split(" ")
+            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            self.index_inform[key] = index_tokens
+
+        # convert each possible response to index
+        self.index_response = {}
+        for resp in self.str_response:
+            tokens = resp.split(" ")
+            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            self.index_response[resp] = index_tokens
+
 
     def init_user(self):
         # initialize the user here
@@ -97,11 +123,6 @@ class BinarySimulator20q (Domain):
         (self.person_inmind_key, self.person_inmind) = self.init_user()
         return np.ones((1, self.statespace_size)) * self.unasked
 
-    ########## Actions #############
-    def get_stractions(self):
-        return self.question_data.append('Inform')
-
-
     def get_inform(self, s):
         filters = []
         for q_id in range(0, self.question_count):
@@ -109,7 +130,6 @@ class BinarySimulator20q (Domain):
                 filters.append((q_id, True))
             elif s[0, q_id] == self.no:
                 filters.append((q_id, False))
-
         return list(self.search(filters))
 
     # filters a list (question_id, true or false)
@@ -131,10 +151,9 @@ class BinarySimulator20q (Domain):
         else:
             return False
 
-    ########## String Actions #############
-
+    # Main Logic
     def step(self, s, aID):
-        # return reward, ns, terminal
+        # return reward, ns, terminal, observation (user string)
         # a is index
         reward = self.step_reward
         ns = np.copy(s)
@@ -142,8 +161,8 @@ class BinarySimulator20q (Domain):
         # increment the counter
         ns[0, -2] = s[0, -2] + 1
 
-        # a response string
-        resp = None
+        # the response string
+        resp = self.index_response.get("I have told you")
 
         # a is a question
         if self.is_question(aID):
@@ -160,16 +179,16 @@ class BinarySimulator20q (Domain):
                         if ca in asked_set:
                             matched = True
                             ns[0, aID] = self.yes
-                            resp = "yes"
+                            resp = self.index_response.get("yes")
                             break
                     if not matched:
                         ns[0, aID] = self.no
-                        resp = "no"
+                        resp = self.index_response.get("no")
                 else:
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == self.question_data[aID][0]:
                             ns[0, q_id] = self.unknown
-                            resp = "I don't know"
+                            resp = self.index_response.get("I do not know")
 
             if ns[0, -2] >= self.episode_cap:
                 reward = self.loss_reward
@@ -182,15 +201,13 @@ class BinarySimulator20q (Domain):
                     reward = self.win_reward
                     # has informed
                     ns[0, -1] = 1
-                    resp = "Correct"
+                    resp = self.index_response.get('correct')
                 else:
                     slope = (self.wrong_guess_reward - self.win_reward) / len(self.corpus)
                     reward = len(results) * slope
-                    #reward = self.wrong_guess_reward
-                    resp = "Wrong"
+                    resp = self.index_response.get('wrong')
             else:
-                print "ERROR"
-                print "internal corruption"
+                print "ERROR: internal corruption"
                 exit()
 
         return reward, ns, self.is_terminal(ns), resp
