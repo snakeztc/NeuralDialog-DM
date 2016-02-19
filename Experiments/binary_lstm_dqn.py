@@ -2,7 +2,7 @@ from Domains.PomdpSimulator20q import PomdpSimulator20q
 from Agents.LstmExpQLearning import LstmExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
-from Representations.BinaryCompactRep import BinaryCompactRep
+from Representations.PartialObserveRep import PartialObserveRep
 import numpy as np
 import matplotlib.pyplot as plt
 from Utils.config import *
@@ -27,9 +27,9 @@ def run():
     update_frequency = 32
     test_trial = 200
 
-    representation = BinaryCompactRep(sim20_evn, seed = global_seed)
+    representation = PartialObserveRep(sim20_evn, seed = global_seed)
     agent = LstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
-                         update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch)
+                             update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch)
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(test_interval)
 

@@ -1,7 +1,7 @@
 from Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
 import numpy as np
-from DNNfqi import DNNfqi
+from LstmDnnQ import LstmDnnQ
 
 
 class LstmExpQLearning(Agent):
@@ -22,19 +22,18 @@ class LstmExpQLearning(Agent):
             if self.exp_head >= self.exp_size:
                 self.exp_head = 0
 
-            phi_s_size = self.representation.state_features_num
-            self.experience[self.exp_head, 0:phi_s_size] = self.representation.phi_s(s)
-            self.experience[self.exp_head, phi_s_size] = aID
-            self.experience[self.exp_head, phi_s_size+1] = r
-            self.experience[self.exp_head, phi_s_size+2:] = self.representation.phi_s(ns)
+            self.exp_s[self.exp_head] = s[1]
+            self.exp_ns[self.exp_head] = ns[1]
+            self.exp_ar[self.exp_head, 0] = aID
+            self.exp_ar[self.exp_head, 1] = r
             self.priority[self.exp_head] = np.min([np.abs(r),5.0]) + 1.0
             # increment the write head
             self.exp_head += 1
 
             if self.exp_head > self.mini_batch and (self.exp_head % self.update_frequency) == 0:
                 prob = self.priority[0:self.exp_head] / np.sum(self.priority[0:self.exp_head])
-                mini_batch_exp = self.experience[self.random_state.choice(a=self.exp_head,
-                                                                          size=self.mini_batch, p=prob, replace=False), :]
+                indices = self.random_state.choice(a=self.exp_head, size=self.mini_batch, p=prob, replace=False)
+                mini_batch_exp = ([self.exp_s[i] for i in indices], self.exp_ar[indices, :], [self.exp_ns[i] for i in indices])
                 self.learner.learn(mini_batch_exp)
 
         return r, ns, terminal
@@ -46,9 +45,13 @@ class LstmExpQLearning(Agent):
         self.mini_batch = mini_batch
         self.exp_size = exp_size
         self.exp_head = 0
-        self.learner = DNNfqi(domain=domain, representation=representation)
-        self.experience = np.zeros((self.exp_size, self.representation.state_features_num * 2 + 2))
+        self.learner = LstmDnnQ(domain=domain, representation=representation)
+        # experiences
+        self.exp_s = [None] * self.exp_size
+        self.exp_ns = [None] * self.exp_size
+        self.exp_ar = np.zeros((self.exp_size, 2))
         self.priority = np.zeros(self.exp_size)
+        #
         print "Using epsilon " + str(epsilon)
         print "Update_frequency " + str(self.update_frequency)
         print "Mini-batch size is " + str(self.mini_batch)

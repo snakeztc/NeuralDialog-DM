@@ -15,15 +15,7 @@ class QLearning(Agent):
         else:
             aID = self.learning_policy.choose_action(Qs)
 
-        (r, ns, terminal, res) = self.domain.step(s, aID)
-
-        if self.verbose:
-            if self.domain.is_question(aID):
-                print self.domain.question_data[aID]
-            else:
-                print "Inform"
-            print res
-
+        (r, ns, terminal) = self.domain.step(s, aID)
 
         if not performance_run:
             self.logger.info("Learning here for tabular")

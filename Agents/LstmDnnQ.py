@@ -7,6 +7,7 @@ from keras.layers.recurrent import LSTM
 from keras.layers.embeddings import Embedding
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
+from keras.preprocessing import sequence
 from keras.regularizers import l2, activity_l2
 
 
@@ -17,12 +18,16 @@ class LstmDnnQ(BatchAgent):
 
     def learn(self, experiences, max_iter=20):
         # experience is in (phi_s, a, r, phi_ns)
-        num_samples = experiences.shape[0]
-        phi_s_size = self.representation.state_features_num
-        phi_s = experiences[:, 0:phi_s_size]
-        actions = experiences[:, phi_s_size]
-        rewards = experiences[:, phi_s_size+1]
-        phi_ns = experiences[:,phi_s_size+2:]
+        exp_s = experiences[0]
+        exp_ar = experiences[1]
+        exp_ns = experiences[2]
+        num_samples = exp_ar.shape[1]
+
+        actions = exp_ar[:, 0]
+        rewards = exp_ar[:, 1]
+
+        phi_s = sequence.pad_sequences(exp_s)
+        phi_ns = sequence.pad_sequences(exp_ns)
 
         # calculate the targets
         y = self.representation.Qs_phi_s(phi_s)
@@ -40,15 +45,15 @@ class LstmDnnQ(BatchAgent):
         self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def init_model(self):
-        print "Model input dimension " + str(self.representation.state_features_num)
+        print "Model input dimension " + str(self.domain.nb_words)
         print "Model output dimension " + str(self.domain.actions_num)
 
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words, 100))
-        model.add(LSTM(100, return_sequences=True))
+        model.add(Embedding(self.domain.nb_words, 100, mask_zero=True))
+        model.add(LSTM(100, return_sequences=False))
         model.add(Dropout(0.2))
 
-        model.add(Dense(100, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
+        model.add(Dense(100, init='lecun_uniform'))
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
 

@@ -161,6 +161,7 @@ class PomdpSimulator20q (Domain):
 
         reward = self.step_reward
         ns = np.copy(s)
+        nhist = list(hist)
 
         # increment the counter
         ns[0, -2] = s[0, -2] + 1
@@ -218,11 +219,11 @@ class PomdpSimulator20q (Domain):
                 print "ERROR: internal corruption"
                 exit()
         # append the agent action and user response to the dialog hist
-        hist.extend(agent_utt)
-        hist.append(self.eos)
-        hist.extend(resp)
-        hist.append(self.eos)
-        return reward, (ns, hist), self.is_terminal(ns)
+        nhist.extend(agent_utt)
+        nhist.append(self.eos)
+        nhist.extend(resp)
+        nhist.append(self.eos)
+        return reward, (ns, nhist), self.is_terminal(ns)
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
