@@ -14,7 +14,7 @@ def run():
     test_sim20_evn = PomdpSimulator20q(global_seed)
 
     test_interval = 1000
-    sample_size = np.arange(0, 15000, test_interval)
+    sample_size = np.arange(0, 10000, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
@@ -54,14 +54,12 @@ def run():
                 test_agent = QLearning(test_sim20_evn, agent.representation)
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
+                #test_agent.verbose = True
+                #eval_agent.eval(1, discount=True)
                 bench_cnt += 1
 
             if terminal or bench_cnt >= len(sample_size):
                 break
-
-    test_agent = QLearning(test_sim20_evn, agent.representation, verbose=True)
-    eval_agent = EvalAgent(test_agent)
-    eval_agent.eval(2, discount=True)
 
     plt.figure()
     plt.plot(sample_size, eval_performance)

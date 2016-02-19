@@ -9,8 +9,6 @@ from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
 from keras.preprocessing import sequence
 from keras.layers.core import TimeDistributedMerge
-from keras.regularizers import l2, activity_l2
-
 
 class LstmDnnQ(BatchAgent):
 
@@ -46,18 +44,14 @@ class LstmDnnQ(BatchAgent):
         self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def init_model(self):
-        print "Model input dimension " + str(self.domain.nb_words)
-        print "Model output dimension " + str(self.domain.actions_num)
-        hidden_size = 20
-
+        print "Creating model"
+        hidden_size = 30
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words, hidden_size, mask_zero=True))
-        model.add(LSTM(hidden_size, return_sequences=False))
+        model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=True))
+        model.add(LSTM(100, return_sequences=False))
         model.add(Dropout(0.2))
 
-        #model.add(TimeDistributedMerge(mode='ave'))
-
-        model.add(Dense(hidden_size, init='lecun_uniform'))
+        model.add(Dense(100, init='lecun_uniform'))
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
 
@@ -67,5 +61,6 @@ class LstmDnnQ(BatchAgent):
         opt = RMSprop(clipvalue=1.0)
         model.compile(loss='mse', optimizer=opt)
         print "Model created"
+        print model.summary()
         return model
 

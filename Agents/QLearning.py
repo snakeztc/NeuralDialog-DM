@@ -9,6 +9,9 @@ class QLearning(Agent):
     def learn(self, s, performance_run=False):
         Qs = self.representation.Qs(s)
 
+        if self.verbose:
+            print Qs
+
         # choose an action
         if performance_run:
             aID = self.performance_policy.choose_action(Qs)
@@ -19,6 +22,10 @@ class QLearning(Agent):
 
         if not performance_run:
             self.logger.info("Learning here for tabular")
+
+        if terminal and self.verbose:
+            for idx in ns[1]:
+                print self.domain.vocabs[idx-1]
 
         return r, ns, terminal
 

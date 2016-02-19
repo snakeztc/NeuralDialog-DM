@@ -11,9 +11,13 @@ class PomdpSimulator20q (Domain):
 
     # a list of tuples (slot_name, question, true_value_set)
     question_data = DomainUtil.get_actions(action_path)
-    str_questions = [qd[1].replace("?", " ?") for qd in question_data]
-    str_informs = {key: "I guess the character is " + person.get('name').replace(' ', '_') for key, person in corpus.iteritems()}
-    str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
+    #str_questions = [qd[1].replace("?", " ?") for qd in question_data]
+    #str_informs = {key: "I guess the character is " + person.get('name').replace(' ', '_') for key, person in corpus.iteritems()}
+    #str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
+
+    str_questions = [str(i) for i in range(0, len(question_data))]
+    str_informs = {"all":'inform'}
+    str_response = ['yes', 'no', 'I_do_not_know', 'I_have_told_you', 'correct', 'wrong']
 
     # find the vocab size of this world
     all_utt = str_questions + str_informs.values() + str_response
@@ -172,7 +176,7 @@ class PomdpSimulator20q (Domain):
 
         # the response string
         agent_utt = None
-        resp = self.index_response.get("I have told you")
+        resp = self.index_response.get("I_have_told_you")
 
         # a is a question
         if self.is_question(aID):
@@ -199,7 +203,7 @@ class PomdpSimulator20q (Domain):
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == self.question_data[aID][0]:
                             ns[0, q_id] = self.unknown
-                            resp = self.index_response.get("I do not know")
+                            resp = self.index_response.get("I_do_not_know")
 
             if ns[0, -2] >= self.episode_cap:
                 reward = self.loss_reward
@@ -208,7 +212,8 @@ class PomdpSimulator20q (Domain):
             results = self.get_inform(s)
             if self.person_inmind_key in results:
                 guess = self.random_state.choice(results)
-                agent_utt = self.index_inform.get(guess)
+                #agent_utt = self.index_inform.get(guess)
+                agent_utt = self.index_inform.get("all")
 
                 if self.person_inmind_key == guess:
                     reward = self.win_reward
@@ -224,9 +229,9 @@ class PomdpSimulator20q (Domain):
                 exit()
         # append the agent action and user response to the dialog hist
         nhist.extend(agent_utt)
-        nhist.append(self.eos)
+        #nhist.append(self.eos)
         nhist.extend(resp)
-        nhist.append(self.eos)
+        #nhist.append(self.eos)
         return reward, (ns, nhist), self.is_terminal(ns)
 
     def is_terminal(self, s):
