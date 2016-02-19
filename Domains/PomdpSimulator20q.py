@@ -19,7 +19,6 @@ class PomdpSimulator20q (Domain):
     all_utt = str_questions + str_informs.values() + str_response
     vocabs = DomainUtil.get_vocab(all_utt)
     nb_words = len(vocabs)
-    eos = vocabs.index("EOS")
     print "Vocabulary size is " + str(nb_words)
 
     print "construct meta info for corpus"
@@ -89,6 +88,9 @@ class PomdpSimulator20q (Domain):
         self.person_inmind = None
         self.person_inmind_key = None
 
+        # convert EOS to index
+        self.eos = self.vocabs.index("EOS") + 1
+
         # convert each possible question into a index list
         self.index_question = []
         for q in self.str_questions:
@@ -109,6 +111,8 @@ class PomdpSimulator20q (Domain):
             tokens = resp.split(" ")
             index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
             self.index_response[resp] = index_tokens
+
+        print "Done indexing"
 
     def init_user(self):
         # initialize the user here

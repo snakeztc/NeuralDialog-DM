@@ -8,6 +8,7 @@ from keras.layers.embeddings import Embedding
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
 from keras.preprocessing import sequence
+from keras.layers.core import TimeDistributedMerge
 from keras.regularizers import l2, activity_l2
 
 
@@ -47,13 +48,16 @@ class LstmDnnQ(BatchAgent):
     def init_model(self):
         print "Model input dimension " + str(self.domain.nb_words)
         print "Model output dimension " + str(self.domain.actions_num)
+        hidden_size = 20
 
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words, 100, mask_zero=True))
-        model.add(LSTM(100, return_sequences=False))
+        model.add(Embedding(self.domain.nb_words, hidden_size, mask_zero=True))
+        model.add(LSTM(hidden_size, return_sequences=False))
         model.add(Dropout(0.2))
 
-        model.add(Dense(100, init='lecun_uniform'))
+        #model.add(TimeDistributedMerge(mode='ave'))
+
+        model.add(Dense(hidden_size, init='lecun_uniform'))
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
 
