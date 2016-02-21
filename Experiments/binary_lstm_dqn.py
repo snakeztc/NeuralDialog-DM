@@ -24,12 +24,14 @@ def run():
     ep_min = 0.2
     exp_size = 30000
     mini_batch = 32
-    update_frequency = 32
+    freeze_frequency = 100
+    update_frequency = 4
     test_trial = 200
 
     representation = PartialObserveRep(sim20_evn, seed = global_seed)
     agent = LstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
-                             update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch)
+                             update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch,
+                             freeze_frequency=freeze_frequency)
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(test_interval)
 
@@ -54,8 +56,8 @@ def run():
                 test_agent = QLearning(test_sim20_evn, agent.representation)
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
-                #test_agent.verbose = True
-                #eval_agent.eval(1, discount=True)
+                test_agent.verbose = True
+                eval_agent.eval(1, discount=True)
                 bench_cnt += 1
 
             if terminal or bench_cnt >= len(sample_size):

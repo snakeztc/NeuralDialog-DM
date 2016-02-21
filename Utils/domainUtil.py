@@ -7,6 +7,18 @@ from scipy.stats import norm
 
 class DomainUtil:
     @staticmethod
+    def get_truth_set(question_data, lookup):
+        #
+        truth_set = []
+        for qd in question_data:
+            q_set = set()
+            # go through true values
+            for value in qd[2]:
+                q_set = q_set.union(lookup.get(qd[0]).get(value))
+            truth_set.append(q_set)
+        return truth_set
+
+    @staticmethod
     def get_vocab(all_utt):
         vocabs = []
         for utt in all_utt:

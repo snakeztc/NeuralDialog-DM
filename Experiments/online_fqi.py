@@ -14,7 +14,6 @@ def run():
     # load the data from file
     seed = 100
     sim20_evn = Simulator20q(seed)
-    #sim20_evn = BinarySimulator20q(seed)
 
     test_interval = 200
     sample_size = np.arange(test_interval, 2001, test_interval)

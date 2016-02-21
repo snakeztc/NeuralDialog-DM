@@ -1,13 +1,15 @@
 from Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
+from Representations.PartialObserveRep import PartialObserveRep
 import numpy as np
 from LstmDnnQ import LstmDnnQ
+import copy
 
 
 class LstmExpQLearning(Agent):
 
     def learn(self, s, performance_run=False):
-        Qs = self.representation.Qs(s)
+        Qs = self.behavior_representation.Qs(s)
 
         # choose an action
         if performance_run:
@@ -35,17 +37,28 @@ class LstmExpQLearning(Agent):
                 indices = self.random_state.choice(a=self.exp_head, size=self.mini_batch, p=prob, replace=False)
                 mini_batch_exp = ([self.exp_s[i] for i in indices], self.exp_ar[indices, :], [self.exp_ns[i] for i in indices])
                 self.learner.learn(mini_batch_exp)
+                # update target model
+                self.update_cnt += 1
+                if self.update_cnt % self.freeze_frequency:
+                    self.representation.model = copy.copy(self.behavior_representation.model)
 
         return r, ns, terminal
 
-    def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10, exp_size=10000, mini_batch=3000):
+    def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10,
+                 exp_size=10000, mini_batch=3000, freeze_frequency=100):
         super(LstmExpQLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
         self.mini_batch = mini_batch
         self.exp_size = exp_size
         self.exp_head = 0
-        self.learner = LstmDnnQ(domain=domain, representation=representation)
+        # freeze model
+        self.freeze_frequency = freeze_frequency
+        self.update_cnt = 0
+        self.behavior_representation = PartialObserveRep(domain, seed=seed)
+        # learner
+        self.learner = LstmDnnQ(domain=domain, representation=representation,
+                                behavior_representation=self.behavior_representation)
         # experiences
         self.exp_s = [None] * self.exp_size
         self.exp_ns = [None] * self.exp_size

@@ -11,9 +11,9 @@ from keras.preprocessing import sequence
 from keras.layers.core import TimeDistributedMerge
 
 class LstmDnnQ(BatchAgent):
-
-    def __init__(self, domain, representation, seed=1):
+    def __init__(self, domain, representation, behavior_representation, seed=1):
         super(LstmDnnQ, self).__init__(domain, representation, seed)
+        self.behavior_representation = behavior_representation
 
     def learn(self, experiences, max_iter=20):
         # experience is in (phi_s, a, r, phi_ns)
@@ -37,21 +37,21 @@ class LstmDnnQ(BatchAgent):
         # update the new y
         y.flat[indices] = targets
 
-        if not self.representation.model:
-            self.representation.model = self.init_model()
+        if not self.behavior_representation.model:
+            self.behavior_representation.model = self.init_model()
 
         # fit the lstm deep neural nets!!
-        self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
+        self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def init_model(self):
         print "Creating model"
         hidden_size = 30
         model = Sequential()
         model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=True))
-        model.add(LSTM(100, return_sequences=False))
+        model.add(LSTM(64, return_sequences=False))
         model.add(Dropout(0.2))
 
-        model.add(Dense(100, init='lecun_uniform'))
+        model.add(Dense(64, init='lecun_uniform'))
         model.add(Activation('relu'))
         model.add(Dropout(0.2))
 

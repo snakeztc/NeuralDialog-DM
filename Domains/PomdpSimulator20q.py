@@ -12,12 +12,10 @@ class PomdpSimulator20q (Domain):
     # a list of tuples (slot_name, question, true_value_set)
     question_data = DomainUtil.get_actions(action_path)
     #str_questions = [qd[1].replace("?", " ?") for qd in question_data]
-    #str_informs = {key: "I guess the character is " + person.get('name').replace(' ', '_') for key, person in corpus.iteritems()}
-    #str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
 
     str_questions = [str(i) for i in range(0, len(question_data))]
     str_informs = {"all":'inform'}
-    str_response = ['yes', 'no', 'I_do_not_know', 'I_have_told_you', 'correct', 'wrong']
+    str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
 
     # find the vocab size of this world
     all_utt = str_questions + str_informs.values() + str_response
@@ -31,12 +29,7 @@ class PomdpSimulator20q (Domain):
     lookup = DomainUtil.get_lookup(corpus, all_slot_dict)
 
     # a list -> a set of valid person keys for each quesiton
-    valid_set = []
-    for qd in question_data:
-        q_set = set()
-        for value in qd[2]:
-            q_set = q_set.union(lookup.get(qd[0]).get(value))
-        valid_set.append(q_set)
+    truth_set = DomainUtil.get_truth_set(question_data, lookup)
 
     # the valid slot system can ask
     slot_names = DomainUtil.remove_duplicate([qd[0] for qd in question_data])
@@ -148,9 +141,9 @@ class PomdpSimulator20q (Domain):
         results = set(self.corpus.keys())
         for (q_id, answer) in filters:
             if answer:
-                results = results.intersection(self.valid_set[q_id])
+                results = results.intersection(self.truth_set[q_id])
             else:
-                results = results - self.valid_set[q_id]
+                results = results - self.truth_set[q_id]
         return results
 
     def is_question(self, a):
@@ -176,7 +169,7 @@ class PomdpSimulator20q (Domain):
 
         # the response string
         agent_utt = None
-        resp = self.index_response.get("I_have_told_you")
+        resp = self.index_response.get("I have told you")
 
         # a is a question
         if self.is_question(aID):
@@ -203,7 +196,7 @@ class PomdpSimulator20q (Domain):
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == self.question_data[aID][0]:
                             ns[0, q_id] = self.unknown
-                            resp = self.index_response.get("I_do_not_know")
+                            resp = self.index_response.get("I do not know")
 
             if ns[0, -2] >= self.episode_cap:
                 reward = self.loss_reward
@@ -229,9 +222,7 @@ class PomdpSimulator20q (Domain):
                 exit()
         # append the agent action and user response to the dialog hist
         nhist.extend(agent_utt)
-        #nhist.append(self.eos)
         nhist.extend(resp)
-        #nhist.append(self.eos)
         return reward, (ns, nhist), self.is_terminal(ns)
 
     def is_terminal(self, s):
