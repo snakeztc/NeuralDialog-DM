@@ -24,14 +24,15 @@ def run():
     ep_min = 0.2
     exp_size = 30000
     mini_batch = 32
-    freeze_frequency = 100
+    freeze_frequency = 10
     update_frequency = 4
     test_trial = 200
+    doubleDQN = True
 
     representation = PartialObserveRep(sim20_evn, seed = global_seed)
     agent = LstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                              update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch,
-                             freeze_frequency=freeze_frequency)
+                             freeze_frequency=freeze_frequency, doubleDQN=doubleDQN)
     print "Test trail number is " + str(test_trial)
     print "Test interval is " + str(test_interval)
 

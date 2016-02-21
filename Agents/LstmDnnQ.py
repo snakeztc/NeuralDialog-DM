@@ -12,9 +12,10 @@ from keras.layers.core import TimeDistributedMerge
 
 class LstmDnnQ(BatchAgent):
 
-    def __init__(self, domain, representation, behavior_representation, seed=1):
+    def __init__(self, domain, representation, behavior_representation, seed=1, doubleDQN=False):
         super(LstmDnnQ, self).__init__(domain, representation, seed)
         self.behavior_representation = behavior_representation
+        self.doubleDQN = doubleDQN
 
     def learn(self, experiences, max_iter=20):
         # experience is in (phi_s, a, r, phi_ns)
@@ -38,20 +39,29 @@ class LstmDnnQ(BatchAgent):
         # update the new y
         y.flat[indices] = targets
 
-        if not self.behavior_representation.model:
-            self.behavior_representation.model = self.init_model()
+        if self.doubleDQN:
+            if not self.behavior_representation.model:
+                self.behavior_representation.model = self.init_model()
 
-        # fit the lstm deep neural nets!!
-        self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
+            # fit the lstm deep neural nets!!
+            self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
+        else:
+            if not self.representation.model:
+                self.representation.model = self.init_model()
+
+            # fit the lstm deep neural nets!!
+            self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def update_target_model(self):
         super(LstmDnnQ, self).update_target_model()
-        if not self.representation.model:
-            self.representation.model = self.init_model()
 
-        # copy weights value to targets
-        for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
-            target_layer.set_weights(behavior_layer.get_weights())
+        if self.doubleDQN:
+            if not self.representation.model:
+                self.representation.model = self.init_model()
+
+            # copy weights value to targets
+            for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
+                target_layer.set_weights(behavior_layer.get_weights())
 
     def init_model(self):
         print "Creating model"

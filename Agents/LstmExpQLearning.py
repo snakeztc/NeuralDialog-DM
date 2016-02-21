@@ -41,13 +41,12 @@ class LstmExpQLearning(Agent):
                 self.update_cnt += 1
 
                 if self.update_cnt % self.freeze_frequency == 0:
-                    print "update target model at " + str(self.update_cnt)
                     self.learner.update_target_model()
 
         return r, ns, terminal
 
     def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10,
-                 exp_size=10000, mini_batch=3000, freeze_frequency=100):
+                 exp_size=10000, mini_batch=3000, freeze_frequency=100, doubleDQN=False):
         super(LstmExpQLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
@@ -60,13 +59,14 @@ class LstmExpQLearning(Agent):
         self.behavior_representation = PartialObserveRep(domain, seed=seed)
         # learner
         self.learner = LstmDnnQ(domain=domain, representation=representation,
-                                behavior_representation=self.behavior_representation)
+                                behavior_representation=self.behavior_representation,
+                                doubleDQN=doubleDQN)
         # experiences
         self.exp_s = [None] * self.exp_size
         self.exp_ns = [None] * self.exp_size
         self.exp_ar = np.zeros((self.exp_size, 2))
         self.priority = np.zeros(self.exp_size)
-        #
+
         print "Using epsilon " + str(epsilon)
         print "Update_frequency " + str(self.update_frequency)
         print "Mini-batch size is " + str(self.mini_batch)
