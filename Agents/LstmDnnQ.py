@@ -11,6 +11,7 @@ from keras.preprocessing import sequence
 from keras.layers.core import TimeDistributedMerge
 
 class LstmDnnQ(BatchAgent):
+
     def __init__(self, domain, representation, behavior_representation, seed=1):
         super(LstmDnnQ, self).__init__(domain, representation, seed)
         self.behavior_representation = behavior_representation

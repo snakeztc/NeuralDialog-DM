@@ -39,9 +39,9 @@ class LstmExpQLearning(Agent):
                 self.learner.learn(mini_batch_exp)
                 # update target model
                 self.update_cnt += 1
-                
+
                 if self.update_cnt % self.freeze_frequency == 0:
-                    print self.update_cnt
+                    print "update target model at " + str(self.update_cnt)
                     self.learner.update_target_model()
 
         return r, ns, terminal
