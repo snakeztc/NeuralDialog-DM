@@ -24,5 +24,12 @@ class BatchAgent(object):
         """
         raise NotImplementedError("Implement batch learning")
 
+    def update_target_model(self):
+        """
+        Update target model to match with behavior model
+        :return:
+        """
+        pass
+
 
 

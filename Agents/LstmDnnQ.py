@@ -43,6 +43,15 @@ class LstmDnnQ(BatchAgent):
         # fit the lstm deep neural nets!!
         self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
+    def update_target_model(self):
+        super(LstmDnnQ, self).update_target_model()
+        if not self.representation.model:
+            self.representation.model = self.init_model()
+
+        # copy weights value to targets
+        for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
+            target_layer.set_weights(behavior_layer.get_weights())
+
     def init_model(self):
         print "Creating model"
         hidden_size = 30
