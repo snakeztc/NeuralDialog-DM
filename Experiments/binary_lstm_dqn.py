@@ -25,9 +25,9 @@ def run():
     exp_size = 30000
     mini_batch = 32
     freeze_frequency = 20
-    update_frequency = 4
+    update_frequency = 32
     test_trial = 100
-    doubleDQN = True
+    doubleDQN = False
 
     representation = PartialObserveRep(sim20_evn, seed = global_seed)
     agent = LstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,

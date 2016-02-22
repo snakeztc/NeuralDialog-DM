@@ -16,10 +16,11 @@ class PomdpSimulator20q (Domain):
     str_questions = ["Q"+str(i) for i in range(0, len(question_data))]
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
+    str_computer = ["yes_include", "yes_exclude", "no_include", "no_exclude", "ignore"]
 
     # find the vocab size of this world
     print "Calculating the vocabulary size"
-    all_utt = str_questions + str_informs.values() + str_response
+    all_utt = str_questions + str_informs.values() + str_response + str_computer
     vocabs = DomainUtil.get_vocab(all_utt)
     nb_words = len(vocabs)
     print "Vocabulary size is " + str(nb_words)
@@ -39,6 +40,7 @@ class PomdpSimulator20q (Domain):
     slot_values = [all_slot_dict.get(field) for field in slot_names]
     slot_count = len(slot_names)
     question_count = len(question_data)
+    print "slot names:",
     print slot_names
 
     # prior distribution
@@ -51,37 +53,42 @@ class PomdpSimulator20q (Domain):
     unknown = 1.0
     yes = 2.0
     no = 3.0
-    holding = 4.0
-    state_modality = [unasked, unknown, yes, no, holding]
+    hold_yes = 4.0
+    hold_no = 5.0
+    hold_unknown = 6.0
+    state_modality = [unasked, unknown, yes, no, hold_yes, hold_no, hold_unknown]
 
-    loss_reward = -10.0
-    wrong_guess_reward = -10.0
-    step_reward = -0.5
-    win_reward = 10.0
-    episode_cap = 30
+    loss_reward = -20.0
+    wrong_guess_reward = -5.0
+    logic_error = -2.0
+    step_reward = -1.0
+    win_reward = 40.0
+    episode_cap = 40
     discount_factor = 0.99
-    actions_num = question_count + 1 + 3 # each value has a question, 1 inform and 3 computer operation
-    action_types = ["question"] * question_count + ["inform", "include", "exclude", "ignore"]
+    # each value has a question, 1 inform and 3 computer operation
+    actions_num = question_count + len(str_informs) + len(str_computer)
+    action_types = ["question"] * question_count + ["inform"] + str_computer
     print "Number of actions is " + str(actions_num)
+    print "actions types are: ",
     print action_types
 
     # raw state is
     # [[unasked yes no] [....] ... turn_cnt informed]
     # 0: init, 1 yes, 3 no
-
     # create state_space_limit
     print "Constructing the state limit for each dimension"
     statespace_limits = np.zeros((question_count, 2))
     for d in range(0, question_count):
         statespace_limits[d, 1] = len(state_modality)
 
-    # add the extra dimension for turn count
+    # add the extra dimension for query size, turn count, informed_successful
+    statespace_limits = np.vstack((statespace_limits, [0, len(corpus)]))
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
     statespace_limits = np.vstack((statespace_limits, [0, 2]))
 
     # turn count is discrete and informed is categorical
     statespace_type = [Domain.categorical] * question_count
-    statespace_type.extend([Domain.discrete, Domain.categorical])
+    statespace_type.extend([Domain.discrete, Domain.discrete, Domain.categorical])
 
     print "Total number of questions " + str(len(question_data))
     print "Done initializing"
@@ -123,6 +130,13 @@ class PomdpSimulator20q (Domain):
             index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
             self.index_response[resp] = index_tokens
 
+        # convert each computer command to index
+        self.index_computer = {}
+        for command in self.str_computer:
+            tokens = command.split(" ")
+            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            self.index_computer[command] = index_tokens
+
         # convert each computer response to index
         self.index_result = {None:[self.vocabs.index("0")+1]}
         for idx in range(1, len(self.corpus) + 1):
@@ -142,7 +156,9 @@ class PomdpSimulator20q (Domain):
         # vector = np.zeros(len(self.fields)+2)
         # (hidden_state, observation)
         (self.person_inmind_key, self.person_inmind) = self.init_user()
-        return np.ones((1, self.statespace_size)) * self.unasked, [self.eos]
+        s = np.ones((1, self.statespace_size)) * self.unasked
+        s[0, -3] = len(self.corpus)
+        return s, [self.eos]
 
     def get_inform(self, s):
         filters = []
@@ -180,19 +196,18 @@ class PomdpSimulator20q (Domain):
         ns = np.copy(s)
         nhist = list(hist)
 
+        # get action type of aID
+        a_type = self.get_action_type(aID)
+
         # increment the counter
         ns[0, -2] = s[0, -2] + 1
 
-        # the response string
-        agent_utt = None
-        resp = self.index_response.get("I have told you")
-
-        # a is a question
-        a_type = self.get_action_type(aID)
         if a_type == 'question':
             agent_utt = self.index_question[aID]
+            resp = self.index_response.get("I have told you")
             slot_name = self.question_data[aID][0]
             asked_set = self.question_data[aID][2]
+
             if ns[0, aID] == self.unasked:
                 chosen_answer = self.person_inmind.get(slot_name)
                 if chosen_answer:
@@ -203,61 +218,72 @@ class PomdpSimulator20q (Domain):
                     for ca in chosen_answer:
                         if ca in asked_set:
                             matched = True
-                            #ns[0, aID] = self.yes
-                            ns[0, aID] = self.holding
+                            ns[0, aID] = self.hold_yes
                             resp = self.index_response.get("yes")
                             break
                     if not matched:
-                        #ns[0, aID] = self.no
-                        ns[0, aID] = self.holding
+                        ns[0, aID] = self.hold_no
                         resp = self.index_response.get("no")
                 else:
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == self.question_data[aID][0]:
-                            #ns[0, q_id] = self.unknown
-                            ns[0, aID] = self.holding
+                            ns[0, aID] = self.hold_unknown
                             resp = self.index_response.get("I do not know")
+            else:
+                reward = self.logic_error
 
-            if ns[0, -2] >= self.episode_cap:
-                reward = self.loss_reward
         elif a_type == "inform":
             # a is the inform
             results = self.get_inform(s)
             agent_utt = self.index_inform.get("all")
             if self.person_inmind_key in results:
                 guess = self.random_state.choice(results)
-
+                ns[0, -3] = len(results)
                 if self.person_inmind_key == guess:
                     reward = self.win_reward
                     # has informed
                     ns[0, -1] = 1
                     resp = self.index_response.get('correct')
                 else:
+                    #reward = self.wrong_guess_reward
                     slope = (self.wrong_guess_reward - self.win_reward) / len(self.corpus)
                     reward = len(results) * slope
                     resp = self.index_response.get('wrong')
             else:
-                reward = self.loss_reward
+                # logic error occurs
+                ns[0, -3] = len(self.corpus)
+                reward = self.wrong_guess_reward
                 resp = self.index_response.get('wrong')
-                ns[0, -1] = 1
         else:
-            # computer operator, finding previous question
-            prev_question = np.argwhere(s == self.holding)
-            agent_utt = []
-            resp = []
-            if prev_question.shape[0] > 0:
-                if a_type == "include":
-                    ns[prev_question[0][0], prev_question[0][1]] = self.yes
-                elif a_type == "exclude":
-                    ns[prev_question[0][0], prev_question[0][1]] = self.no
-                elif a_type == "ignore":
-                    ns[prev_question[0][0], prev_question[0][1]] = self.unknown
+            # computer operator
+            agent_utt = self.index_computer.get(a_type)
+            resp = self.index_result.get(None)
+            ns[0, -3] = len(self.corpus)
+            question_ns = ns[0, 0:self.question_count]
+            if a_type == "yes_include":
+                question_ns[question_ns == self.hold_yes] = self.yes
+            elif a_type == "yes_exclude":
+                question_ns[question_ns == self.hold_yes] = self.no
+                reward = self.logic_error
+            elif a_type == "no_exclude":
+                question_ns[question_ns == self.hold_no] = self.no
+            elif a_type == "no_include":
+                question_ns[question_ns == self.hold_no] = self.yes
+                reward = self.logic_error
+            elif a_type == "ignore":
+                question_ns[question_ns == self.hold_unknown] = self.unknown
+            else:
+                print "ERROR: unknown action type"
+                exit()
+            ns[0, 0:self.question_count] = question_ns
 
-                results = self.get_inform(s)
-                if results:
-                    resp = self.index_result.get(str(len(results)))
-                else:
-                    resp = self.index_result.get(None)
+            results = self.get_inform(ns)
+            if results:
+                resp = self.index_result.get(str(len(results)))
+                ns[0, -3] = len(results)
+
+        if a_type != "inform" and ns[0, -2] >= self.episode_cap:
+            reward = self.loss_reward
 
         # append the agent action and user response to the dialog hist
         nhist.extend(agent_utt)

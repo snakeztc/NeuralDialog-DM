@@ -1,6 +1,6 @@
 import json
 import pickle as p
-import random
+from natsort import natsorted
 import numpy as np
 from scipy.stats import norm
 
@@ -28,7 +28,7 @@ class DomainUtil:
         for i in range(0, 101):
             vocabs.append(str(i))
         # remove duplicate
-        vocabs = sorted(list(set(vocabs)))
+        vocabs = natsorted(list(set(vocabs)))
         vocabs.append("EOS")
         return vocabs
 
