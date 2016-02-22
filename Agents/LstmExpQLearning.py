@@ -3,7 +3,6 @@ from Policies.Policy import EpsilonGreedyPolicy
 from Representations.PartialObserveRep import PartialObserveRep
 import numpy as np
 from LstmDnnQ import LstmDnnQ
-import copy
 
 
 class LstmExpQLearning(Agent):

@@ -28,6 +28,8 @@ class Domain(object):
     logger = None
     # A seeded numpy random number generator
     random_state = None
+    # Different type of actions
+    action_types = None
 
     def __init__(self, seed=1):
         self.logger = logging.getLogger("hrl.Domains." + self.__class__.__name__)

@@ -24,9 +24,9 @@ def run():
     ep_min = 0.2
     exp_size = 30000
     mini_batch = 32
-    freeze_frequency = 10
+    freeze_frequency = 20
     update_frequency = 4
-    test_trial = 200
+    test_trial = 100
     doubleDQN = True
 
     representation = PartialObserveRep(sim20_evn, seed = global_seed)

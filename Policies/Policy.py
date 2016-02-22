@@ -21,6 +21,7 @@ class Policy(object):
         sel = self.random_state.choice(np.arange(Qs.shape[1]), p=prob.ravel())
         return sel
 
+
 class RandomPolicy(Policy):
     def choose_action(self, Qs):
         return self.random_state.randint(0, len(Qs))
@@ -31,8 +32,10 @@ class GreedyPolicy(Policy):
         return self.boltzmann(Qs, 1.0)
         #return self.rargmax(Qs)
 
+
 class EpsilonGreedyPolicy(Policy):
     epsilon = 0.1
+
     def choose_action(self, Qs):
         if self.random_state.random_sample() < self.epsilon:
             return self.random_state.randint(0, Qs.shape[1])

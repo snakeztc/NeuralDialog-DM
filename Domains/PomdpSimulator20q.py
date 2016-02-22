@@ -6,7 +6,7 @@ from Utils.domainUtil import DomainUtil
 
 class PomdpSimulator20q (Domain):
     # global varaible
-    print "loading model"
+    print "loading corpus and question data"
     corpus = DomainUtil.load_model(corpus_path)
 
     # a list of tuples (slot_name, question, true_value_set)
@@ -18,20 +18,23 @@ class PomdpSimulator20q (Domain):
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
 
     # find the vocab size of this world
+    print "Calculating the vocabulary size"
     all_utt = str_questions + str_informs.values() + str_response
     vocabs = DomainUtil.get_vocab(all_utt)
     nb_words = len(vocabs)
     print "Vocabulary size is " + str(nb_words)
 
-    print "construct meta info for corpus"
+    print "Construct lookup table"
     # filed_dict filed->list of value and field dim is the size of values
     (all_slot_dict, all_slot_dim) = DomainUtil.get_fields(corpus)
     lookup = DomainUtil.get_lookup(corpus, all_slot_dict)
 
+    print "Constructing truth table for each question"
     # a list -> a set of valid person keys for each quesiton
     truth_set = DomainUtil.get_truth_set(question_data, lookup)
 
     # the valid slot system can ask
+    print "Find all questionable slot and related staistics"
     slot_names = DomainUtil.remove_duplicate([qd[0] for qd in question_data])
     slot_values = [all_slot_dict.get(field) for field in slot_names]
     slot_count = len(slot_names)
@@ -39,32 +42,43 @@ class PomdpSimulator20q (Domain):
     print slot_names
 
     # prior distribution
-    prob = DomainUtil.get_prior_dist('uniform', len(corpus))
+    prior_dist = "uniform"
+    prob = DomainUtil.get_prior_dist(prior_dist, len(corpus))
+    print "Using prior distribution " + prior_dist
 
     # 20Q related
     unasked = 0.0
     unknown = 1.0
     yes = 2.0
     no = 3.0
+    holding = 4.0
+    state_modality = [unasked, unknown, yes, no, holding]
+
     loss_reward = -10.0
     wrong_guess_reward = -10.0
     step_reward = -0.5
     win_reward = 10.0
     episode_cap = 30
     discount_factor = 0.99
-    actions_num = question_count + 1 # each value has a question and 1 inform
+    actions_num = question_count + 1 + 3 # each value has a question, 1 inform and 3 computer operation
+    action_types = ["question"] * question_count + ["inform", "include", "exclude", "ignore"]
+    print "Number of actions is " + str(actions_num)
+    print action_types
 
     # raw state is
     # [[unasked yes no] [....] ... turn_cnt informed]
     # 0: init, 1 yes, 3 no
 
     # create state_space_limit
+    print "Constructing the state limit for each dimension"
     statespace_limits = np.zeros((question_count, 2))
     for d in range(0, question_count):
-        statespace_limits[d, 1] = 4
+        statespace_limits[d, 1] = len(state_modality)
+
     # add the extra dimension for turn count
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
     statespace_limits = np.vstack((statespace_limits, [0, 2]))
+
     # turn count is discrete and informed is categorical
     statespace_type = [Domain.categorical] * question_count
     statespace_type.extend([Domain.discrete, Domain.categorical])
@@ -146,12 +160,9 @@ class PomdpSimulator20q (Domain):
                 results = results - self.truth_set[q_id]
         return results
 
-    def is_question(self, a):
+    def get_action_type(self, a):
         # check if the index of a is in question
-        if a < self.question_count:
-            return True
-        else:
-            return False
+        return self.action_types[a]
 
     # Main Logic
     def step(self, all_s, aID):
@@ -172,7 +183,8 @@ class PomdpSimulator20q (Domain):
         resp = self.index_response.get("I have told you")
 
         # a is a question
-        if self.is_question(aID):
+        a_type = self.get_action_type(aID)
+        if a_type == 'question':
             agent_utt = self.index_question[aID]
             slot_name = self.question_data[aID][0]
             asked_set = self.question_data[aID][2]
@@ -200,12 +212,11 @@ class PomdpSimulator20q (Domain):
 
             if ns[0, -2] >= self.episode_cap:
                 reward = self.loss_reward
-        else:
+        elif a_type == "inform":
             # a is the inform
             results = self.get_inform(s)
             if self.person_inmind_key in results:
                 guess = self.random_state.choice(results)
-                #agent_utt = self.index_inform.get(guess)
                 agent_utt = self.index_inform.get("all")
 
                 if self.person_inmind_key == guess:
@@ -220,6 +231,25 @@ class PomdpSimulator20q (Domain):
             else:
                 print "ERROR: internal corruption"
                 exit()
+        else:
+            # computer operator, finding previous question
+            prev_question = np.argwhere(s == self.holding)
+            agent_utt = []
+            resp = []
+            if prev_question.shape[0] > 0:
+                if a_type == "include":
+                    ns[prev_question[0][0], prev_question[0][1]] = self.yes
+                elif a_type == "exclude":
+                    ns[prev_question[0][0], prev_question[0][1]] = self.no
+                elif a_type == "ignore":
+                    ns[prev_question[0][0], prev_question[0][1]] = self.unknown
+
+                results = self.get_inform(s)
+                if results:
+                    resp = [str(len(results))]
+                else:
+                    resp = ["0"]
+
         # append the agent action and user response to the dialog hist
         nhist.extend(agent_utt)
         nhist.extend(resp)

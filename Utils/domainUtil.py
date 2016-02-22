@@ -24,6 +24,10 @@ class DomainUtil:
         for utt in all_utt:
             tokens = utt.split(" ")
             vocabs.extend(tokens)
+        # get numbers from 0 to 100
+        for i in range(0, 101):
+            vocabs.append(str(i))
+        # remove duplicate
         vocabs = list(set(vocabs))
         vocabs.append("EOS")
         return vocabs
