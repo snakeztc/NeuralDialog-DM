@@ -28,7 +28,7 @@ class DomainUtil:
         for i in range(0, 101):
             vocabs.append(str(i))
         # remove duplicate
-        vocabs = list(set(vocabs))
+        vocabs = sorted(list(set(vocabs)))
         vocabs.append("EOS")
         return vocabs
 

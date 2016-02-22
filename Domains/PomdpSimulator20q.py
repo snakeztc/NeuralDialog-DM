@@ -13,7 +13,7 @@ class PomdpSimulator20q (Domain):
     question_data = DomainUtil.get_actions(action_path)
     #str_questions = [qd[1].replace("?", " ?") for qd in question_data]
 
-    str_questions = [str(i) for i in range(0, len(question_data))]
+    str_questions = ["Q"+str(i) for i in range(0, len(question_data))]
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
 
@@ -123,6 +123,11 @@ class PomdpSimulator20q (Domain):
             index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
             self.index_response[resp] = index_tokens
 
+        # convert each computer response to index
+        self.index_result = {None:[self.vocabs.index("0")+1]}
+        for idx in range(1, len(self.corpus) + 1):
+            self.index_result[str(idx)] = [self.vocabs.index(str(idx)) + 1]
+
         print "Done indexing"
 
     def init_user(self):
@@ -198,16 +203,19 @@ class PomdpSimulator20q (Domain):
                     for ca in chosen_answer:
                         if ca in asked_set:
                             matched = True
-                            ns[0, aID] = self.yes
+                            #ns[0, aID] = self.yes
+                            ns[0, aID] = self.holding
                             resp = self.index_response.get("yes")
                             break
                     if not matched:
-                        ns[0, aID] = self.no
+                        #ns[0, aID] = self.no
+                        ns[0, aID] = self.holding
                         resp = self.index_response.get("no")
                 else:
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == self.question_data[aID][0]:
-                            ns[0, q_id] = self.unknown
+                            #ns[0, q_id] = self.unknown
+                            ns[0, aID] = self.holding
                             resp = self.index_response.get("I do not know")
 
             if ns[0, -2] >= self.episode_cap:
@@ -215,9 +223,9 @@ class PomdpSimulator20q (Domain):
         elif a_type == "inform":
             # a is the inform
             results = self.get_inform(s)
+            agent_utt = self.index_inform.get("all")
             if self.person_inmind_key in results:
                 guess = self.random_state.choice(results)
-                agent_utt = self.index_inform.get("all")
 
                 if self.person_inmind_key == guess:
                     reward = self.win_reward
@@ -229,8 +237,9 @@ class PomdpSimulator20q (Domain):
                     reward = len(results) * slope
                     resp = self.index_response.get('wrong')
             else:
-                print "ERROR: internal corruption"
-                exit()
+                reward = self.loss_reward
+                resp = self.index_response.get('wrong')
+                ns[0, -1] = 1
         else:
             # computer operator, finding previous question
             prev_question = np.argwhere(s == self.holding)
@@ -246,9 +255,9 @@ class PomdpSimulator20q (Domain):
 
                 results = self.get_inform(s)
                 if results:
-                    resp = [str(len(results))]
+                    resp = self.index_result.get(str(len(results)))
                 else:
-                    resp = ["0"]
+                    resp = self.index_result.get(None)
 
         # append the agent action and user response to the dialog hist
         nhist.extend(agent_utt)

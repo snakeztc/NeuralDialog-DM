@@ -10,11 +10,21 @@ class LstmExpQLearning(Agent):
     def learn(self, s, performance_run=False):
         Qs = self.behavior_representation.Qs(s)
 
+        # alternating between computer operation and human operation
+        if self.domain.holding in s[0]:
+            start = self.domain.actions_num - 3
+            end = self.domain.actions_num
+        else:
+            start = 0
+            end = self.domain.actions_num - 3
+
         # choose an action
         if performance_run:
-            aID = self.performance_policy.choose_action(Qs)
+            aID = self.performance_policy.choose_action(Qs[0:, start:end])
         else:
-            aID = self.learning_policy.choose_action(Qs)
+            aID = self.learning_policy.choose_action(Qs[0:, start:end])
+
+        aID += start
 
         (r, ns, terminal) = self.domain.step(s, aID)
 
