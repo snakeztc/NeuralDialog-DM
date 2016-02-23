@@ -58,12 +58,12 @@ class PomdpSimulator20q (Domain):
     hold_unknown = 6.0
     state_modality = [unasked, unknown, yes, no, hold_yes, hold_no, hold_unknown]
 
-    loss_reward = -20.0
-    wrong_guess_reward = -5.0
-    logic_error = -2.0
+    loss_reward = -50.0
+    wrong_guess_reward = -10.0
+    logic_error = -20.0 # i have told you and opposite yes/no
     step_reward = -1.0
-    win_reward = 40.0
-    episode_cap = 40
+    win_reward = 50.0
+    episode_cap = 50
     discount_factor = 0.99
     # each value has a question, 1 inform and 3 computer operation
     actions_num = question_count + len(str_informs) + len(str_computer)
@@ -140,7 +140,7 @@ class PomdpSimulator20q (Domain):
         # convert each computer response to index
         self.index_result = {None:[self.vocabs.index("0")+1]}
         for idx in range(1, len(self.corpus) + 1):
-            self.index_result[str(idx)] = [self.vocabs.index(str(idx)) + 1]
+            self.index_result[idx] = [self.vocabs.index(str(idx)) + 1]
 
         print "Done indexing"
 
@@ -192,6 +192,7 @@ class PomdpSimulator20q (Domain):
         s = all_s[0]
         hist = all_s[1]
 
+        # default value of reward and create new_s and new_hist
         reward = self.step_reward
         ns = np.copy(s)
         nhist = list(hist)
@@ -245,9 +246,7 @@ class PomdpSimulator20q (Domain):
                     ns[0, -1] = 1
                     resp = self.index_response.get('correct')
                 else:
-                    #reward = self.wrong_guess_reward
-                    slope = (self.wrong_guess_reward - self.win_reward) / len(self.corpus)
-                    reward = len(results) * slope
+                    reward = self.wrong_guess_reward
                     resp = self.index_response.get('wrong')
             else:
                 # logic error occurs
@@ -257,8 +256,7 @@ class PomdpSimulator20q (Domain):
         else:
             # computer operator
             agent_utt = self.index_computer.get(a_type)
-            resp = self.index_result.get(None)
-            ns[0, -3] = len(self.corpus)
+            resp = []
             question_ns = ns[0, 0:self.question_count]
             if a_type == "yes_include":
                 question_ns[question_ns == self.hold_yes] = self.yes
@@ -277,17 +275,24 @@ class PomdpSimulator20q (Domain):
                 exit()
             ns[0, 0:self.question_count] = question_ns
 
-            results = self.get_inform(ns)
-            if results:
-                resp = self.index_result.get(str(len(results)))
-                ns[0, -3] = len(results)
+        new_results = self.get_inform(ns)
+        ns[0, -3] = len(self.corpus)
+
+        cmp_resp = self.index_result.get(None)
+        if new_results:
+            ns[0, -3] = len(new_results)
+            cmp_resp = self.index_result.get(len(new_results))
 
         if a_type != "inform" and ns[0, -2] >= self.episode_cap:
             reward = self.loss_reward
 
+        # potential reward_shaping
+        reward += (s[0, -3] - ns[0, -3])/10
+
         # append the agent action and user response to the dialog hist
         nhist.extend(agent_utt)
         nhist.extend(resp)
+        nhist.extend(cmp_resp)
         return reward, (ns, nhist), self.is_terminal(ns)
 
     def is_terminal(self, s):

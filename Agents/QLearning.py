@@ -21,8 +21,11 @@ class QLearning(Agent):
             self.logger.info("Learning here for tabular")
 
         if terminal and self.verbose:
-            for idx in ns[1]:
-                print self.domain.vocabs[idx-1],
+            for i, idx in enumerate(ns[1]):
+                if (i+1) % 25 == 0:
+                    print self.domain.vocabs[idx-1]
+                else:
+                    print self.domain.vocabs[idx-1],
             print ""
 
         return r, ns, terminal

@@ -12,18 +12,18 @@ def run():
     sim20_evn = PomdpSimulator20q(global_seed)
     test_sim20_evn = PomdpSimulator20q(global_seed)
 
-    test_interval = 3000
-    sample_size = np.arange(0, 200000, test_interval)
+    test_interval = 5000
+    sample_size = np.arange(0, 100000, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
     epsilon = 1.0
-    ep_decay = 0.9995
+    ep_decay = 0.9994
     ep_min = 0.2
-    exp_size = 50000
+    exp_size = 100000
     mini_batch = 32
-    freeze_frequency = 40
+    freeze_frequency = 1000
     update_frequency = 4
     test_trial = 200
     doubleDQN = True
