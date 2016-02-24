@@ -11,15 +11,13 @@ class PomdpSimulator20q (Domain):
 
     # a list of tuples (slot_name, question, true_value_set)
     question_data = DomainUtil.get_actions(action_path)
-    #str_questions = [qd[1].replace("?", " ?") for qd in question_data]
 
-    str_questions = ["Q"+str(i) for i in range(0, len(question_data))]
+    str_questions = ["Q-"+qd[0]+"-"+str(i) for i, qd in enumerate(question_data)]
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
     str_computer = ["yes_include", "yes_exclude", "no_include", "no_exclude", "ignore"]
 
     # find the vocab size of this world
-    print "Calculating the vocabulary size"
     all_utt = str_questions + str_informs.values() + str_response + str_computer
     vocabs = DomainUtil.get_vocab(all_utt)
     nb_words = len(vocabs)
@@ -35,7 +33,7 @@ class PomdpSimulator20q (Domain):
     truth_set = DomainUtil.get_truth_set(question_data, lookup)
 
     # the valid slot system can ask
-    print "Find all questionable slot and related staistics"
+    print "Find all questionable slot and related statistics"
     slot_names = DomainUtil.remove_duplicate([qd[0] for qd in question_data])
     slot_values = [all_slot_dict.get(field) for field in slot_names]
     slot_count = len(slot_names)
@@ -60,7 +58,7 @@ class PomdpSimulator20q (Domain):
 
     loss_reward = -50.0
     wrong_guess_reward = -10.0
-    logic_error = -20.0 # i have told you and opposite yes/no
+    logic_error = -20.0  # i have told you and opposite yes/no
     step_reward = -1.0
     win_reward = 50.0
     episode_cap = 50
@@ -69,8 +67,6 @@ class PomdpSimulator20q (Domain):
     actions_num = question_count + len(str_informs) + len(str_computer)
     action_types = ["question"] * question_count + ["inform"] + str_computer
     print "Number of actions is " + str(actions_num)
-    print "actions types are: ",
-    print action_types
 
     # raw state is
     # [[unasked yes no] [....] ... turn_cnt informed]
@@ -81,7 +77,7 @@ class PomdpSimulator20q (Domain):
     for d in range(0, question_count):
         statespace_limits[d, 1] = len(state_modality)
 
-    # add the extra dimension for query size, turn count, informed_successful
+    # add the extra dimension for query return size, turn count, informed not_yet/successful
     statespace_limits = np.vstack((statespace_limits, [0, len(corpus)]))
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
     statespace_limits = np.vstack((statespace_limits, [0, 2]))
@@ -112,34 +108,30 @@ class PomdpSimulator20q (Domain):
         # convert each possible question into a index list
         self.index_question = []
         for q in self.str_questions:
-            tokens = q.split(" ")
-            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            index_tokens = [self.vocabs.index(t) + 1 for t in q.split(" ")]
             self.index_question.append(index_tokens)
 
         # convert each possible inform into index list save in a dictionary
         self.index_inform = {}
         for key, inform in self.str_informs.iteritems():
-            tokens = inform.split(" ")
-            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            index_tokens = [self.vocabs.index(t) + 1 for t in inform.split(" ")]
             self.index_inform[key] = index_tokens
 
         # convert each possible response to index
         self.index_response = {}
         for resp in self.str_response:
-            tokens = resp.split(" ")
-            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            index_tokens = [self.vocabs.index(t) + 1 for t in resp.split(" ")]
             self.index_response[resp] = index_tokens
 
         # convert each computer command to index
         self.index_computer = {}
         for command in self.str_computer:
-            tokens = command.split(" ")
-            index_tokens = [self.vocabs.index(t) + 1 for t in tokens]
+            index_tokens = [self.vocabs.index(t) + 1 for t in command.split(" ")]
             self.index_computer[command] = index_tokens
 
         # convert each computer response to index
-        self.index_result = {None:[self.vocabs.index("0")+1]}
-        for idx in range(1, len(self.corpus) + 1):
+        self.index_result = {}
+        for idx in range(0, len(self.corpus) + 1):
             self.index_result[idx] = [self.vocabs.index(str(idx)) + 1]
 
         print "Done indexing"
@@ -187,13 +179,19 @@ class PomdpSimulator20q (Domain):
 
     # Main Logic
     def step(self, all_s, aID):
-        # return reward, ns, terminal, observation (user string)
-        # a is index
         s = all_s[0]
         hist = all_s[1]
+        (ns, nhist) = self.get_next_state(s, hist, aID)
+        reward = self.get_reward(s, ns, aID)
+        reward += self.get_potential(s, ns)
+        return reward, (ns, nhist), self.is_terminal(ns)
 
-        # default value of reward and create new_s and new_hist
-        reward = self.step_reward
+    def get_next_state(self, s, hist, aID):
+        """
+        :param s: the current hidden state
+        :param hist: the dialog history
+        :return: (ns, nhist)
+        """
         ns = np.copy(s)
         nhist = list(hist)
 
@@ -207,7 +205,7 @@ class PomdpSimulator20q (Domain):
             agent_utt = self.index_question[aID]
             resp = self.index_response.get("I have told you")
             slot_name = self.question_data[aID][0]
-            asked_set = self.question_data[aID][2]
+            true_set = self.question_data[aID][2]
 
             if ns[0, aID] == self.unasked:
                 chosen_answer = self.person_inmind.get(slot_name)
@@ -216,8 +214,8 @@ class PomdpSimulator20q (Domain):
                         chosen_answer = [chosen_answer]
                     # check if any of chosen answer is in the set
                     matched = False
-                    for ca in chosen_answer:
-                        if ca in asked_set:
+                    for answer in chosen_answer:
+                        if answer in true_set:
                             matched = True
                             ns[0, aID] = self.hold_yes
                             resp = self.index_response.get("yes")
@@ -226,12 +224,11 @@ class PomdpSimulator20q (Domain):
                         ns[0, aID] = self.hold_no
                         resp = self.index_response.get("no")
                 else:
+                    resp = self.index_response.get("I do not know")
+                    # populate to all q_id for this slot_name
                     for q_id, qd in enumerate(self.question_data):
-                        if qd[0] == self.question_data[aID][0]:
-                            ns[0, aID] = self.hold_unknown
-                            resp = self.index_response.get("I do not know")
-            else:
-                reward = self.logic_error
+                        if qd[0] == slot_name:
+                            ns[0, q_id] = self.hold_unknown
 
         elif a_type == "inform":
             # a is the inform
@@ -239,19 +236,13 @@ class PomdpSimulator20q (Domain):
             agent_utt = self.index_inform.get("all")
             if self.person_inmind_key in results:
                 guess = self.random_state.choice(results)
-                ns[0, -3] = len(results)
                 if self.person_inmind_key == guess:
-                    reward = self.win_reward
-                    # has informed
+                    # has informed successfully
                     ns[0, -1] = 1
                     resp = self.index_response.get('correct')
                 else:
-                    reward = self.wrong_guess_reward
                     resp = self.index_response.get('wrong')
             else:
-                # logic error occurs
-                ns[0, -3] = len(self.corpus)
-                reward = self.wrong_guess_reward
                 resp = self.index_response.get('wrong')
         else:
             # computer operator
@@ -262,12 +253,10 @@ class PomdpSimulator20q (Domain):
                 question_ns[question_ns == self.hold_yes] = self.yes
             elif a_type == "yes_exclude":
                 question_ns[question_ns == self.hold_yes] = self.no
-                reward = self.logic_error
             elif a_type == "no_exclude":
                 question_ns[question_ns == self.hold_no] = self.no
             elif a_type == "no_include":
                 question_ns[question_ns == self.hold_no] = self.yes
-                reward = self.logic_error
             elif a_type == "ignore":
                 question_ns[question_ns == self.hold_unknown] = self.unknown
             else:
@@ -276,28 +265,42 @@ class PomdpSimulator20q (Domain):
             ns[0, 0:self.question_count] = question_ns
 
         new_results = self.get_inform(ns)
-        ns[0, -3] = len(self.corpus)
-
-        cmp_resp = self.index_result.get(None)
-        if new_results:
-            ns[0, -3] = len(new_results)
-            cmp_resp = self.index_result.get(len(new_results))
-
-        if a_type != "inform" and ns[0, -2] >= self.episode_cap:
-            reward = self.loss_reward
-
-        # potential reward_shaping
-        reward += (s[0, -3] - ns[0, -3])/10
+        ns[0, -3] = len(new_results) if new_results else 0
+        cmp_resp = self.index_result.get(ns[0, -3])
 
         # append the agent action and user response to the dialog hist
         nhist.extend(agent_utt)
         nhist.extend(resp)
         nhist.extend(cmp_resp)
-        return reward, (ns, nhist), self.is_terminal(ns)
+        return ns, nhist
+
+    def get_reward(self, s, ns, aID):
+        reward = self.step_reward
+        # get action type of aID
+        a_type = self.get_action_type(aID)
+
+        # check loss condition
+        if ns[0, -1] == 1: # successfully inform
+            reward = self.win_reward
+        elif ns[0, -1] == 0 and ns[0, -2] >= self.episode_cap:  # run out of turns or logic errors
+            reward = self.loss_reward
+        elif a_type == "inform" and ns[0, -1] == 0:
+            reward = self.wrong_guess_reward
+        elif a_type == "question" and s[0, aID] != self.unasked:
+            reward = self.logic_error
+        elif a_type == "yes_exclude" or a_type == "no_include":
+            reward = self.logic_error
+        return reward
+
+    def get_potential(self, s, ns):
+        s_potential = s[0, -3] if s[0, -3] > 0 else 100
+        ns_potential = ns[0, -3] if ns[0, -3] > 0 else 100
+        potential = (s_potential - ns_potential) / 10
+        return potential
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
-        if s[0, -1] == 1 or s[0, -2] >= self.episode_cap:
+        if s[0, -1] > 0 or s[0, -2] >= self.episode_cap:
             return True
         else:
             return False

@@ -2,11 +2,13 @@ from Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
 import numpy as np
 from DNNfqi import DNNfqi
+from Representations.BinaryCompactRep import BinaryCompactRep
 
 
 class ExpQLearning(Agent):
 
     def learn(self, s, performance_run=False):
+
         Qs = self.representation.Qs(s)
 
         # choose an action
@@ -15,11 +17,13 @@ class ExpQLearning(Agent):
         else:
             aID = self.learning_policy.choose_action(Qs)
 
-        (r, ns, terminal, res) = self.domain.step(s, aID)
+        (r, ns, terminal) = self.domain.step(s, aID)
 
         if not performance_run:
             # check if exp_head is larger than buffer size
             if self.exp_head >= self.exp_size:
+                print "** reset exp header **"
+                np.random.shuffle(self.experience)
                 self.exp_head = 0
 
             phi_s_size = self.representation.state_features_num
@@ -27,26 +31,42 @@ class ExpQLearning(Agent):
             self.experience[self.exp_head, phi_s_size] = aID
             self.experience[self.exp_head, phi_s_size+1] = r
             self.experience[self.exp_head, phi_s_size+2:] = self.representation.phi_s(ns)
-            self.priority[self.exp_head] = np.min([np.abs(r),5.0]) + 1.0
+            self.priority[self.exp_head] = 1.0 #+ np.min([np.abs(r), 5.0])
             # increment the write head
             self.exp_head += 1
+            self.exp_actual_size += 1
 
-            if self.exp_head > self.mini_batch and (self.exp_head % self.update_frequency) == 0:
-                prob = self.priority[0:self.exp_head] / np.sum(self.priority[0:self.exp_head])
-                mini_batch_exp = self.experience[self.random_state.choice(a=self.exp_head,
-                                                                          size=self.mini_batch, p=prob, replace=False), :]
+            if (self.exp_actual_size > self.mini_batch) and (self.exp_actual_size % self.update_frequency) == 0:
+                sample_size = np.min([self.exp_actual_size, self.exp_size])
+
+                prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
+                mini_batch_exp = self.experience[self.random_state.choice(a=sample_size, size=self.mini_batch,
+                                                                          p=prob, replace=False), :]
                 self.learner.learn(mini_batch_exp)
+
+                # update target model
+                self.update_cnt += 1
+
+                if self.update_cnt % self.freeze_frequency == 0:
+                    self.learner.update_target_model()
 
         return r, ns, terminal
 
-    def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10, exp_size=10000, mini_batch=3000):
+    def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10, freeze_frequency=20,
+                 exp_size=10000, mini_batch=3000, doubleDQN=False):
         super(ExpQLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
         self.mini_batch = mini_batch
         self.exp_size = exp_size
         self.exp_head = 0
-        self.learner = DNNfqi(domain=domain, representation=representation)
+        self.exp_actual_size = 0
+
+        self.update_cnt = 0
+        self.freeze_frequency = freeze_frequency
+        self.behavior_representation = BinaryCompactRep(domain, seed)
+        self.learner = DNNfqi(domain=domain, representation=representation,
+                              behavior_representation=self.behavior_representation, seed=seed, doubleDQN=doubleDQN)
         self.experience = np.zeros((self.exp_size, self.representation.state_features_num * 2 + 2))
         self.priority = np.zeros(self.exp_size)
         print "Using epsilon " + str(epsilon)

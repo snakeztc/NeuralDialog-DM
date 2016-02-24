@@ -13,7 +13,7 @@ def run():
     test_sim20_evn = PomdpSimulator20q(global_seed)
 
     test_interval = 5000
-    sample_size = np.arange(0, 100000, test_interval)
+    sample_size = np.arange(0, 100001, test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
