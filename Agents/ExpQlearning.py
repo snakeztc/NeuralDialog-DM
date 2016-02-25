@@ -23,7 +23,6 @@ class ExpQLearning(Agent):
             # check if exp_head is larger than buffer size
             if self.exp_head >= self.exp_size:
                 print "** reset exp header **"
-                np.random.shuffle(self.experience)
                 self.exp_head = 0
 
             phi_s_size = self.representation.state_features_num

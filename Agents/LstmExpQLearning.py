@@ -10,21 +10,11 @@ class LstmExpQLearning(Agent):
     def learn(self, s, performance_run=False):
         Qs = self.behavior_representation.Qs(s)
 
-        # alternating between computer operation and human operation
-        if self.domain.holding in s[0]:
-            start = self.domain.actions_num - 3
-            end = self.domain.actions_num
-        else:
-            start = 0
-            end = self.domain.actions_num - 3
-
         # choose an action
         if performance_run:
-            aID = self.performance_policy.choose_action(Qs[0:, start:end])
+            aID = self.performance_policy.choose_action(Qs)
         else:
-            aID = self.learning_policy.choose_action(Qs[0:, start:end])
-
-        aID += start
+            aID = self.learning_policy.choose_action(Qs)
 
         (r, ns, terminal) = self.domain.step(s, aID)
 
@@ -37,15 +27,22 @@ class LstmExpQLearning(Agent):
             self.exp_ns[self.exp_head] = ns[1]
             self.exp_ar[self.exp_head, 0] = aID
             self.exp_ar[self.exp_head, 1] = r
-            self.priority[self.exp_head] = np.min([np.abs(r),5.0]) + 1.0
+            self.priority[self.exp_head] = 20.0
             # increment the write head
             self.exp_head += 1
+            self.exp_actual_size += 1
 
-            if self.exp_head > self.mini_batch and (self.exp_head % self.update_frequency) == 0:
-                prob = self.priority[0:self.exp_head] / np.sum(self.priority[0:self.exp_head])
-                indices = self.random_state.choice(a=self.exp_head, size=self.mini_batch, p=prob, replace=False)
+            if self.exp_actual_size > self.mini_batch and (self.exp_actual_size % self.update_frequency) == 0:
+                sample_size = np.min([self.exp_actual_size, self.exp_size])
+                prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
+                indices = self.random_state.choice(a=sample_size, size=self.mini_batch, p=prob, replace=False)
+
                 mini_batch_exp = ([self.exp_s[i] for i in indices], self.exp_ar[indices, :], [self.exp_ns[i] for i in indices])
-                self.learner.learn(mini_batch_exp)
+                td_error = self.learner.learn(mini_batch_exp)
+
+                # update the importance weight
+                self.priority[indices] = np.clip(td_error, 0, 20)
+
                 # update target model
                 self.update_cnt += 1
 
@@ -61,10 +58,14 @@ class LstmExpQLearning(Agent):
         self.update_frequency = update_frequency
         self.mini_batch = mini_batch
         self.exp_size = exp_size
+        # increment the write head
         self.exp_head = 0
+        self.exp_actual_size = 0
+
         # freeze model
         self.freeze_frequency = freeze_frequency
         self.update_cnt = 0
+
         self.behavior_representation = PartialObserveRep(domain, seed=seed)
         # learner
         self.learner = LstmDnnQ(domain=domain, representation=representation,
