@@ -9,7 +9,7 @@ class ExpQLearning(Agent):
 
     def learn(self, s, performance_run=False):
 
-        Qs = self.representation.Qs(s)
+        Qs = self.behavior_representation.Qs(s)
 
         # choose an action
         if performance_run:
@@ -31,7 +31,7 @@ class ExpQLearning(Agent):
             self.experience[self.exp_head, phi_s_size] = aID
             self.experience[self.exp_head, phi_s_size+1] = r
             self.experience[self.exp_head, phi_s_size+2:] = self.representation.phi_s(ns)
-            self.priority[self.exp_head] = 1.0 #+ np.min([np.abs(r), 5.0])
+            self.priority[self.exp_head] = 20.0 #+ np.min([np.abs(r), 5.0])
             # increment the write head
             self.exp_head += 1
             self.exp_actual_size += 1
@@ -40,9 +40,12 @@ class ExpQLearning(Agent):
                 sample_size = np.min([self.exp_actual_size, self.exp_size])
 
                 prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
-                mini_batch_exp = self.experience[self.random_state.choice(a=sample_size, size=self.mini_batch,
-                                                                          p=prob, replace=False), :]
-                self.learner.learn(mini_batch_exp)
+                sample_indices = self.random_state.choice(a=sample_size, size=self.mini_batch, p=prob, replace=False)
+                mini_batch_exp = self.experience[sample_indices, :]
+                td_error = self.learner.learn(mini_batch_exp)
+
+                # update the importance weight
+                self.priority[sample_indices] = np.clip(td_error, 0, 20)
 
                 # update target model
                 self.update_cnt += 1

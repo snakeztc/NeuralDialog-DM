@@ -12,7 +12,7 @@ class PomdpSimulator20q (Domain):
     # a list of tuples (slot_name, question, true_value_set)
     question_data = DomainUtil.get_actions(action_path)
 
-    str_questions = ["Q-"+qd[0]+"-"+str(i) for i, qd in enumerate(question_data)]
+    str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
     str_computer = ["yes_include", "yes_exclude", "no_include", "no_exclude", "ignore"]
@@ -293,8 +293,8 @@ class PomdpSimulator20q (Domain):
         return reward
 
     def get_potential(self, s, ns):
-        s_potential = s[0, -3] if s[0, -3] > 0 else 100
-        ns_potential = ns[0, -3] if ns[0, -3] > 0 else 100
+        s_potential = s[0, -3] if s[0, -3] > 0 else 200
+        ns_potential = ns[0, -3] if ns[0, -3] > 0 else 200
         potential = (s_potential - ns_potential) / 10
         return potential
 

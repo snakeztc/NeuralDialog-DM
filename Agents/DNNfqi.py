@@ -27,13 +27,21 @@ class DNNfqi(BatchAgent):
         phi_ns = experiences[:,phi_s_size+2:]
 
         # calculate the targets
-        y = self.representation.Qs_phi_s(phi_s)
+        y = self.representation.Qs_phi_s(phi_s) ## A Bug should fix in LstmDNNFQI too
         nqs = self.representation.Qs_phi_s(phi_ns)
-        best_nqs = np.amax(nqs, axis=1).ravel()
+        nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
+
+        behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
+        best_nqs = nqs.flat[behavior_argmax]
+        #best_nqs = np.amax(nqs, axis=1).ravel()
         targets = rewards + self.domain.discount_factor * best_nqs
         indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
         # update the new y
         y.flat[indices] = targets
+
+        # compute the TD-error
+        raw_by = self.behavior_representation.Qs_phi_s(phi_s)
+        td_error = np.abs(raw_by.flat[indices] - targets)
 
         if self.doubleDQN:
             if not self.behavior_representation.model:
@@ -47,6 +55,8 @@ class DNNfqi(BatchAgent):
 
             # fit the lstm deep neural nets!!
             self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
+
+        return td_error
 
     def update_target_model(self):
         super(DNNfqi, self).update_target_model()
