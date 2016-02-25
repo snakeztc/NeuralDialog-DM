@@ -83,7 +83,7 @@ class LstmDnnQ(BatchAgent):
         model.add(Dropout(0.2))
 
         model.add(Dense(64, init='lecun_uniform'))
-        model.add(Activation('relu'))
+        model.add(Activation('tanh'))
         model.add(Dropout(0.2))
 
         model.add(Dense(self.domain.actions_num, init='lecun_uniform'))

@@ -19,7 +19,7 @@ def run():
     bench_cnt = 0
     epi_cnt = 0
     epsilon = 1.0
-    ep_decay = 0.9994
+    ep_decay = 0.99
     ep_min = 0.2
     exp_size = 150000
     mini_batch = 32
