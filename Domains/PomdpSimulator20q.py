@@ -15,7 +15,7 @@ class PomdpSimulator20q (Domain):
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
-    str_computer = ["yes_include", "yes_exclude", "no_include", "no_exclude", "ignore"]
+    str_computer = ["yes_include", "no_exclude", "no_include", "yes_exclude"]
 
     # find the vocab size of this world
     all_utt = str_questions + str_informs.values() + str_response + str_computer
@@ -48,17 +48,19 @@ class PomdpSimulator20q (Domain):
 
     # 20Q related
     unasked = 0
-    unknown = 1
-    yes = 2
-    no = 3
-    hold_yes = 4
-    hold_no = 5
-    hold_unknown = 6
-    state_modality = [unasked, unknown, yes, no, hold_yes, hold_no, hold_unknown]
+    hold_yes = 1
+    hold_no = 2
+    hold_unknown = 3
+    # query related
+    unknown = 0
+    yes = 1
+    no = 2
+    resp_modality = [unasked, hold_yes, hold_no, hold_unknown]
+    query_modality = [yes, no, unknown]
 
     loss_reward = -30.0  # -50
     wrong_guess_reward = -10.0  # -10
-    logic_error = -2.0  # -20 i have told you and opposite yes/no
+    logic_error = -10.0  # -20 i have told you and opposite yes/no
     step_reward = 0.0
     win_reward = 30.0  # 50
     episode_cap = 40
@@ -73,9 +75,11 @@ class PomdpSimulator20q (Domain):
     # 0: init, 1 yes, 3 no
     # create state_space_limit
     print "Constructing the state limit for each dimension"
-    statespace_limits = np.zeros((question_count, 2))
+    statespace_limits = np.zeros((question_count*2, 2))
     for d in range(0, question_count):
-        statespace_limits[d, 1] = len(state_modality)
+        statespace_limits[d, 1] = len(resp_modality)
+    for d in range(question_count, question_count*2):
+        statespace_limits[d, 1] = len(query_modality)
 
     # add the extra dimension for query return size, turn count, informed not_yet/successful
     statespace_limits = np.vstack((statespace_limits, [0, len(corpus)]))
@@ -83,7 +87,7 @@ class PomdpSimulator20q (Domain):
     statespace_limits = np.vstack((statespace_limits, [0, 2]))
 
     # turn count is discrete and informed is categorical
-    statespace_type = [Domain.categorical] * question_count
+    statespace_type = [Domain.categorical] * question_count * 2
     statespace_type.extend([Domain.discrete, Domain.discrete, Domain.categorical])
 
     print "Total number of questions " + str(len(question_data))
@@ -152,16 +156,16 @@ class PomdpSimulator20q (Domain):
         # vector = np.zeros(len(self.fields)+2)
         # (hidden_state, observation)
         (self.person_inmind_key, self.person_inmind) = self.init_user()
-        s = np.ones((1, self.statespace_size)) * self.unasked
+        s = np.zeros((1, self.statespace_size))
         s[0, -3] = len(self.corpus)
         return s, [self.eos]
 
     def get_inform(self, s):
         filters = []
         for q_id in range(0, self.question_count):
-            if s[0, q_id] == self.yes:
+            if s[0, self.question_count + q_id] == self.yes:
                 filters.append((q_id, True))
-            elif s[0, q_id] == self.no:
+            elif s[0, self.question_count + q_id] == self.no:
                 filters.append((q_id, False))
         return list(self.search(filters) - set(self.wrong_keys))
 
@@ -221,7 +225,7 @@ class PomdpSimulator20q (Domain):
                     for answer in chosen_answer:
                         if answer in true_set:
                             matched = True
-                            ns[0, aID] = self.yes
+                            ns[0, aID] = self.hold_yes
                             resp = self.index_response.get("yes")
                             break
                     if not matched:
@@ -232,7 +236,7 @@ class PomdpSimulator20q (Domain):
                     # populate to all q_id for this slot_name
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == slot_name:
-                            ns[0, q_id] = self.unknown
+                            ns[0, q_id] = self.hold_unknown
 
         elif a_type == "inform":
             # a is the inform
@@ -254,20 +258,20 @@ class PomdpSimulator20q (Domain):
             agent_utt = self.index_computer.get(a_type)
             resp = []
             question_ns = ns[0, 0:self.question_count]
+            query_ns = ns[0, self.question_count:self.question_count*2]
             if a_type == "yes_include":
-                question_ns[question_ns == self.hold_yes] = self.yes
+                query_ns[question_ns == self.hold_yes] = self.yes
             elif a_type == "yes_exclude":
-                question_ns[question_ns == self.hold_yes] = self.no
+                query_ns[question_ns == self.hold_yes] = self.no
             elif a_type == "no_exclude":
-                question_ns[question_ns == self.hold_no] = self.no
+                query_ns[question_ns == self.hold_no] = self.no
             elif a_type == "no_include":
-                question_ns[question_ns == self.hold_no] = self.yes
+                query_ns[question_ns == self.hold_no] = self.yes
             elif a_type == "ignore":
-                question_ns[question_ns == self.hold_unknown] = self.unknown
+                query_ns[question_ns == self.hold_unknown] = self.unknown
             else:
                 print "ERROR: unknown action type"
                 exit()
-            ns[0, 0:self.question_count] = question_ns
 
         new_results = self.get_inform(ns)
         ns[0, -3] = len(new_results) if new_results else 0
