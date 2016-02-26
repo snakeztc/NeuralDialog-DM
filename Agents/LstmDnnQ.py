@@ -79,10 +79,10 @@ class LstmDnnQ(BatchAgent):
         hidden_size = 30
         model = Sequential()
         model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=True))
-        model.add(LSTM(64, return_sequences=False))
+        model.add(LSTM(128, return_sequences=False))
         model.add(Dropout(0.2))
 
-        model.add(Dense(64, init='lecun_uniform'))
+        model.add(Dense(100, init='lecun_uniform'))
         model.add(Activation('tanh'))
         model.add(Dropout(0.2))
 

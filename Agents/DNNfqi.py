@@ -74,11 +74,11 @@ class DNNfqi(BatchAgent):
         print "Model output dimension " + str(self.domain.actions_num)
 
         model = Sequential()
-        model.add(Dense(150, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
+        model.add(Dense(256, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
         model.add(Activation('tanh'))
         model.add(Dropout(0.2))
 
-        model.add(Dense(100, init='lecun_uniform'))
+        model.add(Dense(128, init='lecun_uniform'))
         model.add(Activation('tanh'))
         model.add(Dropout(0.2))
 

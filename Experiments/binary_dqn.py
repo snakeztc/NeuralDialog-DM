@@ -19,9 +19,9 @@ def run():
     bench_cnt = 0
     epi_cnt = 0
     epsilon = 1.0
-    ep_decay = 0.99
+    ep_decay = 0.999
     ep_min = 0.2
-    exp_size = 150000
+    exp_size = 100000
     mini_batch = 32
     freeze_frequency = 1000
     update_frequency = 4
@@ -57,7 +57,7 @@ def run():
                 eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
                 test_agent.verbose = True
-                eval_agent.eval(1, discount=True)
+                eval_agent.eval(5, discount=True)
                 bench_cnt += 1
 
             if terminal or bench_cnt >= len(sample_size):

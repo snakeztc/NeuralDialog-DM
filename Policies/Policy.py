@@ -29,7 +29,7 @@ class RandomPolicy(Policy):
 
 class GreedyPolicy(Policy):
     def choose_action(self, Qs):
-        return self.boltzmann(Qs, 1.0)
+        return self.boltzmann(Qs, 0.5)
         #return self.rargmax(Qs)
 
 
@@ -40,8 +40,8 @@ class EpsilonGreedyPolicy(Policy):
         if self.random_state.random_sample() < self.epsilon:
             return self.random_state.randint(0, Qs.shape[1])
         else:
-            #return self.boltzmann(Qs, 1.0)
-            return self.rargmax(Qs)
+            return self.boltzmann(Qs, 0.5)
+            #return self.rargmax(Qs)
 
     def __init__(self, epsilon, seed):
         super(EpsilonGreedyPolicy, self).__init__(seed)

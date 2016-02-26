@@ -44,7 +44,7 @@ class ExpQLearning(Agent):
                 td_error = self.learner.learn(mini_batch_exp)
 
                 # update the importance weight
-                self.priority[sample_indices] = np.clip(td_error, 0, 20)
+                self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0
 
                 # update target model
                 self.update_cnt += 1

@@ -47,21 +47,21 @@ class PomdpSimulator20q (Domain):
     print "Using prior distribution " + prior_dist
 
     # 20Q related
-    unasked = 0.0
-    unknown = 1.0
-    yes = 2.0
-    no = 3.0
-    hold_yes = 4.0
-    hold_no = 5.0
-    hold_unknown = 6.0
+    unasked = 0
+    unknown = 1
+    yes = 2
+    no = 3
+    hold_yes = 4
+    hold_no = 5
+    hold_unknown = 6
     state_modality = [unasked, unknown, yes, no, hold_yes, hold_no, hold_unknown]
 
-    loss_reward = -50.0
-    wrong_guess_reward = -10.0
-    logic_error = -20.0  # i have told you and opposite yes/no
-    step_reward = -1.0
-    win_reward = 50.0
-    episode_cap = 50
+    loss_reward = -30.0  # -50
+    wrong_guess_reward = -10.0  # -10
+    logic_error = -2.0  # -20 i have told you and opposite yes/no
+    step_reward = 0.0
+    win_reward = 30.0  # 50
+    episode_cap = 40
     discount_factor = 0.99
     # each value has a question, 1 inform and 3 computer operation
     actions_num = question_count + len(str_informs) + len(str_computer)
@@ -134,12 +134,16 @@ class PomdpSimulator20q (Domain):
         for idx in range(0, len(self.corpus) + 1):
             self.index_result[idx] = [self.vocabs.index(str(idx)) + 1]
 
+        # to make the agent life easier we have a set of result have been informed
+        self.wrong_keys = set()
+
         print "Done indexing"
 
     def init_user(self):
         # initialize the user here
         selected_key = self.random_state.choice(self.corpus.keys(), p=self.prob)
         selected_person = self.corpus.get(selected_key)
+        self.wrong_keys = set()
         return selected_key, selected_person
 
     def s0(self):
@@ -159,7 +163,7 @@ class PomdpSimulator20q (Domain):
                 filters.append((q_id, True))
             elif s[0, q_id] == self.no:
                 filters.append((q_id, False))
-        return list(self.search(filters))
+        return list(self.search(filters) - set(self.wrong_keys))
 
     # filters a list (question_id, true or false)
     def search(self, filters):
@@ -183,7 +187,7 @@ class PomdpSimulator20q (Domain):
         hist = all_s[1]
         (ns, nhist) = self.get_next_state(s, hist, aID)
         reward = self.get_reward(s, ns, aID)
-        reward += self.get_potential(s, ns)
+        #reward += self.get_potential(s, ns)
         return reward, (ns, nhist), self.is_terminal(ns)
 
     def get_next_state(self, s, hist, aID):
@@ -217,7 +221,7 @@ class PomdpSimulator20q (Domain):
                     for answer in chosen_answer:
                         if answer in true_set:
                             matched = True
-                            ns[0, aID] = self.hold_yes
+                            ns[0, aID] = self.yes
                             resp = self.index_response.get("yes")
                             break
                     if not matched:
@@ -228,7 +232,7 @@ class PomdpSimulator20q (Domain):
                     # populate to all q_id for this slot_name
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == slot_name:
-                            ns[0, q_id] = self.hold_unknown
+                            ns[0, q_id] = self.unknown
 
         elif a_type == "inform":
             # a is the inform
@@ -242,6 +246,7 @@ class PomdpSimulator20q (Domain):
                     resp = self.index_response.get('correct')
                 else:
                     resp = self.index_response.get('wrong')
+                    self.wrong_keys.add(guess)
             else:
                 resp = self.index_response.get('wrong')
         else:
