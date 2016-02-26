@@ -37,7 +37,6 @@ class LstmDnnQ(BatchAgent):
 
         behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
         best_nqs = nqs.flat[behavior_argmax]
-        #best_nqs = np.amax(nqs, axis=1).ravel()
 
         targets = rewards + self.domain.discount_factor * best_nqs
         indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
@@ -79,10 +78,10 @@ class LstmDnnQ(BatchAgent):
         hidden_size = 30
         model = Sequential()
         model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=True))
-        model.add(LSTM(128, return_sequences=False))
+        model.add(LSTM(256, return_sequences=False))
         model.add(Dropout(0.2))
 
-        model.add(Dense(100, init='lecun_uniform'))
+        model.add(Dense(128, init='lecun_uniform'))
         model.add(Activation('tanh'))
         model.add(Dropout(0.2))
 

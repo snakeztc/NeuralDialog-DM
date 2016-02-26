@@ -35,13 +35,14 @@ class LstmExpQLearning(Agent):
             if self.exp_actual_size > self.mini_batch and (self.exp_actual_size % self.update_frequency) == 0:
                 sample_size = np.min([self.exp_actual_size, self.exp_size])
                 prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
-                indices = self.random_state.choice(a=sample_size, size=self.mini_batch, p=prob, replace=False)
+                sample_indices = self.random_state.choice(a=sample_size, size=self.mini_batch, p=prob, replace=False)
 
-                mini_batch_exp = ([self.exp_s[i] for i in indices], self.exp_ar[indices, :], [self.exp_ns[i] for i in indices])
+                mini_batch_exp = ([self.exp_s[i] for i in sample_indices], self.exp_ar[sample_indices, :],
+                                  [self.exp_ns[i] for i in sample_indices])
                 td_error = self.learner.learn(mini_batch_exp)
 
                 # update the importance weight
-                self.priority[indices] = np.clip(td_error, 0, 20)
+                self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0
 
                 # update target model
                 self.update_cnt += 1
