@@ -60,9 +60,9 @@ class PomdpSimulator20q (Domain):
 
     loss_reward = -30.0  # -50
     wrong_guess_reward = -10.0  # -10
-    logic_error = -10.0  # -20 i have told you and opposite yes/no
+    logic_error = -10.0
     step_reward = 0.0
-    win_reward = 30.0  # 50
+    win_reward = 30.0
     episode_cap = 40
     discount_factor = 0.99
     # each value has a question, 1 inform and 3 computer operation
@@ -287,6 +287,8 @@ class PomdpSimulator20q (Domain):
         reward = self.step_reward
         # get action type of aID
         a_type = self.get_action_type(aID)
+        query_ns = ns[0, self.question_count:self.question_count*2]
+        query_s = s[0, self.question_count:self.question_count*2]
 
         # check loss condition
         if ns[0, -1] == 1: # successfully inform
@@ -299,6 +301,9 @@ class PomdpSimulator20q (Domain):
             reward = self.logic_error
         elif a_type == "yes_exclude" or a_type == "no_include":
             reward = self.logic_error
+        elif a_type != "inform" and a_type != "question" and np.array_equal(query_s, query_ns):
+            reward = self.logic_error
+
         return reward
 
     def get_potential(self, s, ns):

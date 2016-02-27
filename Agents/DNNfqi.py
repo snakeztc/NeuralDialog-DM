@@ -5,8 +5,7 @@ from BatchAgent import BatchAgent
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
-from keras.optimizers import SGD
-from keras.regularizers import l2, activity_l2
+import os.path
 
 
 class DNNfqi(BatchAgent):
@@ -76,11 +75,11 @@ class DNNfqi(BatchAgent):
         model = Sequential()
         model.add(Dense(256, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
         model.add(Activation('tanh'))
-        model.add(Dropout(0.2))
+        model.add(Dropout(0.3))
 
         model.add(Dense(128, init='lecun_uniform'))
         model.add(Activation('tanh'))
-        model.add(Dropout(0.2))
+        model.add(Dropout(0.3))
 
         model.add(Dense(self.domain.actions_num, init='lecun_uniform'))
         model.add(Activation('linear')) #linear output so we can have range of real-valued outputs
@@ -88,6 +87,13 @@ class DNNfqi(BatchAgent):
         opt = RMSprop(clipvalue=1.0)
         model.compile(loss='mse', optimizer=opt)
         print model.summary()
+
+        # check if we have weights
+        mode_path = model_dir+"best-dqn.h5"
+        if os.path.exists(mode_path):
+            model.load_weights(mode_path)
+            print "Loaded the model weights"
+
         print "Model created"
         return model
 
