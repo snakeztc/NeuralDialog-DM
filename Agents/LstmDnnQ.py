@@ -3,7 +3,7 @@ import numpy as np
 np.random.seed(global_seed)
 from BatchAgent import BatchAgent
 from keras.models import Sequential
-from keras.layers.recurrent import LSTM
+from keras.layers.recurrent import LSTM, GRU
 from keras.layers.embeddings import Embedding
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
@@ -77,9 +77,11 @@ class LstmDnnQ(BatchAgent):
         print "Creating model"
         hidden_size = 30
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=True))
-        model.add(LSTM(256, return_sequences=False))
+        model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=False))
+        model.add(GRU(256, return_sequences=True))
         model.add(Dropout(0.2))
+
+        model.add(TimeDistributedMerge("ave"))
 
         model.add(Dense(128, init='lecun_uniform'))
         model.add(Activation('tanh'))
