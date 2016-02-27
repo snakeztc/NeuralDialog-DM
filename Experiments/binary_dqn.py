@@ -59,6 +59,8 @@ def run():
                 test_agent.verbose = True
                 eval_agent.eval(5, discount=True)
                 bench_cnt += 1
+                if representation.model:
+                    representation.model.save_weights(model_dir+str(step_cnt)+'-dqn.h5')
 
             if terminal or bench_cnt >= len(sample_size):
                 break
