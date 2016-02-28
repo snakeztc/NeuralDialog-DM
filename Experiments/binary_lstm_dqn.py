@@ -6,35 +6,40 @@ from Representations.PartialObserveRep import PartialObserveRep
 import numpy as np
 import matplotlib.pyplot as plt
 from Utils.config import *
+import pprint
 
 
 def run():
-    # load the data from file
-    sim20_evn = PomdpSimulator20q(global_seed)
-    test_sim20_evn = PomdpSimulator20q(global_seed)
+    # print out system config
+    pprint.pprint(generalConfig)
+    pprint.pprint(rnnDqnConfig)
 
-    test_interval = 2500
-    sample_size = np.arange(0, 100001, test_interval)
+    # load the data from file
+    sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+
+    test_interval = rnnDqnConfig["test_interval"]
+    sample_size = np.arange(0, rnnDqnConfig["max_sample"], test_interval)
+    epsilon = rnnDqnConfig["max_sample"]
+    ep_max = rnnDqnConfig["ep_max"]
+    ep_min_step = rnnDqnConfig["ep_min_step"]
+    ep_min = rnnDqnConfig["ep_min"]
+    exp_size = rnnDqnConfig["exp_size"]
+    mini_batch = rnnDqnConfig["mini_batch"]
+    freeze_frequency = rnnDqnConfig["freeze_frequency"]
+    update_frequency = rnnDqnConfig["update_frequency"]
+    test_trial = rnnDqnConfig["test_trial"]
+    doubleDQN = rnnDqnConfig["doubleDQN"]
+
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
-    epsilon = 1.0
-    ep_decay = 0.999
-    ep_min = 0.2
-    exp_size = 100000
-    mini_batch = 32
-    freeze_frequency = 1000
-    update_frequency = 4
-    test_trial = 100
-    doubleDQN = True
 
-    representation = PartialObserveRep(sim20_evn, seed = global_seed)
+    representation = PartialObserveRep(sim20_evn, seed = generalConfig["global_seed"])
     agent = LstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                              update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch,
                              freeze_frequency=freeze_frequency, doubleDQN=doubleDQN)
-    print "Test trail number is " + str(test_trial)
-    print "Test interval is " + str(test_interval)
 
     print "evaluation at 0"
     test_agent = QLearning(test_sim20_evn, agent.representation)
@@ -45,8 +50,8 @@ def run():
     while bench_cnt < len(sample_size):
         epi_cnt += 1
         s = sim20_evn.s0()
-        cur_epsilon = max(epsilon * (ep_decay ** epi_cnt), ep_min)
         while True:
+            cur_epsilon = max(ep_max-((ep_max-ep_min)*step_cnt/ep_min_step), ep_min)
             # set the current epslion
             agent.learning_policy.set_epsilon(epsilon=cur_epsilon)
             (r, ns, terminal) = agent.learn(s, performance_run=False)

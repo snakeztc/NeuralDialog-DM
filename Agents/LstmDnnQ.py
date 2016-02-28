@@ -1,6 +1,6 @@
 from Utils.config import *
 import numpy as np
-np.random.seed(global_seed)
+np.random.seed(generalConfig["global_seed"])
 from BatchAgent import BatchAgent
 from keras.models import Sequential
 from keras.layers.recurrent import LSTM, GRU
@@ -75,15 +75,17 @@ class LstmDnnQ(BatchAgent):
 
     def init_model(self):
         print "Creating model"
-        hidden_size = 30
+        embed_size = rnnDqnConfig["embedding"]
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=True))
-        model.add(GRU(256, return_sequences=False))
+        model.add(Embedding(self.domain.nb_words+1, embed_size, mask_zero=True))
+
+        if rnnDqnConfig["recurrent"] == "LSTM":
+            model.add(LSTM(rnnDqnConfig["first_hidden"], return_sequences=False))
+        else:
+            model.add(GRU(rnnDqnConfig["first_hidden"], return_sequences=False))
         model.add(Dropout(0.2))
 
-        #model.add(TimeDistributedMerge("ave"))
-
-        model.add(Dense(128, init='lecun_uniform'))
+        model.add(Dense(rnnDqnConfig["second_hidden"], init='lecun_uniform'))
         model.add(Activation('tanh'))
         model.add(Dropout(0.2))
 
