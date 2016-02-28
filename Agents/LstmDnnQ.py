@@ -77,11 +77,11 @@ class LstmDnnQ(BatchAgent):
         print "Creating model"
         hidden_size = 30
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=False))
-        model.add(GRU(256, return_sequences=True))
+        model.add(Embedding(self.domain.nb_words+1, hidden_size, mask_zero=True))
+        model.add(GRU(256, return_sequences=False))
         model.add(Dropout(0.2))
 
-        model.add(TimeDistributedMerge("ave"))
+        #model.add(TimeDistributedMerge("ave"))
 
         model.add(Dense(128, init='lecun_uniform'))
         model.add(Activation('tanh'))

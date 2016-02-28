@@ -61,7 +61,7 @@ def run():
                 eval_agent.eval(1, discount=True)
                 bench_cnt += 1
                 if representation.model:
-                    representation.model.save_weights(model_dir+str(step_cnt)+'-gru.h5')
+                    representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-last.h5')
 
             if terminal or bench_cnt >= len(sample_size):
                 break
