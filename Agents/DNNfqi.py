@@ -1,6 +1,6 @@
 from Utils.config import *
 import numpy as np
-np.random.seed(global_seed)
+np.random.seed(generalConfig["global_seed"])
 from BatchAgent import BatchAgent
 from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation

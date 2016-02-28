@@ -6,34 +6,37 @@ from Representations.BinaryCompactRep import BinaryCompactRep
 import numpy as np
 import matplotlib.pyplot as plt
 from Utils.config import *
+import pprint
+
 
 def run():
-    # load the data from file
-    sim20_evn = PomdpSimulator20q(global_seed)
-    test_sim20_evn = PomdpSimulator20q(global_seed)
+    pprint.pprint(generalConfig)
+    pprint.pprint(dqnConfig)
 
-    test_interval = 2500
-    sample_size = np.arange(0, 100001, test_interval)
+    # load the data from file
+    sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+
+    test_interval = dqnConfig.get("test_interval")
+    sample_size = np.arange(0, dqnConfig.get("max_sample"), test_interval)
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
     epsilon = 1.0
-    ep_decay = 0.999
-    ep_min = 0.2
-    exp_size = 100000
-    mini_batch = 32
-    freeze_frequency = 1000
-    update_frequency = 4
-    test_trial = 200
-    doubleDQN = True
+    ep_decay = dqnConfig["ep_decay"]
+    ep_min = dqnConfig["ep_min"]
+    exp_size = dqnConfig["exp_size"]
+    mini_batch = dqnConfig["mini_batch"]
+    freeze_frequency = dqnConfig["freeze_frequency"]
+    update_frequency = dqnConfig["update_frequency"]
+    test_trial = dqnConfig.get("test_trial")
+    doubleDQN = dqnConfig.get("doubleDQN")
 
-    representation = BinaryCompactRep(sim20_evn, seed = global_seed)
+    representation = BinaryCompactRep(sim20_evn, seed = generalConfig["global_seed"])
     agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                          update_frequency=update_frequency, freeze_frequency=freeze_frequency, exp_size=exp_size,
                          mini_batch=mini_batch, doubleDQN=doubleDQN)
-    print "Test trail number is " + str(test_trial)
-    print "Test interval is " + str(test_interval)
 
     print "evaluation at 0"
     test_agent = QLearning(test_sim20_evn, agent.representation)

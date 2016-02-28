@@ -1,6 +1,6 @@
 import logging
 import numpy as np
-
+from Utils.config import *
 
 class Policy(object):
     def __init__(self, seed=1):
@@ -29,19 +29,15 @@ class RandomPolicy(Policy):
 
 class GreedyPolicy(Policy):
     def choose_action(self, Qs):
-        return self.boltzmann(Qs, 0.5)
-        #return np.argmax(Qs)
-
+        return self.boltzmann(Qs, generalConfig["greedy_temp"])
 
 class EpsilonGreedyPolicy(Policy):
-    epsilon = 0.1
 
     def choose_action(self, Qs):
         if self.random_state.random_sample() < self.epsilon:
             return self.random_state.randint(0, Qs.shape[1])
         else:
-            return self.boltzmann(Qs, 0.5)
-            #return self.rargmax(Qs)
+            return self.boltzmann(Qs, generalConfig["greedy_temp"])
 
     def __init__(self, epsilon, seed):
         super(EpsilonGreedyPolicy, self).__init__(seed)

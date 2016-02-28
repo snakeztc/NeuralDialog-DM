@@ -2,9 +2,13 @@ import numpy as np
 from Domain import Domain
 from Utils.config import *
 from Utils.domainUtil import DomainUtil
+import pprint
 
 
 class PomdpSimulator20q (Domain):
+
+    pprint.pprint(pomdpConfig)
+
     # global varaible
     print "loading corpus and question data"
     corpus = DomainUtil.load_model(corpus_path)
@@ -58,13 +62,13 @@ class PomdpSimulator20q (Domain):
     resp_modality = [unasked, hold_yes, hold_no, hold_unknown]
     query_modality = [yes, no, unknown]
 
-    loss_reward = -30.0  # -50
-    wrong_guess_reward = -10.0  # -10
-    logic_error = -10.0
-    step_reward = 0.0
-    win_reward = 30.0
-    episode_cap = 40
-    discount_factor = 0.99
+    loss_reward = pomdpConfig["loss_reward"]
+    wrong_guess_reward = pomdpConfig["wrong_guess_reward"]
+    logic_error = pomdpConfig["logic_error"]
+    step_reward = pomdpConfig["step_reward"]
+    win_reward = pomdpConfig["win_reward"]
+    episode_cap = pomdpConfig["episode_cap"]
+    discount_factor = pomdpConfig.get("discount_factor")
     # each value has a question, 1 inform and 3 computer operation
     actions_num = question_count + len(str_informs) + len(str_computer)
     action_types = ["question"] * question_count + ["inform"] + str_computer
