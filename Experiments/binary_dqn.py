@@ -23,8 +23,8 @@ def run():
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
-    epsilon = 1.0
-    ep_decay = dqnConfig["ep_decay"]
+    ep_max = dqnConfig["ep_max"]
+    ep_min_step = dqnConfig["ep_min_step"]
     ep_min = dqnConfig["ep_min"]
     exp_size = dqnConfig["exp_size"]
     mini_batch = dqnConfig["mini_batch"]
@@ -34,7 +34,7 @@ def run():
     doubleDQN = dqnConfig.get("doubleDQN")
 
     representation = BinaryCompactRep(sim20_evn, seed = generalConfig["global_seed"])
-    agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
+    agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=ep_max,
                          update_frequency=update_frequency, freeze_frequency=freeze_frequency, exp_size=exp_size,
                          mini_batch=mini_batch, doubleDQN=doubleDQN)
 
@@ -47,8 +47,8 @@ def run():
     while bench_cnt < len(sample_size):
         epi_cnt += 1
         s = sim20_evn.s0()
-        cur_epsilon = max(epsilon * (ep_decay ** epi_cnt), ep_min)
         while True:
+            cur_epsilon = max(ep_max-((ep_max-ep_min)*step_cnt/ep_min_step), ep_min)
             # set the current epslion
             agent.learning_policy.set_epsilon(epsilon=cur_epsilon)
             (r, ns, terminal) = agent.learn(s, performance_run=False)

@@ -9,6 +9,7 @@ import os.path
 
 
 class DNNfqi(BatchAgent):
+    mode_path = model_dir+"best-dqn.h5"
 
     def __init__(self, domain, representation, behavior_representation, seed=1, doubleDQN=False):
         super(DNNfqi, self).__init__(domain, representation, seed)
@@ -73,13 +74,13 @@ class DNNfqi(BatchAgent):
         print "Model output dimension " + str(self.domain.actions_num)
 
         model = Sequential()
-        model.add(Dense(256, init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
+        model.add(Dense(dqnConfig["first_hidden"], init='lecun_uniform', input_shape=(self.representation.state_features_num,)))
         model.add(Activation('tanh'))
-        model.add(Dropout(0.3))
+        model.add(Dropout(dqnConfig["dropout"]))
 
-        model.add(Dense(128, init='lecun_uniform'))
+        model.add(Dense(dqnConfig["second_hidden"], init='lecun_uniform'))
         model.add(Activation('tanh'))
-        model.add(Dropout(0.3))
+        model.add(Dropout(dqnConfig["dropout"]))
 
         model.add(Dense(self.domain.actions_num, init='lecun_uniform'))
         model.add(Activation('linear')) #linear output so we can have range of real-valued outputs
@@ -89,9 +90,8 @@ class DNNfqi(BatchAgent):
         print model.summary()
 
         # check if we have weights
-        mode_path = model_dir+"best-dqn.h5"
-        if os.path.exists(mode_path):
-            model.load_weights(mode_path)
+        if os.path.exists(self.mode_path):
+            model.load_weights(self.mode_path)
             print "Loaded the model weights"
 
         print "Model created"

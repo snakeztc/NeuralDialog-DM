@@ -16,12 +16,16 @@ pomdpConfig = {"loss_reward": -30.0,
 
 dqnConfig = {"test_interval": 2500,
              "max_sample": 100001,
-             "ep_min": 1.0,
-             "ep_decay": 0.999,
-             "exp_size": 10000,
+             'ep_max': 1.0,
+             "ep_min": 0.1,
+             "ep_min_step": 70000,
+             "exp_size": 100000,
              "mini_batch": 32,
              "freeze_frequency": 1000,
              "update_frequency": 4,
              "test_trial": 200,
-             "doubleDQN": True}
+             "doubleDQN": True,
+             "first_hidden": 128,
+             "second_hidden": 256,
+             "dropout": 0.3}
 
