@@ -16,15 +16,10 @@ class DNNfqi(BatchAgent):
         self.behavior_representation = behavior_representation
         self.doubleDQN = doubleDQN
 
-
     def learn(self, experiences, max_iter=20):
         # experience is in (phi_s, a, r, phi_ns)
-        num_samples = experiences.shape[0]
-        phi_s_size = self.representation.state_features_num
-        phi_s = experiences[:, 0:phi_s_size]
-        actions = experiences[:, phi_s_size]
-        rewards = experiences[:, phi_s_size+1]
-        phi_ns = experiences[:,phi_s_size+2:]
+        num_samples = experiences.mini_batch_size
+        (phi_s, actions, rewards, phi_ns, sample_indices) = experiences.sample_mini_batch()
 
         # calculate the targets
         y = self.representation.Qs_phi_s(phi_s) ## A Bug should fix in LstmDNNFQI too
@@ -33,7 +28,7 @@ class DNNfqi(BatchAgent):
 
         behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
         best_nqs = nqs.flat[behavior_argmax]
-        #best_nqs = np.amax(nqs, axis=1).ravel()
+
         targets = rewards + self.domain.discount_factor * best_nqs
         indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
         # update the new y
@@ -42,6 +37,9 @@ class DNNfqi(BatchAgent):
         # compute the TD-error
         raw_by = self.behavior_representation.Qs_phi_s(phi_s)
         td_error = np.abs(raw_by.flat[indices] - targets)
+
+        # update the priority
+        experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
 
         if self.doubleDQN:
             if not self.behavior_representation.model:
@@ -57,7 +55,6 @@ class DNNfqi(BatchAgent):
             # fit the lstm deep neural nets!!
             self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
-        return td_error
 
     def update_target_model(self):
         super(DNNfqi, self).update_target_model()
