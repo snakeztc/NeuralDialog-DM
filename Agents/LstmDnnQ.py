@@ -76,14 +76,19 @@ class LstmDnnQ(BatchAgent):
     def init_model(self):
         print "Creating model"
         embed_size = rnnDqnConfig["embedding"]
+        use_mean_pool = rnnDqnConfig["use_mean_pool"]
+
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words+1, embed_size, mask_zero=True))
+        model.add(Embedding(self.domain.nb_words+1, embed_size, mask_zero=(not use_mean_pool)))
 
         if rnnDqnConfig["recurrent"] == "LSTM":
-            model.add(LSTM(rnnDqnConfig["first_hidden"], return_sequences=False))
+            model.add(LSTM(rnnDqnConfig["first_hidden"], return_sequences=use_mean_pool))
         else:
-            model.add(GRU(rnnDqnConfig["first_hidden"], return_sequences=False))
+            model.add(GRU(rnnDqnConfig["first_hidden"], return_sequences=use_mean_pool))
         model.add(Dropout(0.2))
+
+        if use_mean_pool:
+            model.add(TimeDistributedMerge("ave"))
 
         model.add(Dense(rnnDqnConfig["second_hidden"], init='lecun_uniform'))
         model.add(Activation('tanh'))
