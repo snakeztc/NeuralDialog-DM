@@ -65,7 +65,7 @@ def run():
                 test_agent.verbose = True
                 eval_agent.eval(1, discount=True)
                 bench_cnt += 1
-                if representation.model:
+                if generalConfig["save_model"] and representation.model:
                     representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-last.h5')
 
             if terminal or bench_cnt >= len(sample_size):

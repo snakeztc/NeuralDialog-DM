@@ -46,13 +46,14 @@ class DNNfqi(BatchAgent):
         if self.doubleDQN:
             if not self.behavior_representation.model:
                 self.behavior_representation.model = self.init_model()
+                if os.path.exists(self.mode_path):
+                    self.representation.model = self.init_model()
 
             # fit the lstm deep neural nets!!
             self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
         else:
             if not self.representation.model:
                 self.representation.model = self.init_model()
-
             # fit the lstm deep neural nets!!
             self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 

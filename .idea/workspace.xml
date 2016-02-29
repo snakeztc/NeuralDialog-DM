@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5f205f89-a1d7-41c9-a7a4-173417943a5c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/LstmDnnQ.py" afterPath="$PROJECT_DIR$/Agents/LstmDnnQ.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/DNNfqi.py" afterPath="$PROJECT_DIR$/Agents/DNNfqi.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/binary_dqn.py" afterPath="$PROJECT_DIR$/Experiments/binary_dqn.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/binary_lstm_dqn.py" afterPath="$PROJECT_DIR$/Experiments/binary_lstm_dqn.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Utils/config.py" afterPath="$PROJECT_DIR$/Utils/config.py" />
     </list>
     <ignored path="NeuralDM.iws" />
@@ -29,7 +31,7 @@
     <SUITE FILE_PATH="coverage/NeuralDM$binary_online_fqi.coverage" NAME="binary_online_fqi Coverage Results" MODIFIED="1455250109767" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$BinarySimulator20q.coverage" NAME="BinarySimulator20q Coverage Results" MODIFIED="1455473510532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Domains" />
     <SUITE FILE_PATH="coverage/NeuralDM$online_fqi.coverage" NAME="online_fqi Coverage Results" MODIFIED="1455231289864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
-    <SUITE FILE_PATH="coverage/NeuralDM$binary_dqn.coverage" NAME="binary_dqn Coverage Results" MODIFIED="1456638911280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
+    <SUITE FILE_PATH="coverage/NeuralDM$binary_dqn.coverage" NAME="binary_dqn Coverage Results" MODIFIED="1456761857927" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -44,17 +46,17 @@
         <entry file="file://$PROJECT_DIR$/Utils/config.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="43" column="39" selection-start-line="43" selection-start-column="39" selection-end-line="43" selection-end-column="39" />
+              <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="binary_lstm_dqn.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="binary_lstm_dqn.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Experiments/binary_lstm_dqn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+            <state vertical-scroll-proportion="1.0603448">
+              <caret line="74" column="42" selection-start-line="74" selection-start-column="42" selection-end-line="74" selection-end-column="42" />
               <folding>
                 <element signature="e#0#55#0" expanded="true" />
               </folding>
@@ -62,11 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LstmDnnQ.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LstmDnnQ.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Agents/LstmDnnQ.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.3912311">
-              <caret line="91" column="0" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
               <folding />
             </state>
           </provider>
@@ -76,10 +78,20 @@
         <entry file="file://$PROJECT_DIR$/Agents/DNNfqi.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="80" column="50" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="50" />
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="domainUtil.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Utils/domainUtil.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -88,7 +100,7 @@
         <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="50" column="84" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="84" />
+              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
               <folding>
                 <element signature="e#0#55#0" expanded="true" />
               </folding>
@@ -168,11 +180,11 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/Domains/PomdpSimulator20q.py" />
         <option value="$PROJECT_DIR$/Policies/Policy.py" />
-        <option value="$PROJECT_DIR$/Agents/DNNfqi.py" />
-        <option value="$PROJECT_DIR$/Experiments/binary_dqn.py" />
-        <option value="$PROJECT_DIR$/Experiments/binary_lstm_dqn.py" />
-        <option value="$PROJECT_DIR$/Utils/config.py" />
         <option value="$PROJECT_DIR$/Agents/LstmDnnQ.py" />
+        <option value="$PROJECT_DIR$/Agents/DNNfqi.py" />
+        <option value="$PROJECT_DIR$/Experiments/binary_lstm_dqn.py" />
+        <option value="$PROJECT_DIR$/Experiments/binary_dqn.py" />
+        <option value="$PROJECT_DIR$/Utils/config.py" />
       </list>
     </option>
   </component>
@@ -182,10 +194,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="207" />
-    <option name="y" value="57" />
-    <option name="width" value="1224" />
-    <option name="height" value="711" />
+    <option name="x" value="297" />
+    <option name="y" value="23" />
+    <option name="width" value="1208" />
+    <option name="height" value="670" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -212,7 +224,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -275,7 +287,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -298,7 +310,7 @@
       <recent name="$PROJECT_DIR$/Experiments" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.binary_lstm_dqn">
+  <component name="RunManager" selected="Python.binary_dqn">
     <configuration default="false" name="binary_dqn" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -595,8 +607,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.binary_lstm_dqn" />
-        <item index="1" class="java.lang.String" itemvalue="Python.binary_dqn" />
+        <item index="0" class="java.lang.String" itemvalue="Python.binary_dqn" />
+        <item index="1" class="java.lang.String" itemvalue="Python.binary_lstm_dqn" />
         <item index="2" class="java.lang.String" itemvalue="Python.Policy" />
         <item index="3" class="java.lang.String" itemvalue="Python.BinarySimulator20q" />
         <item index="4" class="java.lang.String" itemvalue="Python tests.Nosetest TestBinarySimulator20q.test_value_id_2_slot_id" />
@@ -896,7 +908,13 @@
       <option name="project" value="LOCAL" />
       <updated>1456672389623</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="add mean pool config&#10;">
+      <created>1456718348126</created>
+      <option name="number" value="00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1456718348126</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -941,28 +959,28 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="207" y="57" width="1224" height="711" extended-state="0" />
+    <frame x="297" y="23" width="1208" height="670" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22758037" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2341338" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27380952" sideWeight="0.49690402" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6598916" sideWeight="0.13043478" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4236842" sideWeight="0.56707317" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28421053" sideWeight="0.4878049" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.55172414" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3258278" sideWeight="0.49125364" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.87108016" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45101088" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24078947" sideWeight="0.49690402" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.87108016" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27380952" sideWeight="0.49690402" order="6" side_tool="false" content_ui="tabs" />
@@ -998,7 +1016,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix bug in EOS" />
     <MESSAGE value="wokring version with LSTM no words" />
     <MESSAGE value="working double dqn" />
     <MESSAGE value="fix not deep copy bug" />
@@ -1023,7 +1040,8 @@
     <MESSAGE value="add configuration" />
     <MESSAGE value="finish config for binary dqn" />
     <MESSAGE value="adapt lstm to config mode" />
-    <option name="LAST_COMMIT_MESSAGE" value="adapt lstm to config mode" />
+    <MESSAGE value="add mean pool config&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="add mean pool config&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1037,7 +1055,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="493" />
+      <option name="time" value="494" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1252,13 +1270,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Utils/domainUtil.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.024752475">
-          <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Agents/EvalAgent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.38118812">
@@ -1368,49 +1379,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
+    <entry file="file://$PROJECT_DIR$/Utils/domainUtil.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="50" column="84" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="84" />
-          <folding>
-            <element signature="e#0#55#0" expanded="true" />
-          </folding>
+          <caret line="27" column="24" selection-start-line="27" selection-start-column="24" selection-end-line="27" selection-end-column="24" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Agents/DNNfqi.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="50" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="50" />
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/binary_lstm_dqn.py">
+    <entry file="file://$PROJECT_DIR$/Agents/LstmDnnQ.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#55#0" expanded="true" />
-          </folding>
+          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Utils/config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="39" selection-start-line="43" selection-start-column="39" selection-end-line="43" selection-end-column="39" />
+          <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/LstmDnnQ.py">
+    <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3912311">
-          <caret line="91" column="0" selection-start-line="91" selection-start-column="0" selection-end-line="91" selection-end-column="0" />
-          <folding />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#55#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experiments/binary_lstm_dqn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0603448">
+          <caret line="74" column="42" selection-start-line="74" selection-start-column="42" selection-end-line="74" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#55#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
