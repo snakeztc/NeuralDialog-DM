@@ -50,7 +50,7 @@ class LstmExpQLearning(Agent):
         # learner
         self.learner = LstmDnnQ(domain=domain, representation=representation,
                                 behavior_representation=self.behavior_representation,
-                                doubleDQN=doubleDQN)
+                                doubleDQN=doubleDQN, seed=seed)
         print "Using epsilon " + str(epsilon)
         print "Update_frequency " + str(self.update_frequency)
         print "Mini-batch size is " + str(self.experience.mini_batch_size)
