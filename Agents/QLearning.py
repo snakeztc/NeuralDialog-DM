@@ -1,8 +1,5 @@
 from Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
-from Utils.Tools import vec2id
-import numpy as np
-
 
 class QLearning(Agent):
 

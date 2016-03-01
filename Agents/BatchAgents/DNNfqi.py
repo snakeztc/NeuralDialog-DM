@@ -55,7 +55,6 @@ class DNNfqi(BatchAgent):
             # fit the lstm deep neural nets!!
             self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
-
     def update_target_model(self):
         super(DNNfqi, self).update_target_model()
 

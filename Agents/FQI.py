@@ -1,6 +1,7 @@
 import numpy as np
-from BatchAgent import BatchAgent
 from sklearn import tree
+
+from Agents.BatchAgents.BatchAgent import BatchAgent
 
 
 class FQI(BatchAgent):

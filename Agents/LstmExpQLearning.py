@@ -1,9 +1,8 @@
 from Agent import Agent
+from Agents.BatchAgents.LstmDnnQ import LstmDnnQ
+from Experience.WordExperience import WordExperience
 from Policies.Policy import EpsilonGreedyPolicy
 from Representations.PartialObserveRep import PartialObserveRep
-import numpy as np
-from LstmDnnQ import LstmDnnQ
-from Experience.WordExperience import WordExperience
 
 
 class LstmExpQLearning(Agent):
