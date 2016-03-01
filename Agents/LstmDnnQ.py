@@ -11,7 +11,6 @@ from keras.preprocessing import sequence
 from keras.layers.core import TimeDistributedMerge
 
 class LstmDnnQ(BatchAgent):
-
     def __init__(self, domain, representation, behavior_representation, seed=1, doubleDQN=False):
         super(LstmDnnQ, self).__init__(domain, representation, seed)
         self.behavior_representation = behavior_representation
@@ -76,19 +75,20 @@ class LstmDnnQ(BatchAgent):
     def init_model(self):
         print "Creating model"
         embed_size = rnnDqnConfig["embedding"]
-        use_mean_pool = rnnDqnConfig["use_mean_pool"]
+        pooling_type = rnnDqnConfig["pooling"]
+        use_pool = pooling_type != None
 
         model = Sequential()
-        model.add(Embedding(self.domain.nb_words+1, embed_size, mask_zero=(not use_mean_pool)))
+        model.add(Embedding(self.domain.nb_words+1, embed_size, mask_zero=(not use_pool)))
 
         if rnnDqnConfig["recurrent"] == "LSTM":
-            model.add(LSTM(rnnDqnConfig["first_hidden"], return_sequences=use_mean_pool))
+            model.add(LSTM(rnnDqnConfig["first_hidden"], return_sequences=use_pool))
         else:
-            model.add(GRU(rnnDqnConfig["first_hidden"], return_sequences=use_mean_pool))
+            model.add(GRU(rnnDqnConfig["first_hidden"], return_sequences=use_pool))
         model.add(Dropout(0.2))
 
-        if use_mean_pool:
-            model.add(TimeDistributedMerge("ave"))
+        if use_pool:
+            model.add(TimeDistributedMerge(pooling_type))
 
         model.add(Dense(rnnDqnConfig["second_hidden"], init='lecun_uniform'))
         model.add(Activation('tanh'))

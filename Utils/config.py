@@ -42,9 +42,9 @@ rnnDqnConfig = {"test_interval": 2500,
                  "test_trial": 200,
                  "doubleDQN": True,
                  "embedding": 30,
-                 "use_mean_pool": False,
-                 "recurrent": "GRU",
+                 "pooling": None,
+                 "recurrent": "LSTM",
                  "first_hidden": 256,
                  "second_hidden": 128,
-                 "dropout": 0.3}
+                 "dropout": 0.2}
 
