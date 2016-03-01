@@ -1,6 +1,5 @@
 from Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
-import numpy as np
 from Experience.OracleStateExperience import OracleStateExperience
 from DNNfqi import DNNfqi
 from Representations.BinaryCompactRep import BinaryCompactRep

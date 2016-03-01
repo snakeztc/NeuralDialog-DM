@@ -4,7 +4,7 @@ action_path = root_path + 'Data/action_data.p'
 model_dir = root_path + 'Models/'
 
 generalConfig = {"global_seed": 100,
-                 "greedy_temp": 1.0,
+                 "greedy_temp": 0.5,
                  "save_model": False}
 
 pomdpConfig = {"loss_reward": -30.0,

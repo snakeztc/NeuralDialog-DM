@@ -18,16 +18,8 @@ class LstmDnnQ(BatchAgent):
 
     def learn(self, experiences, max_iter=20):
         # experience is in (phi_s, a, r, phi_ns)
-        exp_s = experiences[0]
-        exp_ar = experiences[1]
-        exp_ns = experiences[2]
-        num_samples = exp_ar.shape[1]
-
-        actions = exp_ar[:, 0]
-        rewards = exp_ar[:, 1]
-
-        phi_s = sequence.pad_sequences(exp_s)
-        phi_ns = sequence.pad_sequences(exp_ns)
+        num_samples = experiences.mini_batch_size
+        (phi_s, actions, rewards, phi_ns, sample_indices) = experiences.sample_mini_batch()
 
         # calculate the targets
         y = self.representation.Qs_phi_s(phi_s)
@@ -46,6 +38,9 @@ class LstmDnnQ(BatchAgent):
         raw_by = self.behavior_representation.Qs_phi_s(phi_s)
         td_error = np.abs(raw_by.flat[indices] - targets)
 
+        # update the priority
+        experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
+
         if self.doubleDQN:
             if not self.behavior_representation.model:
                 self.behavior_representation.model = self.init_model()
@@ -58,8 +53,6 @@ class LstmDnnQ(BatchAgent):
 
             # fit the lstm deep neural nets!!
             self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
-
-        return td_error
 
     def update_target_model(self):
         super(LstmDnnQ, self).update_target_model()
