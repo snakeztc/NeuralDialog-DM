@@ -127,9 +127,9 @@ class PomdpSimulator20q (Domain):
 
         # convert each possible response to index
         self.index_response = {}
-        for resp in self.str_response:
+        for idx, resp in enumerate(self.str_response):
             index_tokens = [self.vocabs.index(t) + 1 for t in resp.split(" ")]
-            self.index_response[resp] = index_tokens
+            self.index_response[resp] = (index_tokens, idx)
 
         # convert each computer command to index
         self.index_computer = {}
@@ -159,10 +159,18 @@ class PomdpSimulator20q (Domain):
         # extra 1 dimension for informed or not
         # vector = np.zeros(len(self.fields)+2)
         # (hidden_state, observation)
+
+        # get init user
         (self.person_inmind_key, self.person_inmind) = self.init_user()
+
+        # get init state
         s = np.zeros((1, self.statespace_size))
         s[0, -3] = len(self.corpus)
-        return s, [self.eos]
+
+        # get init turn
+        t = np.array([-1, -1, len(self.corpus)])
+
+        return s, [self.eos], t
 
     def get_inform(self, s):
         filters = []
@@ -192,20 +200,22 @@ class PomdpSimulator20q (Domain):
     # Main Logic
     def step(self, all_s, aID):
         s = all_s[0]
-        hist = all_s[1]
-        (ns, nhist) = self.get_next_state(s, hist, aID)
+        w_hist = all_s[1]
+        t_hist = all_s[2]
+        (ns, n_w_hist, n_t_hist) = self.get_next_state(s=s, w_hist=w_hist, t_hist=t_hist, aID=aID)
         reward = self.get_reward(s, ns, aID)
         #reward += self.get_potential(s, ns)
-        return reward, (ns, nhist), self.is_terminal(ns)
 
-    def get_next_state(self, s, hist, aID):
+        return reward, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
+
+    def get_next_state(self, s, w_hist, t_hist, aID):
         """
         :param s: the current hidden state
         :param hist: the dialog history
         :return: (ns, nhist)
         """
         ns = np.copy(s)
-        nhist = list(hist)
+        n_w_hist = list(w_hist)
 
         # get action type of aID
         a_type = self.get_action_type(aID)
@@ -260,7 +270,7 @@ class PomdpSimulator20q (Domain):
         else:
             # computer operator
             agent_utt = self.index_computer.get(a_type)
-            resp = []
+            resp = ([], -1)
             question_ns = ns[0, 0:self.question_count]
             query_ns = ns[0, self.question_count:self.question_count*2]
             if a_type == "yes_include":
@@ -282,10 +292,14 @@ class PomdpSimulator20q (Domain):
         cmp_resp = self.index_result.get(ns[0, -3])
 
         # append the agent action and user response to the dialog hist
-        nhist.extend(agent_utt)
-        nhist.extend(resp)
-        nhist.extend(cmp_resp)
-        return ns, nhist
+        n_w_hist.extend(agent_utt)
+        n_w_hist.extend(resp[0])
+        n_w_hist.extend(cmp_resp)
+
+        # stack turn hist
+        n_t_hist = np.row_stack((t_hist, np.array([aID, resp[1], ns[0, -3]])))
+
+        return ns, n_w_hist, n_t_hist
 
     def get_reward(self, s, ns, aID):
         reward = self.step_reward
