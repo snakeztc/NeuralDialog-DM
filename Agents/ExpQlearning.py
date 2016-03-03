@@ -1,7 +1,7 @@
 from Agent import Agent
-from Policies.Policy import EpsilonGreedyPolicy
+from Agents.BatchAgents.DnnQ import DnnQ
 from Experience.OracleStateExperience import OracleStateExperience
-from DNNfqi import DNNfqi
+from Policies.Policy import EpsilonGreedyPolicy
 from Representations.BinaryCompactRep import BinaryCompactRep
 
 
@@ -47,8 +47,9 @@ class ExpQLearning(Agent):
         self.update_cnt = 0
         self.freeze_frequency = freeze_frequency
         self.behavior_representation = BinaryCompactRep(domain, seed)
-        self.learner = DNNfqi(domain=domain, representation=representation,
-                              behavior_representation=self.behavior_representation, seed=seed, doubleDQN=doubleDQN)
+        self.learner = DnnQ(domain=domain, representation=representation,
+                            behavior_representation=self.behavior_representation,
+                            seed=seed, doubleDQN=doubleDQN)
         print "Using epsilon " + str(epsilon)
         print "Update_frequency " + str(self.update_frequency)
         print "Mini-batch size is " + str(self.experience.mini_batch_size)

@@ -26,8 +26,8 @@ dqnConfig = {"test_interval": 2500,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "first_hidden": 128,
-             "second_hidden": 256,
+             "first_hidden": 256,
+             "second_hidden": 128,
              "dropout": 0.3}
 
 rnnDqnConfig = {"test_interval": 2500,
