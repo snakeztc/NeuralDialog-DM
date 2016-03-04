@@ -1,4 +1,4 @@
-from Utils.config import *
+from Utils.config import generalConfig, turnDqnConfig
 import numpy as np
 np.random.seed(generalConfig["global_seed"])
 from BatchAgent import BatchAgent
@@ -10,26 +10,26 @@ from keras.optimizers import RMSprop
 from keras.layers.core import TimeDistributedMerge
 
 
-class LstmDnnQ(BatchAgent):
+class TurnLstmDnnQ(BatchAgent):
     def init_model(self):
         print "Creating model"
-        embed_size = wordDqnConfig["embedding"]
-        pooling_type = wordDqnConfig["pooling"]
+        embed_size = turnDqnConfig["embedding"]
+        pooling_type = turnDqnConfig["pooling"]
         use_pool = pooling_type != None
 
         model = Sequential()
         model.add(Embedding(self.domain.nb_words+1, embed_size, mask_zero=(not use_pool)))
 
-        if wordDqnConfig["recurrent"] == "LSTM":
-            model.add(LSTM(wordDqnConfig["first_hidden"], return_sequences=use_pool))
+        if turnDqnConfig["recurrent"] == "LSTM":
+            model.add(LSTM(turnDqnConfig["first_hidden"], return_sequences=use_pool))
         else:
-            model.add(GRU(wordDqnConfig["first_hidden"], return_sequences=use_pool))
+            model.add(GRU(turnDqnConfig["first_hidden"], return_sequences=use_pool))
         model.add(Dropout(0.2))
 
         if use_pool:
             model.add(TimeDistributedMerge(pooling_type))
 
-        model.add(Dense(wordDqnConfig["second_hidden"], init='lecun_uniform'))
+        model.add(Dense(turnDqnConfig["second_hidden"], init='lecun_uniform'))
         model.add(Activation('tanh'))
         model.add(Dropout(0.2))
 

@@ -1,11 +1,11 @@
 from Agent import Agent
-from Agents.BatchAgents.LstmDnnQ import LstmDnnQ
-from Experience.WordExperience import WordExperience
 from Policies.Policy import EpsilonGreedyPolicy
-from Representations.WordHistoryRep import WordHistoryRep
+from Agents.BatchAgents.TurnLstmDnnQ import TurnLstmDnnQ
+from Experience.TurnExperience import TurnExperience
+from Representations.TurnHistoryRep import TurnHistoryRep
 
 
-class LstmExpQLearning(Agent):
+class TurnLstmExpQLearning(Agent):
 
     def learn(self, s, performance_run=False):
         Qs = self.behavior_representation.Qs(s)
@@ -36,21 +36,22 @@ class LstmExpQLearning(Agent):
 
     def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10,
                  exp_size=10000, mini_batch=3000, freeze_frequency=100, doubleDQN=False):
-        super(LstmExpQLearning, self).__init__(domain, representation, seed)
+
+        super(TurnLstmExpQLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
 
-        self.experience = WordExperience(exp_size=exp_size,  mini_batch_size=mini_batch, use_priority=True, seed=seed)
+        self.experience = TurnExperience(exp_size=exp_size,  mini_batch_size=mini_batch, use_priority=True, seed=seed)
 
         # freeze model
         self.freeze_frequency = freeze_frequency
         self.update_cnt = 0
 
-        self.behavior_representation = WordHistoryRep(domain, seed=seed)
+        self.behavior_representation = TurnHistoryRep(domain, seed=seed)
         # learner
-        self.learner = LstmDnnQ(domain=domain, representation=representation,
-                                behavior_representation=self.behavior_representation,
-                                doubleDQN=doubleDQN, seed=seed)
+        self.learner = TurnLstmDnnQ(domain=domain, representation=representation,
+                                    behavior_representation=self.behavior_representation,
+                                    doubleDQN=doubleDQN, seed=seed)
         print "Using epsilon " + str(epsilon)
         print "Update_frequency " + str(self.update_frequency)
         print "Mini-batch size is " + str(self.experience.mini_batch_size)

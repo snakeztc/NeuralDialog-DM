@@ -19,7 +19,7 @@ def run():
                  "/Users/Tony/Dropbox/CMU_MLT/CS-11-777/project/temp/100000-lstm-last.h5"]
     # print out system config
     pprint.pprint(generalConfig)
-    pprint.pprint(rnnDqnConfig)
+    pprint.pprint(wordDqnConfig)
 
     # load the data from file
     test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
@@ -35,7 +35,7 @@ def run():
         test_agent = QLearning(test_sim20_evn, representation)
         eval_agent = EvalAgent(test_agent)
         print "Begin evaluation"
-        eval_agent.eval(rnnDqnConfig["test_trial"], discount=True)
+        eval_agent.eval(wordDqnConfig["test_trial"], discount=True)
 
 
 if __name__ == '__main__':

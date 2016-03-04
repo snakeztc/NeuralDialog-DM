@@ -5,8 +5,6 @@ import time
 
 class WordHistoryRep(Representation):
 
-    state_feature_base = None
-
     def __init__(self, domain, seed=1):
         super(WordHistoryRep, self).__init__(domain, seed)
         # initialize the model

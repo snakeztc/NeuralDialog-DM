@@ -30,7 +30,7 @@ dqnConfig = {"test_interval": 2500,
              "second_hidden": 128,
              "dropout": 0.3}
 
-rnnDqnConfig = {"test_interval": 2500,
+wordDqnConfig = {"test_interval": 2500,
                  "max_sample": 100001,
                  'ep_max': 1.0,
                  "ep_min": 0.1,
@@ -47,4 +47,23 @@ rnnDqnConfig = {"test_interval": 2500,
                  "first_hidden": 256,
                  "second_hidden": 128,
                  "dropout": 0.2}
+
+turnDqnConfig = {"test_interval": 2500,
+                 "max_sample": 100001,
+                 'ep_max': 1.0,
+                 "ep_min": 0.1,
+                 "ep_min_step": 70000,
+                 "exp_size": 100000,
+                 "mini_batch": 32,
+                 "freeze_frequency": 1000,
+                 "update_frequency": 4,
+                 "test_trial": 200,
+                 "doubleDQN": True,
+                 "embedding": 30,
+                 "pooling": None,
+                 "recurrent": "LSTM",
+                 "first_hidden": 256,
+                 "second_hidden": 128,
+                 "dropout": 0.2}
+
 

@@ -1,43 +1,43 @@
 from Domains.PomdpSimulator20q import PomdpSimulator20q
-from Agents.WordLstmExpQLearning import WordLstmExpQLearning
+from Agents.TurnLstmExpQLearning import TurnLstmExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
-from Representations.WordHistoryRep import WordHistoryRep
+from Representations.TurnHistoryRep import TurnHistoryRep
 import numpy as np
 import matplotlib.pyplot as plt
-from Utils.config import *
+from Utils.config import generalConfig, turnDqnConfig, model_dir
 import pprint
 
 
 def run():
     # print out system config
     pprint.pprint(generalConfig)
-    pprint.pprint(wordDqnConfig)
+    pprint.pprint(turnDqnConfig)
 
     # load the data from file
     sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
     test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
 
-    test_interval = wordDqnConfig["test_interval"]
-    sample_size = np.arange(0, wordDqnConfig["max_sample"], test_interval)
-    epsilon = wordDqnConfig["max_sample"]
-    ep_max = wordDqnConfig["ep_max"]
-    ep_min_step = wordDqnConfig["ep_min_step"]
-    ep_min = wordDqnConfig["ep_min"]
-    exp_size = wordDqnConfig["exp_size"]
-    mini_batch = wordDqnConfig["mini_batch"]
-    freeze_frequency = wordDqnConfig["freeze_frequency"]
-    update_frequency = wordDqnConfig["update_frequency"]
-    test_trial = wordDqnConfig["test_trial"]
-    doubleDQN = wordDqnConfig["doubleDQN"]
+    test_interval = turnDqnConfig["test_interval"]
+    sample_size = np.arange(0, turnDqnConfig["max_sample"], test_interval)
+    epsilon = turnDqnConfig["max_sample"]
+    ep_max = turnDqnConfig["ep_max"]
+    ep_min_step = turnDqnConfig["ep_min_step"]
+    ep_min = turnDqnConfig["ep_min"]
+    exp_size = turnDqnConfig["exp_size"]
+    mini_batch = turnDqnConfig["mini_batch"]
+    freeze_frequency = turnDqnConfig["freeze_frequency"]
+    update_frequency = turnDqnConfig["update_frequency"]
+    test_trial = turnDqnConfig["test_trial"]
+    doubleDQN = turnDqnConfig["doubleDQN"]
 
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
 
-    representation = WordHistoryRep(sim20_evn, seed = generalConfig["global_seed"])
-    agent = WordLstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
+    representation = TurnHistoryRep(sim20_evn, seed = generalConfig["global_seed"])
+    agent = TurnLstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                                  update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch,
                                  freeze_frequency=freeze_frequency, doubleDQN=doubleDQN)
 
@@ -66,7 +66,7 @@ def run():
                 eval_agent.eval(1, discount=True)
                 bench_cnt += 1
                 if generalConfig["save_model"] and representation.model:
-                    representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-last.h5')
+                    representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-turn.h5')
 
             if terminal or bench_cnt >= len(sample_size):
                 break

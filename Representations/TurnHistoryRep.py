@@ -5,7 +5,9 @@ import time
 
 class TurnHistoryRep(Representation):
 
-    state_feature_base = None
+    # since we don't use state we create our own state limit and state type and feature base
+    turn_state_limits = None
+    turn_state_type = None
 
     def __init__(self, domain, seed=1):
         super(TurnHistoryRep, self).__init__(domain, seed)
@@ -15,16 +17,23 @@ class TurnHistoryRep(Representation):
         # get state_feature_num
         # this state limit is different because we are not operating on the oracle state.
         # instead we are working on the turn output
-        for idx, type in enumerate(self.domain.statespace_type):
-            if type == self.domain.categorical:
-                self.state_features_num += (self.domain.statespace_limits[idx, 1] - self.domain.statespace_limits[idx, 0])
+        self.turn_state_limits = np.atleast_2d([[-1, len(self.domain.actions_num)],
+                                                [-1, len(self.domain.str_response)],
+                                                [0, len(self.domain.corpus)]])
+        self.turn_state_type = [self.domain.categorical, self.domain.categorical, self.domain.discrete]
+
+        # get state feature number
+        for idx, s_type in enumerate(self.turn_state_type):
+            if s_type == self.domain.categorical:
+                self.state_features_num += (self.turn_state_limits[idx, 1] - self.turn_state_limits[idx, 0])
             else:
                 self.state_features_num += 1
         self.state_features_num = int(self.state_features_num)
+
         # get state base
-        diff = self.domain.statespace_limits[:, 1] - self.domain.statespace_limits[:, 0]
+        diff = self.turn_state_limits[:, 1] - self.turn_state_limits[:, 0]
         for row_idx in range(0, diff.size):
-            if self.domain.statespace_type[row_idx] != self.domain.categorical:
+            if self.turn_state_type[row_idx] != self.domain.categorical:
                 diff[row_idx] = 1
         self.base = np.append([0], np.cumsum(diff))
 
