@@ -47,7 +47,8 @@ class TurnHistoryRep(Representation):
     def phi_s(self, s):
         # !! we assume "s" is just one sample, can never be more than that
         phi_s = self.expand_state_space(s[2], self.turn_state_type, self.turn_state_limits)
-        # phi_s = np.reshape(phi_s, (1,) + phi_s.shape) 2d to 3d
+        # convert from 2d to 3d
+        phi_s = np.reshape(phi_s, (1,) + phi_s.shape)
         return phi_s
 
     def phi_s_phi_a(self, phi_s, phi_a):

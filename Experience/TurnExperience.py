@@ -9,16 +9,17 @@ class TurnExperience (Experiences):
 
     def __init__(self, exp_size, phi_s_size, max_len, mini_batch_size, use_priority, seed):
         super(TurnExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size, seed=seed)
-        # experience is a 3D tensor in shape num_sample * max_t * feature_dimension
-        self.experience = np.zeros((exp_size, self.max_len, phi_s_size * 2 + 2))
         self.exp_ar = np.zeros((exp_size, 2))
 
         self.priority = np.zeros(exp_size)
         self.exp_size = exp_size
-        self.max_len = max_len
+        self.max_len = max_len + 1
         self.exp_head = 0
         self.exp_actual_size = 0
         self.phi_s_size = phi_s_size
+
+        # experience is a 3D tensor in shape num_sample * max_t * feature_dimension
+        self.experience = np.zeros((exp_size, self.max_len, phi_s_size * 2))
 
     def add_experience(self, phi_s, a, r, phi_ns, priority):
         if self.exp_head >= self.exp_size:
@@ -26,8 +27,8 @@ class TurnExperience (Experiences):
             self.exp_head = 0
 
         # pad phi_s and phi_ns with 0 zeros in the front
-        self.experience[self.exp_head, self.max_len-phi_s.shape[0]:self.max_len, 0:self.phi_s_size] = phi_s
-        self.experience[self.exp_head, self.max_len-phi_ns.shape[0]:self.max_len, self.phi_s_size:] = phi_ns
+        self.experience[self.exp_head, self.max_len-phi_s.shape[1]:self.max_len, 0:self.phi_s_size] = phi_s
+        self.experience[self.exp_head, self.max_len-phi_ns.shape[1]:self.max_len, self.phi_s_size:] = phi_ns
 
         self.exp_ar[self.exp_head, 0] = a
         self.exp_ar[self.exp_head, 1] = r

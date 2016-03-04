@@ -1,4 +1,4 @@
-from Utils.config import generalConfig, wordDqnConfig
+from Utils.config import generalConfig, wordDqnConfig, model_dir
 import numpy as np
 np.random.seed(generalConfig["global_seed"])
 from BatchAgent import BatchAgent
@@ -11,6 +11,8 @@ from keras.layers.core import TimeDistributedMerge
 
 
 class LstmDnnQ(BatchAgent):
+    mode_path = model_dir+"best-lstm.h5"
+
     def init_model(self):
         print "Creating model"
         embed_size = wordDqnConfig["embedding"]
