@@ -48,7 +48,7 @@ class Representation(object):
     def phi_s_phi_a(self, phi_s, phi_a):
         raise NotImplementedError("Implement phi_s_phi_a")
 
-    def expand_state_space(self, s, state_type):
+    def expand_state_space(self, s, state_type, state_limit):
         phi = np.zeros((s.shape[0], self.state_features_num))
         num_var = s.shape[1]
         row_starts = np.linspace(0.0, (s.shape[0]-1) * phi.shape[1], num=s.shape[0])
@@ -60,6 +60,6 @@ class Representation(object):
                 indices = all_indices[:, var_idx]
                 flat_phi[indices] = 1
             else:
-                phi[:, self.base[var_idx]] = s[:, var_idx] / self.domain.statespace_limits[var_idx, 1]
+                phi[:, self.base[var_idx]] = s[:, var_idx] / state_limit[var_idx, 1]
         return phi
 

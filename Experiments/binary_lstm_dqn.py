@@ -2,7 +2,7 @@ from Domains.PomdpSimulator20q import PomdpSimulator20q
 from Agents.LstmExpQLearning import LstmExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
-from Representations.PartialObserveRep import PartialObserveRep
+from Representations.WordHistoryRep import WordHistoryRep
 import numpy as np
 import matplotlib.pyplot as plt
 from Utils.config import *
@@ -36,7 +36,7 @@ def run():
     bench_cnt = 0
     epi_cnt = 0
 
-    representation = PartialObserveRep(sim20_evn, seed = generalConfig["global_seed"])
+    representation = WordHistoryRep(sim20_evn, seed = generalConfig["global_seed"])
     agent = LstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
                              update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch,
                              freeze_frequency=freeze_frequency, doubleDQN=doubleDQN)

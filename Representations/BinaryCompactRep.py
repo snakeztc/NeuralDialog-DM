@@ -35,7 +35,7 @@ class BinaryCompactRep(Representation):
 
     def phi_s(self, s):
         phi = np.copy(s[0])
-        return self.expand_state_space(phi, self.domain.statespace_type)
+        return self.expand_state_space(phi, self.domain.statespace_type, self.domain.statespace_limits)
 
     def phi_s_phi_a(self, phi_s, phi_a):
         pass

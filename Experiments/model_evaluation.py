@@ -4,7 +4,7 @@ from Agents.BatchAgents.LstmDnnQ import LstmDnnQ
 from Agents.EvalAgent import EvalAgent
 from Agents.QLearning import QLearning
 from Domains.PomdpSimulator20q import PomdpSimulator20q
-from Representations.PartialObserveRep import PartialObserveRep
+from Representations.WordHistoryRep import WordHistoryRep
 from Utils.config import *
 
 
@@ -24,7 +24,7 @@ def run():
     # load the data from file
     test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
 
-    representation = PartialObserveRep(test_sim20_evn, seed=generalConfig["global_seed"])
+    representation = WordHistoryRep(test_sim20_evn, seed=generalConfig["global_seed"])
     batch_learner = LstmDnnQ(test_sim20_evn, representation, None, generalConfig["global_seed"], True)
     representation.model = batch_learner.init_model()
 

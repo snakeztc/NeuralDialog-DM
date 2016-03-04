@@ -3,12 +3,12 @@ from Representation import Representation
 import time
 
 
-class WhCompactRep(Representation):
+class WordHistoryRep(Representation):
 
     state_feature_base = None
 
     def __init__(self, domain, seed=1):
-        super(WhCompactRep, self).__init__(domain, seed)
+        super(WordHistoryRep, self).__init__(domain, seed)
         # initialize the model
         self.model = None
         self.state_features_num = 0
@@ -34,16 +34,12 @@ class WhCompactRep(Representation):
         pass
 
     def phi_s(self, s):
-        phi = np.copy(s)
-        temp_phi = phi[:, 0:-2]
-        temp_phi[temp_phi > 1] = 2
-        phi[:, 0:-2] = temp_phi
-        return self.expand_state_space(phi, self.domain.statespace_type, self.domain.statespace_limits)
+        return np.atleast_2d(s[1])
 
     def phi_s_phi_a(self, phi_s, phi_a):
         pass
 
-    ### Value function Representation ###
+    # Value function Representation ###
     def Q(self, s, aID):
         pass
 

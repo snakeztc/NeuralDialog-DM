@@ -2,7 +2,7 @@ from Agent import Agent
 from Agents.BatchAgents.LstmDnnQ import LstmDnnQ
 from Experience.WordExperience import WordExperience
 from Policies.Policy import EpsilonGreedyPolicy
-from Representations.PartialObserveRep import PartialObserveRep
+from Representations.WordHistoryRep import WordHistoryRep
 
 
 class LstmExpQLearning(Agent):
@@ -46,7 +46,7 @@ class LstmExpQLearning(Agent):
         self.freeze_frequency = freeze_frequency
         self.update_cnt = 0
 
-        self.behavior_representation = PartialObserveRep(domain, seed=seed)
+        self.behavior_representation = WordHistoryRep(domain, seed=seed)
         # learner
         self.learner = LstmDnnQ(domain=domain, representation=representation,
                                 behavior_representation=self.behavior_representation,

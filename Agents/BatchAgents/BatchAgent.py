@@ -28,7 +28,7 @@ class BatchAgent(object):
         :param max_iter: The max number of iteration
         :return: Nothing
         """
-                # experience is in (phi_s, a, r, phi_ns)
+        # experience is in (phi_s, a, r, phi_ns)
         num_samples = experiences.mini_batch_size
         (phi_s, actions, rewards, phi_ns, sample_indices) = experiences.sample_mini_batch()
 

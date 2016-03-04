@@ -3,16 +3,18 @@ from Representation import Representation
 import time
 
 
-class PartialObserveRep(Representation):
+class TurnHistoryRep(Representation):
 
     state_feature_base = None
 
     def __init__(self, domain, seed=1):
-        super(PartialObserveRep, self).__init__(domain, seed)
+        super(TurnHistoryRep, self).__init__(domain, seed)
         # initialize the model
         self.model = None
         self.state_features_num = 0
         # get state_feature_num
+        # this state limit is different because we are not operating on the oracle state.
+        # instead we are working on the turn output
         for idx, type in enumerate(self.domain.statespace_type):
             if type == self.domain.categorical:
                 self.state_features_num += (self.domain.statespace_limits[idx, 1] - self.domain.statespace_limits[idx, 0])
@@ -26,7 +28,7 @@ class PartialObserveRep(Representation):
                 diff[row_idx] = 1
         self.base = np.append([0], np.cumsum(diff))
 
-    ### State Representation ###
+    # State Representation #
     def phi_sa(self, s, aID):
         pass
 
@@ -34,7 +36,9 @@ class PartialObserveRep(Representation):
         pass
 
     def phi_s(self, s):
-        return np.atleast_2d(s[1])
+        # !! we assume "s" is just one sample, can never be more than that
+        phi_s = np.reshape(s[2], (1,) + s[2].shape)
+        return s[2]
 
     def phi_s_phi_a(self, phi_s, phi_a):
         pass
@@ -51,6 +55,7 @@ class PartialObserveRep(Representation):
         pass
 
     def Qs_phi_s(self, phi_s):
+        # we assume that phi_s is in the format of num_sample * time_stamp * dimension
         if self.model:
             return self.model.predict(phi_s)
         else:

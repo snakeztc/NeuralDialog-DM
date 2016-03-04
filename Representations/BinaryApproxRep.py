@@ -50,7 +50,7 @@ class BinaryApproxRep(Representation):
 
     def phi_s(self, s):
         phi = np.copy(s)
-        return self.expand_state_space(phi, self.domain.statespace_type)
+        return self.expand_state_space(phi, self.domain.statespace_type, self.domain.statespace_limits)
 
     def phi_s_phi_a(self, phi_s, phi_a):
         return np.column_stack((phi_s, phi_a))
