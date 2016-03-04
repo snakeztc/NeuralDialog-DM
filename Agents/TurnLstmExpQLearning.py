@@ -41,13 +41,15 @@ class TurnLstmExpQLearning(Agent):
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
 
-        self.experience = TurnExperience(exp_size=exp_size,  mini_batch_size=mini_batch, use_priority=True, seed=seed)
-
+        self.experience = TurnExperience(exp_size=exp_size, phi_s_size=representation.state_features_num,
+                                         max_len=domain.episode_cap, mini_batch_size=mini_batch,
+                                         use_priority=True, seed=seed)
         # freeze model
         self.freeze_frequency = freeze_frequency
         self.update_cnt = 0
 
         self.behavior_representation = TurnHistoryRep(domain, seed=seed)
+
         # learner
         self.learner = TurnLstmDnnQ(domain=domain, representation=representation,
                                     behavior_representation=self.behavior_representation,

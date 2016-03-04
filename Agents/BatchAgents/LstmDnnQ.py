@@ -1,4 +1,4 @@
-from Utils.config import *
+from Utils.config import generalConfig, wordDqnConfig
 import numpy as np
 np.random.seed(generalConfig["global_seed"])
 from BatchAgent import BatchAgent

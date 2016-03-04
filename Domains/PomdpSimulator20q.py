@@ -168,7 +168,7 @@ class PomdpSimulator20q (Domain):
         s[0, -3] = len(self.corpus)
 
         # get init turn
-        t = np.array([-1, -1, len(self.corpus)])
+        t = np.atleast_2d([0.0, 0.0, len(self.corpus)])
 
         return s, [self.eos], t
 
@@ -297,7 +297,7 @@ class PomdpSimulator20q (Domain):
         n_w_hist.extend(cmp_resp)
 
         # stack turn hist
-        n_t_hist = np.row_stack((t_hist, np.array([aID, resp[1], ns[0, -3]])))
+        n_t_hist = np.row_stack((t_hist, np.array([aID+1, resp[1]+1, ns[0, -3]])))
 
         return ns, n_w_hist, n_t_hist
 
