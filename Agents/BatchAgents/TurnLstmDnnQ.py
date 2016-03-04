@@ -20,7 +20,7 @@ class TurnLstmDnnQ(BatchAgent):
         use_pool = pooling_type != None
 
         model = Sequential()
-        model.add(Masking(mask_value=0.0, input_shape=(self.domain.episode_cap+1, self.representation.state_features_num)))
+        model.add(Masking(mask_value=0.0, input_shape=(None, self.representation.state_features_num)))
 
         model.add(TimeDistributedDense(embed_size, input_dim=self.representation.state_features_num))
 
