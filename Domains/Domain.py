@@ -57,3 +57,9 @@ class Domain(object):
         """
         raise NotImplementedError("Any domain needs to implement step function")
 
+    def action_prune(self, s):
+        """
+        :param s: the current state
+        :return: a boolean mask that indicates which action is avaliable
+        """
+        return None

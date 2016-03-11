@@ -26,3 +26,11 @@ class Agent(object):
         :return: r, ns, terminal (boolean), observation (response from env)
         """
         raise NotImplementedError("implement learning algorithm")
+
+    def print_episode(self, hist):
+        for i, idx in enumerate(hist):
+            if (i+1) % 25 == 0:
+                print self.domain.vocabs[idx-1]
+            else:
+                print self.domain.vocabs[idx-1],
+        print ""

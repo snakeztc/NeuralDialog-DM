@@ -1,5 +1,6 @@
-from Domains.PomdpSimulator20q import PomdpSimulator20q
 from Domains.SlotSimulator20q import SlotSimulator20q
+from Domains.PomdpSimulator20q import PomdpSimulator20q
+
 from Agents.ExpQLearning import ExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
@@ -15,10 +16,10 @@ def run():
     pprint.pprint(dqnConfig)
 
     # load the data from file
-    #sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
-    #test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
-    sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
-    test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
+    sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    #sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
+    #test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
 
     test_interval = dqnConfig.get("test_interval")
     sample_size = np.arange(0, dqnConfig.get("max_sample"), test_interval)
@@ -42,7 +43,7 @@ def run():
                          mini_batch=mini_batch, doubleDQN=doubleDQN)
 
     print "evaluation at 0"
-    test_agent = QLearning(test_sim20_evn, agent.representation)
+    test_agent = ExpQLearning(test_sim20_evn, agent.representation, exp_size=0)
     eval_agent = EvalAgent(test_agent)
     (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
     bench_cnt += 1
@@ -59,11 +60,10 @@ def run():
             s = ns
             if step_cnt == sample_size[bench_cnt]:
                 print "evaluation at " + str(step_cnt)
-                test_agent = QLearning(test_sim20_evn, agent.representation)
-                eval_agent = EvalAgent(test_agent)
                 (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
                 test_agent.verbose = True
-                eval_agent.eval(5, discount=True)
+                eval_agent.eval(1, discount=True)
+                test_agent.verbose = False
                 bench_cnt += 1
                 if generalConfig["save_model"] and representation.model:
                     representation.model.save_weights(model_dir+str(step_cnt)+'-dqn.h5')

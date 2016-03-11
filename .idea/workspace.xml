@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="5f205f89-a1d7-41c9-a7a4-173417943a5c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/Agent.py" afterPath="$PROJECT_DIR$/Agents/Agent.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domains/Domain.py" afterPath="$PROJECT_DIR$/Domains/Domain.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domains/SlotSimulator20q.py" afterPath="$PROJECT_DIR$/Domains/SlotSimulator20q.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/binary_dqn.py" afterPath="$PROJECT_DIR$/Experiments/binary_dqn.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Utils/config.py" afterPath="$PROJECT_DIR$/Utils/config.py" />
     </list>
     <ignored path="NeuralDM.iws" />
@@ -27,7 +30,7 @@
     <SUITE FILE_PATH="coverage/NeuralDM$model_evaluation.coverage" NAME="model_evaluation Coverage Results" MODIFIED="1456841587969" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$BinarySimulator20q.coverage" NAME="BinarySimulator20q Coverage Results" MODIFIED="1455473510532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Domains" />
     <SUITE FILE_PATH="coverage/NeuralDM$online_fqi.coverage" NAME="online_fqi Coverage Results" MODIFIED="1455231289864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
-    <SUITE FILE_PATH="coverage/NeuralDM$binary_dqn.coverage" NAME="binary_dqn Coverage Results" MODIFIED="1457684230678" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
+    <SUITE FILE_PATH="coverage/NeuralDM$binary_dqn.coverage" NAME="binary_dqn Coverage Results" MODIFIED="1457725420586" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$Policy.coverage" NAME="Policy Coverage Results" MODIFIED="1455501248268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Policies" />
     <SUITE FILE_PATH="coverage/NeuralDM$Simulator20q.coverage" NAME="Simulator20q Coverage Results" MODIFIED="1455165765557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NeuralDM$Nosetest_TestBinarySimulator20q_test_value_id_2_slot_id.coverage" NAME="Nosetest TestBinarySimulator20q.test_value_id_2_slot_id Coverage Results" MODIFIED="1455473506326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Domains" />
@@ -42,33 +45,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TurnExperience.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Experience/TurnExperience.py">
+      <file leaf-file-name="Experience.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Experience/Experience.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SlotSimulator20q.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Domains/SlotSimulator20q.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.13968958">
-              <caret line="206" column="42" selection-start-line="206" selection-start-column="42" selection-end-line="206" selection-end-column="42" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="QLearning.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Agents/QLearning.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -78,27 +59,17 @@
         <entry file="file://$PROJECT_DIR$/Utils/config.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
+              <caret line="38" column="32" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EvalAgent.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Agents/EvalAgent.py">
+      <file leaf-file-name="OracleStateExperience.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Experience/OracleStateExperience.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="domainUtil.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Utils/domainUtil.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="25" column="33" selection-start-line="25" selection-start-column="33" selection-end-line="25" selection-end-column="33" />
+              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -108,29 +79,71 @@
         <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+              <caret line="45" column="78" selection-start-line="45" selection-start-column="78" selection-end-line="45" selection-end-column="78" />
               <folding>
-                <element signature="e#0#55#0" expanded="true" />
+                <element signature="e#0#53#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PomdpSimulator20q.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Domains/PomdpSimulator20q.py">
+      <file leaf-file-name="ExpQLearning.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="27" column="42" selection-start-line="27" selection-start-column="42" selection-end-line="27" selection-end-column="42" />
+              <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="turn_lstm_dqn.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Experiments/turn_lstm_dqn.py">
+      <file leaf-file-name="Agent.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Agents/Agent.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.8255814">
+              <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SlotSimulator20q.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Domains/SlotSimulator20q.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
+              <caret line="360" column="60" selection-start-line="360" selection-start-column="60" selection-end-line="360" selection-end-column="60" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Domain.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Domains/Domain.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="62" column="72" selection-start-line="62" selection-start-column="72" selection-end-line="62" selection-end-column="72" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Policy.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Policies/Policy.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QLearning.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Agents/QLearning.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -163,12 +176,10 @@
         <option value="$PROJECT_DIR$/Domains/Simulator20q.py" />
         <option value="$PROJECT_DIR$/Domains/test_binarySimulator20q.py" />
         <option value="$PROJECT_DIR$/Domains/BinarySimulator20q.py" />
-        <option value="$PROJECT_DIR$/Agents/Agent.py" />
         <option value="$PROJECT_DIR$/Representations/NaturalLanguageRep.py" />
         <option value="$PROJECT_DIR$/Representations/PartialObserveRep.py" />
         <option value="$PROJECT_DIR$/Experiments/online_fqi.py" />
         <option value="$PROJECT_DIR$/Representations/test_representation.py" />
-        <option value="$PROJECT_DIR$/Domains/Domain.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgent.py" />
         <option value="$PROJECT_DIR$/Agents/EvalAgent.py" />
         <option value="$PROJECT_DIR$/Domains/test_pomdpSimulator20q.py" />
@@ -181,12 +192,10 @@
         <option value="$PROJECT_DIR$/Agents/DNNfqi.py" />
         <option value="$PROJECT_DIR$/Agents/LstmDnnQ.py" />
         <option value="$PROJECT_DIR$/Experience/WordExperience.py" />
-        <option value="$PROJECT_DIR$/Agents/QLearning.py" />
         <option value="$PROJECT_DIR$/Experiments/model_evaluation.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgents/DNNfqi.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py" />
         <option value="$PROJECT_DIR$/Agents/LstmExpQLearning.py" />
-        <option value="$PROJECT_DIR$/Agents/ExpQLearning.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgents/BatchAgent.py" />
         <option value="$PROJECT_DIR$/Representations/BinaryApproxRep.py" />
         <option value="$PROJECT_DIR$/Representations/BinaryCompactRep.py" />
@@ -203,11 +212,15 @@
         <option value="$PROJECT_DIR$/Representations/TurnHistoryRep.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py" />
         <option value="$PROJECT_DIR$/Domains/OldDomains/BinarySimulator20q.py" />
-        <option value="$PROJECT_DIR$/Experiments/binary_dqn.py" />
-        <option value="$PROJECT_DIR$/Utils/domainUtil.py" />
         <option value="$PROJECT_DIR$/Domains/PomdpSimulator20q.py" />
-        <option value="$PROJECT_DIR$/Domains/SlotSimulator20q.py" />
+        <option value="$PROJECT_DIR$/Utils/domainUtil.py" />
         <option value="$PROJECT_DIR$/Utils/config.py" />
+        <option value="$PROJECT_DIR$/Experiments/binary_dqn.py" />
+        <option value="$PROJECT_DIR$/Agents/QLearning.py" />
+        <option value="$PROJECT_DIR$/Domains/Domain.py" />
+        <option value="$PROJECT_DIR$/Domains/SlotSimulator20q.py" />
+        <option value="$PROJECT_DIR$/Agents/ExpQLearning.py" />
+        <option value="$PROJECT_DIR$/Agents/Agent.py" />
       </list>
     </option>
   </component>
@@ -217,10 +230,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="2" />
+    <option name="x" value="64" />
     <option name="y" value="23" />
-    <option name="width" value="1423" />
-    <option name="height" value="849" />
+    <option name="width" value="1363" />
+    <option name="height" value="828" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -289,6 +302,20 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="Policies" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NeuralDM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NeuralDM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="Experiments" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -303,7 +330,35 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="Experience" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NeuralDM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NeuralDM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="Domains" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NeuralDM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="NeuralDM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Agents" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -648,12 +703,6 @@
       <option name="number" value="Default" />
       <updated>1453141026937</updated>
     </task>
-    <task id="LOCAL-00016" summary="add random seed">
-      <created>1455497602612</created>
-      <option name="number" value="00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1455497602612</updated>
-    </task>
     <task id="LOCAL-00017" summary="add random argmax and botlzmann">
       <created>1455551477472</created>
       <option name="number" value="00017" />
@@ -942,7 +991,13 @@
       <option name="project" value="LOCAL" />
       <updated>1457681532414</updated>
     </task>
-    <option name="localTasksCounter" value="65" />
+    <task id="LOCAL-00065" summary="init commit for slotSimulator">
+      <created>1457684401422</created>
+      <option name="number" value="00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1457684401422</updated>
+    </task>
+    <option name="localTasksCounter" value="66" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -987,22 +1042,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="2" y="23" width="1423" height="849" extended-state="0" />
+    <frame x="64" y="23" width="1363" height="828" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27380952" sideWeight="0.49690402" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6598916" sideWeight="0.13043478" order="11" side_tool="true" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3051519" sideWeight="0.56707317" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3043478" sideWeight="0.56707317" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28137386" sideWeight="0.4878049" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.331572" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3777174" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3258278" sideWeight="0.49125364" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18175235" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19000757" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24702774" sideWeight="0.49690402" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21136063" sideWeight="0.49690402" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5165126" sideWeight="0.87108016" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43206522" sideWeight="0.87108016" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1044,7 +1099,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="save model" />
     <MESSAGE value="add models dirrectory for both" />
     <MESSAGE value="change the reward s.t its more guided" />
     <MESSAGE value="fix none model" />
@@ -1069,7 +1123,8 @@
     <MESSAGE value="change config path" />
     <MESSAGE value="add slot domain simulator" />
     <MESSAGE value="adding compute result as a part of the vocab" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding compute result as a part of the vocab" />
+    <MESSAGE value="init commit for slotSimulator" />
+    <option name="LAST_COMMIT_MESSAGE" value="init commit for slotSimulator" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1083,7 +1138,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="525" />
+      <option name="time" value="541" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1144,13 +1199,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Domains/Domain.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="23" selection-start-line="31" selection-start-column="23" selection-end-line="31" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Experiments/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1179,13 +1227,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Policies/Policy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.28125">
-          <caret line="40" column="0" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Agents/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1197,13 +1238,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/Agent.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5208333">
-          <caret line="27" column="33" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -1277,13 +1311,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experience/Experience.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.077586204">
-          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Experiments/word_lstm_dqn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.94614005">
@@ -1295,27 +1322,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="37" column="82" selection-start-line="37" selection-start-column="82" selection-end-line="37" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Experience/OracleStateExperience.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17045455">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="58" selection-start-line="22" selection-start-column="58" selection-end-line="22" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/WordLstmExpQLearning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1380,16 +1386,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.15498155">
-          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#23#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Domains/OldDomains/BinarySimulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.27675277">
@@ -1406,10 +1402,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/WordLstmExpQLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Utils/domainUtil.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="33" selection-start-line="25" selection-start-column="33" selection-end-line="25" selection-end-column="33" />
+          <caret line="35" column="32" selection-start-line="35" selection-start-column="32" selection-end-line="35" selection-end-column="32" />
           <folding />
         </state>
       </provider>
@@ -1417,33 +1429,33 @@
     <entry file="file://$PROJECT_DIR$/Domains/PomdpSimulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="42" selection-start-line="27" selection-start-column="42" selection-end-line="27" selection-end-column="42" />
+          <caret line="9" column="4" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experience/Experience.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="3" column="6" selection-start-line="3" selection-start-column="6" selection-end-line="3" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Agents/EvalAgent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.13986014">
+          <caret line="6" column="8" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="8" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
+    <entry file="file://$PROJECT_DIR$/Experience/OracleStateExperience.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#55#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/QLearning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1451,18 +1463,68 @@
     <entry file="file://$PROJECT_DIR$/Utils/config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="14" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="14" />
+          <caret line="38" column="32" selection-start-line="38" selection-start-column="32" selection-end-line="38" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Policies/Policy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="45" column="78" selection-start-line="45" selection-start-column="78" selection-end-line="45" selection-end-column="78" />
+          <folding>
+            <element signature="e#0#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Domains/Domain.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="62" column="72" selection-start-line="62" selection-start-column="72" selection-end-line="62" selection-end-column="72" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Domains/SlotSimulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.13968958">
-          <caret line="206" column="42" selection-start-line="206" selection-start-column="42" selection-end-line="206" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="360" column="60" selection-start-line="360" selection-start-column="60" selection-end-line="360" selection-end-column="60" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/QLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/Agent.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8255814">
+          <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>

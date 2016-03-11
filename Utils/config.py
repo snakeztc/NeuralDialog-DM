@@ -36,8 +36,8 @@ dqnConfig = {"test_interval": 4000,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "first_hidden": 256,
-             "second_hidden": 128,
+             "first_hidden": 512,
+             "second_hidden": 256,
              "dropout": 0.3}
 # Word LSTM
 wordDqnConfig = {"test_interval": 4000,

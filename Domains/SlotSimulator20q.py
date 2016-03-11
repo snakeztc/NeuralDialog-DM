@@ -46,6 +46,7 @@ class SlotSimulator20q (Domain):
     slot_values = [all_slot_dict.get(field) for field in slot_names]
     slot_count = len(slot_names)
     question_count = len(question_data)
+    inform_count = len(str_informs)
     print "slot names:",
     print slot_names
 
@@ -74,8 +75,8 @@ class SlotSimulator20q (Domain):
     episode_cap = curConfig["episode_cap"]
     discount_factor = curConfig.get("discount_factor")
     # each value has a question, 1 inform and 3 computer operation
-    actions_num = question_count + len(str_informs) + len(str_computer)
-    action_types = ["question"] * question_count + ["inform"] + ["computer"] * len(str_computer)
+    actions_num = question_count + inform_count + len(str_computer)
+    action_types = ["question"] * question_count + ["inform"] * inform_count + ["computer"] * len(str_computer)
     print "Number of actions is " + str(actions_num)
 
     # raw state is
@@ -202,7 +203,7 @@ class SlotSimulator20q (Domain):
         return self.action_types[a]
 
     def parse_computer_command(self, aID):
-        offset_id = aID - self.question_count - len(self.str_informs)
+        offset_id = aID - self.question_count - self.inform_count
         m_size = len(self.query_modality)
         return offset_id/m_size, offset_id % m_size
 
@@ -278,10 +279,13 @@ class SlotSimulator20q (Domain):
                 resp = self.index_response.get('wrong')
         elif a_type == "computer":
             # computer operator
-            agent_utt = self.index_computer[aID - self.question_count - len(self.str_informs)]
+            agent_utt = self.index_computer[aID-self.question_count-self.inform_count]
             resp = ([], -1)
-            (slot_idx, slot_val) = self.parse_computer_command(aID)
-            ns[0, self.question_count+slot_idx] = slot_val
+            # update the query
+            (query_idx, query_val) = self.parse_computer_command(aID)
+            if ns[0, query_idx] != self.unasked and query_val == ns[0, query_idx] - 1:
+                query_ns = ns[0, self.question_count:self.question_count*2]
+                query_ns[query_idx] = query_val
         else:
             print "ERROR: unknown action type"
             exit(1)
@@ -319,10 +323,16 @@ class SlotSimulator20q (Domain):
             reward = self.logic_error
         elif a_type == "computer":
             (slot_idx, slot_val) = self.parse_computer_command(aID)
-            if ns[0, slot_idx] -1 != query_ns[slot_idx]:
+            # don't fill slot for unasked
+            # if the slot filling is correct
+            # don't repeat the action
+            if ns[0, slot_idx] == self.unasked:
                 reward = self.logic_error
-        elif a_type == "computer" and np.array_equal(query_s, query_ns):
-            reward = self.logic_error
+            else:
+                if ns[0, slot_idx] -1 != slot_val:
+                    reward = self.logic_error
+                if query_ns[slot_idx] == query_s[slot_idx]:
+                    reward = self.logic_error
 
         return reward
 
@@ -338,3 +348,21 @@ class SlotSimulator20q (Domain):
             return True
         else:
             return False
+
+    def action_prune(self, all_s):
+        # check if we have any query slots asked but not filled
+        s = all_s[0]
+        resp_s = s[0, 0:self.question_count]
+        query_s = s[0, self.question_count:self.question_count*2]
+        unasked_mask = resp_s == self.unasked
+        incorrect_mask = (resp_s - 1) == query_s
+        or_mask = unasked_mask or incorrect_mask
+
+        action_mask = np.zeros(self.actions_num, dtype=bool)
+
+
+
+
+
+
+
