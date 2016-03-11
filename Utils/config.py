@@ -1,4 +1,4 @@
-root_path = '/Users/Tony/Dropbox/CMU_MLT/DialPort/NeuralDM/'
+root_path = '/Users/Tony/Dropbox/CMU_Grad/DialPort/NeuralDM/'
 corpus_path = root_path + 'Data/top100.json'
 action_path = root_path + 'Data/action_data.p'
 model_dir = root_path + 'Models/'
@@ -9,7 +9,7 @@ generalConfig = {"global_seed": 100,
 
 pomdpConfig = {"loss_reward": -30.0,
                "win_reward": 30.0,
-               "step_reward": 0.0,
+               "step_reward": -1.0,
                "wrong_guess_reward": -10.0,
                "logic_error": -10.0,
                "episode_cap": 40,

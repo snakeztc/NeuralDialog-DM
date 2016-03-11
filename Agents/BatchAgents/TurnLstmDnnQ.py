@@ -17,7 +17,7 @@ class TurnLstmDnnQ(BatchAgent):
         print "Creating model"
         embed_size = turnDqnConfig["embedding"]
         pooling_type = turnDqnConfig["pooling"]
-        use_pool = pooling_type != None
+        use_pool = pooling_type is not None
 
         model = Sequential()
         model.add(Masking(mask_value=0.0, input_shape=(None, self.representation.state_features_num)))
