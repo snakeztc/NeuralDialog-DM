@@ -21,7 +21,7 @@ class SlotSimulator20q (Domain):
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
-    str_computer = [str(i)+"-"+m for i in range(len(question_data)) for m in ["yes", "no", "unknown"]]
+    str_computer = [str(i)+"-"+m for i in range(len(question_data)) for m in ["unknown", "yes", "no"]]
     str_result = [str(i) for i in range(0, len(corpus)+1)]
 
     # find the vocab size of this world (question + inform + user_response + computer_command + computer_result)
@@ -56,15 +56,15 @@ class SlotSimulator20q (Domain):
 
     # 20Q related
     unasked = 0
-    hold_yes = 1
-    hold_no = 2
-    hold_unknown = 3
+    hold_unknown = 1
+    hold_yes = 2
+    hold_no = 3
     # query related
-    unknown = 0
-    yes = 1
-    no = 2
-    resp_modality = [unasked, hold_yes, hold_no, hold_unknown]
-    query_modality = [yes, no, unknown]
+    unknown = hold_unknown - 1
+    yes = hold_yes - 1
+    no = hold_no - 1
+    resp_modality = [unasked, hold_unknown, hold_yes, hold_no]
+    query_modality = [unknown, yes, no]
 
     loss_reward = curConfig["loss_reward"]
     wrong_guess_reward = curConfig["wrong_guess_reward"]
@@ -136,15 +136,15 @@ class SlotSimulator20q (Domain):
             self.index_response[resp] = (index_tokens, idx)
 
         # convert each computer command to index
-        self.index_computer = {}
+        self.index_computer = []
         for command in self.str_computer:
             index_tokens = [self.vocabs.index(t) + 1 for t in command.split(" ")]
-            self.index_computer[command] = index_tokens
+            self.index_computer.append(index_tokens)
 
         # convert each computer response to index
         self.index_result = {}
-        for idx in range(0, len(self.corpus) + 1):
-            self.index_result[idx] = [self.vocabs.index(str(idx)) + 1]
+        for result in self.str_result:
+            self.index_result[int(result)] = [self.vocabs.index(str(result)) + 1]
 
         # to make the agent life easier we have a set of result have been informed
         self.wrong_keys = set()
@@ -200,6 +200,11 @@ class SlotSimulator20q (Domain):
     def get_action_type(self, a):
         # check if the index of a is in question
         return self.action_types[a]
+
+    def parse_computer_command(self, aID):
+        offset_id = aID - self.question_count - len(self.str_informs)
+        m_size = len(self.query_modality)
+        return offset_id/m_size, offset_id % m_size
 
     # Main Logic
     def step(self, all_s, aID):
@@ -271,25 +276,16 @@ class SlotSimulator20q (Domain):
                     self.wrong_keys.add(guess)
             else:
                 resp = self.index_response.get('wrong')
-        else:
+        elif a_type == "computer":
             # computer operator
-            agent_utt = self.index_computer.get(a_type)
+            agent_utt = self.index_computer[aID - self.question_count - len(self.str_informs)]
             resp = ([], -1)
-            question_ns = ns[0, 0:self.question_count]
-            query_ns = ns[0, self.question_count:self.question_count*2]
-            if a_type == "yes_include":
-                query_ns[question_ns == self.hold_yes] = self.yes
-            elif a_type == "yes_exclude":
-                query_ns[question_ns == self.hold_yes] = self.no
-            elif a_type == "no_exclude":
-                query_ns[question_ns == self.hold_no] = self.no
-            elif a_type == "no_include":
-                query_ns[question_ns == self.hold_no] = self.yes
-            elif a_type == "ignore":
-                query_ns[question_ns == self.hold_unknown] = self.unknown
-            else:
-                print "ERROR: unknown action type"
-                exit()
+            (slot_idx, slot_val) = self.parse_computer_command(aID)
+            ns[0, self.question_count+slot_idx] = slot_val
+        else:
+            print "ERROR: unknown action type"
+            exit(1)
+            return None
 
         new_results = self.get_inform(ns)
         ns[0, -3] = len(new_results) if new_results else 0
@@ -321,9 +317,11 @@ class SlotSimulator20q (Domain):
             reward = self.wrong_guess_reward
         elif a_type == "question" and s[0, aID] != self.unasked:
             reward = self.logic_error
-        elif a_type == "yes_exclude" or a_type == "no_include":
-            reward = self.logic_error
-        elif a_type != "inform" and a_type != "question" and np.array_equal(query_s, query_ns):
+        elif a_type == "computer":
+            (slot_idx, slot_val) = self.parse_computer_command(aID)
+            if ns[0, slot_idx] -1 != query_ns[slot_idx]:
+                reward = self.logic_error
+        elif a_type == "computer" and np.array_equal(query_s, query_ns):
             reward = self.logic_error
 
         return reward
