@@ -1,4 +1,5 @@
 from Domains.PomdpSimulator20q import PomdpSimulator20q
+from Domains.SlotSimulator20q import SlotSimulator20q
 from Agents.ExpQLearning import ExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
@@ -14,8 +15,10 @@ def run():
     pprint.pprint(dqnConfig)
 
     # load the data from file
-    sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
-    test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    #sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    #test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
+    test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
 
     test_interval = dqnConfig.get("test_interval")
     sample_size = np.arange(0, dqnConfig.get("max_sample"), test_interval)

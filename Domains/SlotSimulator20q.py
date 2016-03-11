@@ -7,7 +7,9 @@ import pprint
 
 class SlotSimulator20q (Domain):
 
-    pprint.pprint(pomdpConfig)
+    # read config
+    curConfig = slotConfig
+    pprint.pprint(curConfig)
 
     # global varaible
     print "loading corpus and question data"
@@ -19,10 +21,12 @@ class SlotSimulator20q (Domain):
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
-    str_computer = ["yes_include", "no_exclude", "no_include", "yes_exclude"]
+    str_computer = [str(i)+"-"+m for i in range(len(question_data)) for m in ["yes", "no", "unknown"]]
+    str_result = [str(i) for i in range(0, len(corpus)+1)]
 
-    # find the vocab size of this world
-    all_utt = str_questions + str_informs.values() + str_response + str_computer
+    # find the vocab size of this world (question + inform + user_response + computer_command + computer_result)
+    all_utt = str_questions + str_informs.values() + str_response + str_computer + str_result
+    # it will add EOS
     vocabs = DomainUtil.get_vocab(all_utt)
     nb_words = len(vocabs)
     print "Vocabulary size is " + str(nb_words)
@@ -62,16 +66,16 @@ class SlotSimulator20q (Domain):
     resp_modality = [unasked, hold_yes, hold_no, hold_unknown]
     query_modality = [yes, no, unknown]
 
-    loss_reward = pomdpConfig["loss_reward"]
-    wrong_guess_reward = pomdpConfig["wrong_guess_reward"]
-    logic_error = pomdpConfig["logic_error"]
-    step_reward = pomdpConfig["step_reward"]
-    win_reward = pomdpConfig["win_reward"]
-    episode_cap = pomdpConfig["episode_cap"]
-    discount_factor = pomdpConfig.get("discount_factor")
+    loss_reward = curConfig["loss_reward"]
+    wrong_guess_reward = curConfig["wrong_guess_reward"]
+    logic_error = curConfig["logic_error"]
+    step_reward = curConfig["step_reward"]
+    win_reward = curConfig["win_reward"]
+    episode_cap = curConfig["episode_cap"]
+    discount_factor = curConfig.get("discount_factor")
     # each value has a question, 1 inform and 3 computer operation
     actions_num = question_count + len(str_informs) + len(str_computer)
-    action_types = ["question"] * question_count + ["inform"] + str_computer
+    action_types = ["question"] * question_count + ["inform"] + ["computer"] * len(str_computer)
     print "Number of actions is " + str(actions_num)
 
     # raw state is
@@ -125,7 +129,7 @@ class SlotSimulator20q (Domain):
             index_tokens = [self.vocabs.index(t) + 1 for t in inform.split(" ")]
             self.index_inform[key] = index_tokens
 
-        # convert each possible response to index
+        # convert each possible user response to index
         self.index_response = {}
         for idx, resp in enumerate(self.str_response):
             index_tokens = [self.vocabs.index(t) + 1 for t in resp.split(" ")]

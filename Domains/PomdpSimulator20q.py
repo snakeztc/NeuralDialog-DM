@@ -20,9 +20,11 @@ class PomdpSimulator20q (Domain):
     str_informs = {"all":'inform'}
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
     str_computer = ["yes_include", "no_exclude", "no_include", "yes_exclude"]
+    str_result = [str(i) for i in range(0, len(corpus)+1)]
 
     # find the vocab size of this world
-    all_utt = str_questions + str_informs.values() + str_response + str_computer
+    all_utt = str_questions + str_informs.values() + str_response + str_computer + str_result
+    # it will add EOS
     vocabs = DomainUtil.get_vocab(all_utt)
     nb_words = len(vocabs)
     print "Vocabulary size is " + str(nb_words)
