@@ -7,14 +7,24 @@ generalConfig = {"global_seed": 100,
                  "greedy_temp": 0.5,
                  "save_model": False}
 
+# Simple Yes/NO based Simulator
 pomdpConfig = {"loss_reward": -30.0,
+               "win_reward": 30.0,
+               "step_reward": 0.0,
+               "wrong_guess_reward": -10.0,
+               "logic_error": -10.0,
+               "episode_cap": 40,
+               "discount_factor": 0.99}
+
+# Slot filling based Simulator
+slotConfig = {"loss_reward": -30.0,
                "win_reward": 30.0,
                "step_reward": -1.0,
                "wrong_guess_reward": -10.0,
                "logic_error": -10.0,
                "episode_cap": 40,
                "discount_factor": 0.99}
-
+# Oracle State
 dqnConfig = {"test_interval": 2500,
              "max_sample": 100001,
              'ep_max': 1.0,
@@ -29,7 +39,7 @@ dqnConfig = {"test_interval": 2500,
              "first_hidden": 256,
              "second_hidden": 128,
              "dropout": 0.3}
-
+# Word LSTM
 wordDqnConfig = {"test_interval": 2500,
                  "max_sample": 100001,
                  'ep_max': 1.0,
@@ -47,7 +57,7 @@ wordDqnConfig = {"test_interval": 2500,
                  "first_hidden": 256,
                  "second_hidden": 128,
                  "dropout": 0.2}
-
+# Turn LSTM
 turnDqnConfig = {"test_interval": 2500,
                  "max_sample": 100001,
                  'ep_max': 1.0,

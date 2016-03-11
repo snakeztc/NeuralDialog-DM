@@ -1,6 +1,6 @@
 import re
 import numpy as np
-from Domain import Domain
+from Domains.Domain import Domain
 from Utils.config import *
 from Utils.domainUtil import DomainUtil
 

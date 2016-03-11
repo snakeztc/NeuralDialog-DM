@@ -1,9 +1,11 @@
-from Domains.Simulator20q import Simulator20q
+import numpy as np
+
+from Agents.EvalAgent import EvalAgent
 from Agents.ExpQLearning import ExpQLearning
 from Agents.QLearning import QLearning
-from Agents.EvalAgent import EvalAgent
+from Domains.OldDomains.Simulator20q import Simulator20q
 from Representations.WhCompactRep import WhCompactRep
-import numpy as np
+
 
 def run():
     # load the data from file
