@@ -24,6 +24,11 @@ class DnnQ(BatchAgent):
         model.add(Activation('tanh'))
         model.add(Dropout(dqnConfig["dropout"]))
 
+        if dqnConfig["third_hidden"]:
+            model.add(Dense(dqnConfig["third_hidden"], init='lecun_uniform'))
+            model.add(Activation('tanh'))
+            model.add(Dropout(dqnConfig["dropout"]))
+
         model.add(Dense(self.domain.actions_num, init='lecun_uniform'))
         model.add(Activation('linear')) #linear output so we can have range of real-valued outputs
 

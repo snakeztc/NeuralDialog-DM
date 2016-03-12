@@ -21,8 +21,8 @@ slotConfig = {"loss_reward": -30.0,
               "win_reward": 30.0,
               "step_reward": 0.0,
               "wrong_guess_reward": -10.0,
-              "logic_error": -10.0,
-              "episode_cap": 100,
+              "logic_error": -5.0,
+              "episode_cap": 500,
               "discount_factor": 0.99}
 # Oracle State
 dqnConfig = {"test_interval": 4000,
@@ -38,6 +38,7 @@ dqnConfig = {"test_interval": 4000,
              "doubleDQN": True,
              "first_hidden": 512,
              "second_hidden": 256,
+             "third_hidden": None,
              "dropout": 0.3}
 # Word LSTM
 wordDqnConfig = {"test_interval": 4000,

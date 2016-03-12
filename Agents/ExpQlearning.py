@@ -6,18 +6,32 @@ from Representations.BinaryCompactRep import BinaryCompactRep
 
 
 class ExpQLearning(Agent):
+    fake_policy = []
+    for i in range(100):
+        if i < 62:
+            if i % 2 == 0:
+                fake_policy.append(i/2)
+            else:
+                fake_policy.append(32+i/2)
+        else:
+            fake_policy.append(31)
 
     def learn(self, s, performance_run=False):
 
-        Qs = self.behavior_representation.Qs(s)
-
-        # choose an action
+        # choose an action. If in learning, we use behavior policy, If not use target policy
         if performance_run:
+            Qs = self.representation.Qs(s)
             aID = self.performance_policy.choose_action(Qs)
+            #ss = s[0]
+            #aID = self.fake_policy[int(ss[0, -2])]
         else:
+            Qs = self.behavior_representation.Qs(s)
             aID = self.learning_policy.choose_action(Qs)
 
         (r, ns, terminal) = self.domain.step(s, aID)
+
+        if terminal and self.verbose:
+            self.print_episode(ns[1])
 
         if not performance_run:
             # check if exp_head is larger than buffer size
@@ -37,7 +51,7 @@ class ExpQLearning(Agent):
         return r, ns, terminal
 
     def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10, freeze_frequency=20,
-                 exp_size=10000, mini_batch=3000, doubleDQN=False):
+                 exp_size=10000, mini_batch=3000, doubleDQN=False, verbose=False):
         super(ExpQLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
@@ -50,6 +64,7 @@ class ExpQLearning(Agent):
         self.learner = DnnQ(domain=domain, representation=representation,
                             behavior_representation=self.behavior_representation,
                             seed=seed, doubleDQN=doubleDQN)
+        self.verbose = verbose
         print "Using epsilon " + str(epsilon)
         print "Update_frequency " + str(self.update_frequency)
         print "Mini-batch size is " + str(self.experience.mini_batch_size)
