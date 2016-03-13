@@ -8,7 +8,7 @@ import pprint
 class End2EndSimulator20q (Domain):
 
     # read config
-    curConfig = slotConfig
+    curConfig = end2endConfig
     pprint.pprint(curConfig)
 
     # global varaible
@@ -19,7 +19,7 @@ class End2EndSimulator20q (Domain):
     question_data = DomainUtil.get_actions(action_path)
 
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
-    str_informs = [key for key in corpus.keys()]
+    str_informs = ["Guess_"+key for key in corpus.keys()]
     str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
 
     # find the vocab size of this world (question + inform + user_response)
@@ -78,7 +78,7 @@ class End2EndSimulator20q (Domain):
     # 0: init, 1 yes, 3 no
     # create state_space_limit
     print "Constructing the state limit for each dimension"
-    statespace_limits = np.zeros((question_count*2, 2))
+    statespace_limits = np.zeros((question_count, 2))
     for d in range(0, question_count):
         statespace_limits[d, 1] = len(resp_modality)
 
@@ -88,7 +88,7 @@ class End2EndSimulator20q (Domain):
 
     # turn count is discrete and informed is categorical
     statespace_type = [Domain.categorical] * question_count
-    statespace_type.extend([Domain.discrete, Domain.discrete, Domain.categorical])
+    statespace_type.extend([Domain.discrete, Domain.categorical])
 
     print "Total number of questions " + str(len(question_data))
     print "Done initializing"
@@ -216,7 +216,8 @@ class End2EndSimulator20q (Domain):
             # a is the inform
             inform_idx = aID - self.question_count
             agent_utt = self.index_inform[inform_idx]
-            if self.person_inmind_key == inform_idx:
+            if sum(s[0, 0:self.question_count] != self.unasked) > 10\
+                    or self.person_inmind_key == inform_idx:
                 # has informed successfully
                 ns[0, -1] = 1
                 resp = self.index_response.get('correct')

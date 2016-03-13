@@ -1,6 +1,6 @@
 from Domains.SlotSimulator20q import SlotSimulator20q
-from Domains.PomdpSimulator20q import PomdpSimulator20q
-from Domains.End2EndSimulator20q import End2EndSimulator20q
+#from Domains.PomdpSimulator20q import PomdpSimulator20q
+#from Domains.End2EndSimulator20q import End2EndSimulator20q
 from Agents.ExpQLearning import ExpQLearning
 from Agents.EvalAgent import EvalAgent
 from Representations.BinaryCompactRep import BinaryCompactRep
@@ -17,10 +17,10 @@ def run():
     # load the data from file
     #sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
     #test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
-    #sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
-    #test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
-    sim20_evn = End2EndSimulator20q(generalConfig["global_seed"])
-    test_sim20_evn = End2EndSimulator20q(generalConfig["global_seed"])
+    sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
+    test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
+    #sim20_evn = End2EndSimulator20q(generalConfig["global_seed"])
+    #test_sim20_evn = End2EndSimulator20q(generalConfig["global_seed"])
 
     test_interval = dqnConfig.get("test_interval")
     sample_size = np.arange(0, dqnConfig.get("max_sample"), test_interval)

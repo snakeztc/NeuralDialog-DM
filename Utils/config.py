@@ -22,8 +22,17 @@ slotConfig = {"loss_reward": -30.0,
               "step_reward": 0.0,
               "wrong_guess_reward": -10.0,
               "logic_error": -5.0,
-              "episode_cap": 500,
+              "episode_cap": 100,
               "discount_factor": 0.99}
+
+# Slot filling based Simulator
+end2endConfig = {"loss_reward": -30.0,
+                  "win_reward": 30.0,
+                  "step_reward": 0.0,
+                  "wrong_guess_reward": -10.0,
+                  "logic_error": -5.0,
+                  "episode_cap": 40,
+                  "discount_factor": 0.99}
 # Oracle State
 dqnConfig = {"test_interval": 4000,
              "max_sample": 100001,
