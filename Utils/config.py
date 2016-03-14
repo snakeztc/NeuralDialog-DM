@@ -17,11 +17,11 @@ pomdpConfig = {"loss_reward": -30.0,
                "discount_factor": 0.99}
 
 # Slot filling based Simulator
-slotConfig = {"loss_reward": -30.0,
+slotConfig = {"loss_reward": -100.0,
               "win_reward": 30.0,
               "step_reward": 0.0,
-              "wrong_guess_reward": -10.0,
-              "logic_error": -5.0,
+              "wrong_guess_reward": -20.0,
+              "logic_error": -10.0,
               "episode_cap": 100,
               "discount_factor": 0.99}
 
@@ -34,7 +34,7 @@ end2endConfig = {"loss_reward": -30.0,
                   "episode_cap": 40,
                   "discount_factor": 0.99}
 # Oracle State
-dqnConfig = {"test_interval": 4000,
+dqnConfig = {"test_interval": 5000,
              "max_sample": 100001,
              'ep_max': 1.0,
              "ep_min": 0.1,
@@ -45,9 +45,9 @@ dqnConfig = {"test_interval": 4000,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "first_hidden": 512,
+             "first_hidden": 256,
              "second_hidden": 256,
-             "third_hidden": None,
+             "third_hidden": 128,
              "dropout": 0.3}
 # Word LSTM
 wordDqnConfig = {"test_interval": 4000,

@@ -19,19 +19,19 @@ class ExpQLearning(Agent):
     def learn(self, s, performance_run=False):
 
         # choose an action. If in learning, we use behavior policy, If not use target policy
+        mask = self.domain.action_prune(s)
         if performance_run:
             Qs = self.representation.Qs(s)
-            aID = self.performance_policy.choose_action(Qs)
-            #ss = s[0]
-            #aID = self.fake_policy[int(ss[0, -2])]
+            aID = self.performance_policy.choose_action(Qs, mask)
         else:
             Qs = self.behavior_representation.Qs(s)
-            aID = self.learning_policy.choose_action(Qs)
+            aID = self.learning_policy.choose_action(Qs, mask)
 
         (r, ns, terminal) = self.domain.step(s, aID)
 
         if terminal and self.verbose:
             self.print_episode(ns[1])
+            print "final reward is " + str(r)
 
         if not performance_run:
             # check if exp_head is larger than buffer size

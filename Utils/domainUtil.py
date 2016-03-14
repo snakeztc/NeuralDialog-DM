@@ -81,6 +81,7 @@ class DomainUtil:
     @staticmethod
     def load_model(path):
         corpus = json.load(open(path, 'r'))
+        corpus = json.load(open(path, 'r'))
         print "A domain with " + str(len(corpus)) + " people."
         return corpus
 

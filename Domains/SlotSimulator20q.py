@@ -27,7 +27,7 @@ class SlotSimulator20q (Domain):
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
     str_informs = {key:'inform_'+person.get('name').replace(" ", "") for key, person in corpus.iteritems()}
     str_informs["none"] = "none"
-    str_response = ['yes', 'no', 'I do not know', 'correct', 'wrong']
+    str_response = ['yes', 'no', 'I_do_not_know', 'correct', 'wrong']
     str_computer = ["c_unkown", "c_yes", "c_no"]
     str_result = [str(i) for i in range(0, len(corpus)+1)]
     question_count = len(question_data)
@@ -99,9 +99,10 @@ class SlotSimulator20q (Domain):
     for d in range(question_count, question_count*2):
         statespace_limits[d, 1] = len(query_modality)
 
-    # prev_action, query return size, turn count, action_mode, informed not_yet/successful
+    # prev_action, query return size, turn count, action_mode, inform_count informed not_yet/successful
     statespace_limits = np.vstack((statespace_limits, [0, actions_num+1]))
     statespace_limits = np.vstack((statespace_limits, [0, len(corpus)]))
+    statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
     statespace_limits = np.vstack((statespace_limits, [0, 2]))
     statespace_limits = np.vstack((statespace_limits, [0, 2]))
@@ -110,10 +111,16 @@ class SlotSimulator20q (Domain):
 
     # turn count is discrete and informed is categorical
     statespace_type = [Domain.categorical] * question_count * 2
-    statespace_type.extend([Domain.categorical, Domain.discrete, Domain.discrete, Domain.categorical, Domain.categorical])
-    prev_idx = statespace_limits.shape[0]-5 # prev_action is 1 based 0 leave for no_action
-    comp_idx = statespace_limits.shape[0]-4
-    turn_idx = statespace_limits.shape[0]-3
+    statespace_type.extend([Domain.categorical, # prev_action
+                            Domain.discrete, # query return size
+                            Domain.discrete, # turn count
+                            Domain.discrete, # inform count
+                            Domain.categorical, # action mode
+                            Domain.categorical]) # end
+    prev_idx = statespace_limits.shape[0]-6 # prev_action is 1 based 0 leave for no_action
+    comp_idx = statespace_limits.shape[0]-5
+    turn_idx = statespace_limits.shape[0]-4
+    icnt_idx = statespace_limits.shape[0]-3
     mode_idx = statespace_limits.shape[0]-2
     end_idx = statespace_limits.shape[0]-1
 
@@ -279,7 +286,7 @@ class SlotSimulator20q (Domain):
                         ns[0, aID] = self.hold_no
                         resp = self.index_response.get("no")
                 else:
-                    resp = self.index_response.get("I do not know")
+                    resp = self.index_response.get("I_do_not_know")
                     # populate to all q_id for this slot_name
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == slot_name:
@@ -291,12 +298,14 @@ class SlotSimulator20q (Domain):
                 elif s[0, aID] == self.hold_no:
                     resp = self.index_response.get("no")
                 elif s[0, aID] == self.hold_unknown:
-                    resp = self.index_response.get("I do not know")
+                    resp = self.index_response.get("I_do_not_know")
                 else:
                     print "something wrong for question"
                     exit(1)
 
         elif a_type == "inform":
+            # increment the inform count
+            ns[0, self.icnt_idx] = s[0, self.icnt_idx] + 1
             # a is the inform
             results = self.get_inform(s)
             if self.person_inmind_key in results:
@@ -314,9 +323,9 @@ class SlotSimulator20q (Domain):
                 resp = self.index_response.get('wrong')
 
         elif a_type == "computer":
-            #if s[0, self.mode_idx] != self.slot_mode:
-            #    print "something wrong for the action masking"
-            #    exit(1)
+            if s[0, self.mode_idx] != self.slot_mode:
+                print "something wrong for the action masking"
+                exit(1)
             resp = ([], -1)
             # update the query
             query_val = self.parse_computer_command(aID)
@@ -324,7 +333,8 @@ class SlotSimulator20q (Domain):
             agent_utt = self.index_computer[query_val]
             # update if possible
             if prev_a_type == "question":
-                query_idx = self.question_count + self.inform_count + s[0, self.prev_idx] - 1
+                query_idx = self.question_count + s[0, self.prev_idx] - 1
+                #ns[0, query_idx] = ns[0, s[0, self.prev_idx] - 1] - 1
                 ns[0, query_idx] = query_val
         else:
             print "ERROR: unknown action type"
@@ -334,6 +344,8 @@ class SlotSimulator20q (Domain):
         new_results = self.get_inform(ns)
         ns[0, self.comp_idx] = len(new_results) if new_results else 0
         cmp_resp = self.index_result.get(ns[0, self.comp_idx])
+        if len(new_results) == 0:
+            ns[0, self.turn_idx] = self.episode_cap
 
         # append the agent action and user response to the dialog hist
         n_w_hist.extend(agent_utt)
@@ -363,10 +375,11 @@ class SlotSimulator20q (Domain):
             # if the slot filling is correct
             # don't repeat the action
             if prev_a_type != "question":
-                reward = self.logic_error
+                print "something wrong about action mask"
+                exit(1)
             else:
                 query_idx = s[0, self.prev_idx] - 1
-                if ns[0, query_idx] != ns[0, query_idx + self.question_count + self.inform_count]:
+                if ns[0, query_idx] -1 != ns[0, query_idx + self.question_count]:
                     reward = self.logic_error
 
         return reward
@@ -381,12 +394,16 @@ class SlotSimulator20q (Domain):
     def action_prune(self, all_s):
         # check if we have any query slots asked but not filled
         s = all_s[0]
-        resp_s = s[0, 0:self.question_count]
-        query_s = s[0, self.question_count:self.question_count*2]
-        unasked_mask = resp_s == self.unasked
-        incorrect_mask = (resp_s) == query_s
-        or_mask = unasked_mask or incorrect_mask
-        action_mask = np.zeros(self.actions_num, dtype=bool)
+        mask = np.zeros(self.actions_num, dtype=bool)
+        prev_a_type = self.get_prev_action_type(s[0, self.prev_idx])
+        if s[0, self.mode_idx] == self.question_mode or prev_a_type == "inform":
+            mask[0:self.question_count+self.inform_count] = True
+        elif s[0, self.mode_idx] == self.slot_mode:
+            mask[self.question_count+self.inform_count:] = True
+        else:
+            print "state mode is wrong"
+            exit(1)
+        return mask
 
 
 
