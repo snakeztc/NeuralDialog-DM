@@ -14,7 +14,9 @@ class DomainUtil:
             q_set = set()
             # go through true values
             for value in qd[2]:
-                q_set = q_set.union(lookup.get(qd[0]).get(value))
+                valid_people = lookup.get(qd[0]).get(value)
+                if valid_people:
+                    q_set = q_set.union(valid_people)
             truth_set.append(q_set)
         return truth_set
 
@@ -81,9 +83,9 @@ class DomainUtil:
     @staticmethod
     def load_model(path):
         corpus = json.load(open(path, 'r'))
-        corpus = json.load(open(path, 'r'))
-        print "A domain with " + str(len(corpus)) + " people."
-        return corpus
+        temp = {key:value for key,value in corpus.items()[0:10]}
+        print "A domain with " + str(len(temp)) + " people."
+        return temp
 
     @staticmethod
     def get_lookup(corpus, field_dict):

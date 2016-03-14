@@ -33,12 +33,14 @@ class BatchAgent(object):
         (phi_s, actions, rewards, phi_ns, sample_indices) = experiences.sample_mini_batch()
 
         # calculate the targets
-        y = self.representation.Qs_phi_s(phi_s) ## A Bug should fix in LstmDNNFQI too
+        y = self.representation.Qs_phi_s(phi_s)
         nqs = self.representation.Qs_phi_s(phi_ns)
-        nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
-
-        behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
-        best_nqs = nqs.flat[behavior_argmax]
+        if self.doubleDQN:
+            nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
+            behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
+            best_nqs = nqs.flat[behavior_argmax]
+        else:
+            best_nqs = np.amax(nqs, axis=1).ravel()
 
         targets = rewards + self.domain.discount_factor * best_nqs
         indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
@@ -52,32 +54,25 @@ class BatchAgent(object):
         # update the priority
         experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
 
-        if self.doubleDQN:
-            if not self.behavior_representation.model:
-                self.behavior_representation.model = self.init_model()
-                if os.path.exists(self.mode_path):
-                    self.representation.model = self.init_model()
-
-            # fit the deep neural nets!!
-            self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
-        else:
-            if not self.representation.model:
+        if not self.behavior_representation.model:
+            self.behavior_representation.model = self.init_model()
+            if os.path.exists(self.mode_path):
                 self.representation.model = self.init_model()
-            # fit the lstm deep neural nets!!
-            self.representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
+
+        # fit the deep neural nets!!
+        self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def update_target_model(self):
         """
         Update target model to match with behavior model
         :return:
         """
-        if self.doubleDQN:
-            if not self.representation.model:
-                self.representation.model = self.init_model()
+        if not self.representation.model:
+            self.representation.model = self.init_model()
 
-            # copy weights value to targets
-            for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
-                target_layer.set_weights(behavior_layer.get_weights())
+        # copy weights value to targets
+        for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
+            target_layer.set_weights(behavior_layer.get_weights())
 
     def init_model(self):
         raise NotImplementedError("Models")
