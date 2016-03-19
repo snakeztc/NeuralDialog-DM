@@ -3,7 +3,7 @@ import numpy as np
 from Utils.config import *
 
 class Policy(object):
-    def __init__(self, seed=1):
+    def __init__(self, seed):
         self.logger = logging.getLogger("hrl.Policy." + self.__class__.__name__)
         # a new stream of random numbers for each domain
         self.random_state = np.random.RandomState(seed)
@@ -64,7 +64,7 @@ class EpsilonGreedyPolicy(Policy):
     def __init__(self, epsilon, seed):
         super(EpsilonGreedyPolicy, self).__init__(seed)
         self.epsilon = epsilon
-        self.random_policy = RandomPolicy()
+        self.random_policy = RandomPolicy(seed=seed)
 
     def set_epsilon(self, epsilon):
         self.epsilon = epsilon

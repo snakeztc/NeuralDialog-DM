@@ -3,6 +3,7 @@ import pickle as p
 from natsort import natsorted
 import numpy as np
 from scipy.stats import norm
+from config import generalConfig
 
 
 class DomainUtil:
@@ -83,9 +84,9 @@ class DomainUtil:
     @staticmethod
     def load_model(path):
         corpus = json.load(open(path, 'r'))
-        temp = {key:value for key,value in corpus.items()[0:10]}
-        print "A domain with " + str(len(temp)) + " people."
-        return temp
+        corpus = {key:person for key, person in corpus.items()[0:generalConfig["corpus_size"]]}
+        print "A domain with " + str(len(corpus)) + " people."
+        return corpus
 
     @staticmethod
     def get_lookup(corpus, field_dict):

@@ -6,15 +6,6 @@ from Representations.BinaryCompactRep import BinaryCompactRep
 
 
 class ExpQLearning(Agent):
-    fake_policy = []
-    for i in range(100):
-        if i < 62:
-            if i % 2 == 0:
-                fake_policy.append(i/2)
-            else:
-                fake_policy.append(32+i/2)
-        else:
-            fake_policy.append(31)
 
     def learn(self, s, performance_run=False):
 
@@ -23,7 +14,7 @@ class ExpQLearning(Agent):
         if performance_run:
             Qs = self.representation.Qs(s)
             aID = self.performance_policy.choose_action(Qs, mask)
-        else:
+        else: # learning step
             Qs = self.behavior_representation.Qs(s)
             aID = self.learning_policy.choose_action(Qs, mask)
 
@@ -65,6 +56,3 @@ class ExpQLearning(Agent):
                             behavior_representation=self.behavior_representation,
                             seed=seed, doubleDQN=doubleDQN)
         self.verbose = verbose
-        print "Using epsilon " + str(epsilon)
-        print "Update_frequency " + str(self.update_frequency)
-        print "Mini-batch size is " + str(self.experience.mini_batch_size)

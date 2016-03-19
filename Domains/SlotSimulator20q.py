@@ -344,8 +344,9 @@ class SlotSimulator20q (Domain):
             # update if possible
             if prev_a_type == "question":
                 query_idx = self.question_count + s[0, self.prev_idx] - 1
-                ns[0, query_idx] = ns[0, s[0, self.prev_idx] - 1] - 1
-                #ns[0, query_idx] = query_val
+                #if ns[0, s[0, self.prev_idx] - 1] - 1 == query_val:
+                ns[0, query_idx] = query_val
+
             else:
                 print "something wrong about action mask"
                 exit(1)
@@ -392,7 +393,8 @@ class SlotSimulator20q (Domain):
                 exit(1)
             else:
                 query_idx = s[0, self.prev_idx] - 1
-                if ns[0, query_idx] -1 != ns[0, query_idx + self.question_count]:
+                query_val = self.parse_computer_command(aID)
+                if ns[0, query_idx] -1 != query_val:
                     reward = self.logic_error
 
         return reward

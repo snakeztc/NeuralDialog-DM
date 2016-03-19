@@ -44,3 +44,4 @@ class LstmDnnQ(BatchAgent):
         print model.summary()
         return model
 
+

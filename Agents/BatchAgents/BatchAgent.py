@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 import os.path
+from Utils.config import dqnConfig
 
 
 class BatchAgent(object):
@@ -21,11 +22,10 @@ class BatchAgent(object):
         self.behavior_representation = behavior_representation
         self.doubleDQN = doubleDQN
 
-    def learn(self, experiences, max_iter=20):
+    def learn(self, experiences):
         """
         Sadly, we have to use the representation in terms of phi_sa r phi_ns
         :param experiences:
-        :param max_iter: The max number of iteration
         :return: Nothing
         """
         # experience is in (phi_s, a, r, phi_ns)
@@ -60,7 +60,11 @@ class BatchAgent(object):
                 self.representation.model = self.init_model()
 
         # fit the deep neural nets!!
-        self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
+        if dqnConfig["model"] == "graph":
+            self.behavior_representation.model.fit({'input':phi_s, 'output':y}, batch_size=num_samples, nb_epoch=1, verbose=0)
+        else:
+            self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
+
 
     def update_target_model(self):
         """
@@ -71,8 +75,12 @@ class BatchAgent(object):
             self.representation.model = self.init_model()
 
         # copy weights value to targets
-        for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
-            target_layer.set_weights(behavior_layer.get_weights())
+        if dqnConfig["model"] == "graph":
+            for target_layer, behavior_layer in zip(self.representation.model.nodes.values(), self.behavior_representation.model.nodes.values()):
+                target_layer.set_weights(behavior_layer.get_weights())
+        else:
+            for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
+                target_layer.set_weights(behavior_layer.get_weights())
 
     def init_model(self):
         raise NotImplementedError("Models")

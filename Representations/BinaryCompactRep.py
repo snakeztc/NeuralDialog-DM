@@ -1,6 +1,6 @@
 import numpy as np
 from Representation import Representation
-import time
+from Utils.config import dqnConfig
 
 
 class BinaryCompactRep(Representation):
@@ -53,7 +53,10 @@ class BinaryCompactRep(Representation):
 
     def Qs_phi_s(self, phi_s):
         if self.model:
-            return self.model.predict(phi_s)
+            if dqnConfig["model"] == "graph":
+                return self.model.predict({'input':phi_s}).get('output')
+            else:
+                return self.model.predict(phi_s)
         else:
             return np.zeros((phi_s.shape[0], self.domain.actions_num))
 

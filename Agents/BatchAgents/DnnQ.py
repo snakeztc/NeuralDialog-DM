@@ -56,21 +56,18 @@ class DnnQ(BatchAgent):
 
         graph = Graph()
         graph.add_input(name='input', input_shape=(self.representation.state_features_num,))
-        graph.add_node(Dense(dqnConfig["first_hidden"]), name="l1", input="input")
-        graph.add_node(Activation('tanh'), name="l1a", input="l1")
-        graph.add_node(Dropout(dqnConfig["dropout"]), name="l1dp", input="l1a")
+        graph.add_node(Dense(dqnConfig["first_hidden"], activation="tanh"), name="l1", input="input")
+        graph.add_node(Dropout(dqnConfig["dropout"]), name="l1dp", input="l1")
 
-        graph.add_node(Dense(dqnConfig["second_hidden"]), name="l2", input="l1dp")
-        graph.add_node(Activation('tanh'), name="l2a", input="l2")
-        graph.add_node(Dropout(dqnConfig["dropout"]), name="l2dp", input="l2a")
+        graph.add_node(Dense(dqnConfig["second_hidden"], activation='tanh'), name="l2", input="l1dp")
+        graph.add_node(Dropout(dqnConfig["dropout"]), name="l2dp", input="l2")
 
-        graph.add_node(Dense(self.domain.actions_num), name="l3")
-        graph.add_node(Activation("linear"), name="l3a")
+        graph.add_node(Dense(self.domain.actions_num, activation='linear'), name="output", input='l2dp', create_output=True)
 
-        graph.add_output(name="output", input="l3a")
+        opt = RMSprop(clipvalue=1.0)
+        graph.compile(optimizer=opt, loss={'output':'mse'})
 
-        graph.compile(optimizer='rmsprop', loss={'output':'mse'})
-
+        print graph.summary()
         print "Model created"
         return graph
 
