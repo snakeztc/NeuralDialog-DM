@@ -84,7 +84,8 @@ class DomainUtil:
     @staticmethod
     def load_model(path):
         corpus = json.load(open(path, 'r'))
-        corpus = {key:person for key, person in corpus.items()[0:generalConfig["corpus_size"]]}
+        if len(corpus) > generalConfig["corpus_size"]:
+            corpus = {key:person for key, person in corpus.items()[0:generalConfig["corpus_size"]]}
         print "A domain with " + str(len(corpus)) + " people."
         return corpus
 

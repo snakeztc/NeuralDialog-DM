@@ -10,12 +10,12 @@ generalConfig = {"global_seed": 100,
 
 # Simple Yes/NO based Simulator
 commandConfig = {"loss_reward": -30.0,
-               "win_reward": 30.0,
-               "step_reward": 0.0,
-               "wrong_guess_reward": -10.0,
-               "logic_error": -10.0,
-               "episode_cap": 40,
-               "discount_factor": 0.99}
+                 "win_reward": 30.0,
+                 "step_reward": 0.0,
+                 "wrong_guess_reward": -10.0,
+                 "logic_error": -10.0,
+                 "episode_cap": 40,
+                 "discount_factor": 0.99}
 
 # Slot filling where the agent should fill the slots
 slotConfig = {"loss_reward": -30.0,
@@ -36,8 +36,7 @@ end2endConfig = {"loss_reward": -30.0,
                  "episode_cap": 40,
                  "discount_factor": 0.99}
 # Oracle State
-dqnConfig = {"model": "graph",
-             "test_interval": 5000,
+dqnConfig = {"test_interval": 5000,
              "max_sample": 100001,
              'ep_max': 1.0,
              "ep_min": 0.1,

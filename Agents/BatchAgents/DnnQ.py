@@ -12,13 +12,7 @@ class DnnQ(BatchAgent):
     mode_path = model_dir+"best-dqn.h5"
 
     def init_model(self):
-        if dqnConfig["model"] == "seq":
-            return self.get_sequential_model()
-        elif dqnConfig["model"] == "graph":
-            return self.get_graph_model()
-        else:
-            print "unknown keras model"
-            exit(1)
+        return self.get_graph_model()
 
     def get_sequential_model(self):
         model = Sequential()

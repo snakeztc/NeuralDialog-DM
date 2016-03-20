@@ -18,6 +18,7 @@ class CommandSimulator20q (Domain):
 
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
     str_informs = {key:'inform_'+person.get('name').replace(" ", "") for key, person in corpus.iteritems()}
+    str_informs["none"] = "none"
     str_response = ['yes', 'no', 'I_do_not_know', 'I_have_told_you', 'correct', 'wrong']
     str_computer = ["yes_include", "no_exclude", "no_include", "yes_exclude"]
     str_result = [str(i) for i in range(0, len(corpus)+1)]
@@ -44,6 +45,7 @@ class CommandSimulator20q (Domain):
     slot_values = [all_slot_dict.get(field) for field in slot_names]
     slot_count = len(slot_names)
     question_count = len(question_data)
+    inform_count = 1 # !! only 1 inform action
     print "slot names:",
     print slot_names
 
@@ -72,9 +74,11 @@ class CommandSimulator20q (Domain):
     episode_cap = commandConfig["episode_cap"]
     discount_factor = commandConfig.get("discount_factor")
     # each value has a question, 1 inform and 3 computer operation
-    actions_num = question_count + len(str_informs) + len(str_computer)
+    actions_num = question_count + inform_count + len(str_computer)
     action_types = ["question"] * question_count + ["inform"] + str_computer
-    actions_tree = ["output"] * actions_num
+    tree_actions_name = ["output"] * actions_num
+    tree_actions_num = {"output": actions_num}
+    tree_names = DomainUtil.remove_duplicate(tree_actions_name)
     print "Number of actions is " + str(actions_num)
 
     # raw state is
@@ -177,7 +181,7 @@ class CommandSimulator20q (Domain):
 
         # get init state
         s = np.zeros((1, self.statespace_size))
-        s[0, -3] = len(self.corpus)
+        s[0, self.comp_idx] = len(self.corpus)
 
         # get init turn
         t = np.atleast_2d([0.0, 0.0, len(self.corpus)])
@@ -236,7 +240,7 @@ class CommandSimulator20q (Domain):
 
         if a_type == 'question':
             agent_utt = self.index_question[aID]
-            resp = self.index_response.get("I have told you")
+            resp = self.index_response.get("I_have_told_you")
             slot_name = self.question_data[aID][0]
             true_set = self.question_data[aID][2]
 
@@ -268,9 +272,9 @@ class CommandSimulator20q (Domain):
             ns[0, self.icnt_idx] = s[0, self.icnt_idx] + 1
             # a is the inform
             results = self.get_inform(s)
-            agent_utt = self.index_inform.get("all")
             if self.person_inmind_key in results:
                 guess = self.random_state.choice(results)
+                agent_utt = self.index_inform.get(guess)
                 if self.person_inmind_key == guess:
                     # has informed successfully
                     ns[0, self.end_idx] = 1
@@ -279,6 +283,7 @@ class CommandSimulator20q (Domain):
                     resp = self.index_response.get('wrong')
                     self.wrong_keys.add(guess)
             else:
+                agent_utt = self.index_inform.get("none")
                 resp = self.index_response.get('wrong')
         else:
             # computer operator

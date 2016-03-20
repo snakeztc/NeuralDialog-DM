@@ -1,5 +1,5 @@
-from Domains.SlotSimulator20q import SlotSimulator20q
-#from Domains.PomdpSimulator20q import PomdpSimulator20q
+#from Domains.SlotSimulator20q import SlotSimulator20q
+from Domains.CommandSimulator20q import CommandSimulator20q
 #from Domains.End2EndSimulator20q import End2EndSimulator20q
 from Agents.ExpQLearning import ExpQLearning
 from Agents.EvalAgent import EvalAgent
@@ -15,10 +15,10 @@ def run():
     pprint.pprint(dqnConfig)
 
     # load the data from file
-    #sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
-    #test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
-    sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
-    test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
+    sim20_evn = CommandSimulator20q(generalConfig["global_seed"])
+    test_sim20_evn = CommandSimulator20q(generalConfig["global_seed"])
+    #sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
+    #test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
     #sim20_evn = End2EndSimulator20q(generalConfig["global_seed"])
     #test_sim20_evn = End2EndSimulator20q(generalConfig["global_seed"])
 

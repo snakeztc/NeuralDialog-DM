@@ -34,22 +34,41 @@ class BatchAgent(object):
 
         # calculate the targets
         y = self.representation.Qs_phi_s(phi_s)
-        nqs = self.representation.Qs_phi_s(phi_ns)
+
+        #nqs = self.representation.Qs_phi_s(phi_ns)
+        nqs = self.stack_all_qs(self.representation.Qs_phi_s(phi_ns), num_samples)
+
+        # append next Qs into 1 matrix
         if self.doubleDQN:
-            nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
-            behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
+            #nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
+            #behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
+
+            nbqs = self.stack_all_qs(self.behavior_representation.Qs_phi_s(phi_ns), num_samples)
+            behavior_argmax = [int(v+i*nbqs.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
             best_nqs = nqs.flat[behavior_argmax]
         else:
             best_nqs = np.amax(nqs, axis=1).ravel()
 
         targets = rewards + self.domain.discount_factor * best_nqs
-        indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
+        #indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
         # update the new y
-        y.flat[indices] = targets
+        #y.flat[indices] = targets
 
         # compute the TD-error
         raw_by = self.behavior_representation.Qs_phi_s(phi_s)
-        td_error = np.abs(raw_by.flat[indices] - targets)
+        #td_error = np.abs(raw_by.flat[indices] - targets)
+
+        # update the y and td_error
+        td_error = np.zeros(num_samples)
+
+        for name in self.domain.tree_names:
+            name_num = self.domain.tree_actions_num[name]
+            valid_mask = [i for i, v in enumerate(actions) if self.domain.tree_actions_name[int(v)] == name]
+            indices = [int(actions[i]+i*name_num) for i in valid_mask]
+            y[name].flat[indices] = targets[valid_mask]
+
+            # td error
+            td_error[valid_mask] = np.abs(raw_by[name].flat[indices] - targets[valid_mask])
 
         # update the priority
         experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
@@ -60,11 +79,9 @@ class BatchAgent(object):
                 self.representation.model = self.init_model()
 
         # fit the deep neural nets!!
-        if dqnConfig["model"] == "graph":
-            self.behavior_representation.model.fit({'input':phi_s, 'output':y}, batch_size=num_samples, nb_epoch=1, verbose=0)
-        else:
-            self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
-
+        y["input"] = phi_s
+        self.behavior_representation.model.fit(y, batch_size=num_samples, nb_epoch=1, verbose=0)
+        #self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def update_target_model(self):
         """
@@ -75,12 +92,20 @@ class BatchAgent(object):
             self.representation.model = self.init_model()
 
         # copy weights value to targets
-        if dqnConfig["model"] == "graph":
-            for target_layer, behavior_layer in zip(self.representation.model.nodes.values(), self.behavior_representation.model.nodes.values()):
-                target_layer.set_weights(behavior_layer.get_weights())
-        else:
-            for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
-                target_layer.set_weights(behavior_layer.get_weights())
+        for target_layer, behavior_layer in zip(self.representation.model.nodes.values(), self.behavior_representation.model.nodes.values()):
+            target_layer.set_weights(behavior_layer.get_weights())
+
+        #for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
+        #    target_layer.set_weights(behavior_layer.get_weights())
+
+    def stack_all_qs(self, Qs, num_samples):
+        results = np.zeros((num_samples, self.domain.actions_num))
+        base = 0
+        for name in self.domain.tree_names:
+            name_num = self.domain.tree_actions_num[name]
+            results[:, base:base+name_num] = Qs[name]
+            base += name_num
+        return results
 
     def init_model(self):
         raise NotImplementedError("Models")

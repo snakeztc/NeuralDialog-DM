@@ -1,6 +1,7 @@
 """ Domain Abstract Class """
 import logging
 import numpy as np
+from Utils.domainUtil import DomainUtil
 
 
 class Domain(object):
@@ -17,8 +18,12 @@ class Domain(object):
     actions_num = None  # was None
     # Different type of actions
     action_types = None
-    # The action hierarchy
-    actions_tree = None
+    # The action hierarchy [action_name, ... ] num_actions
+    tree_actions_name = None
+    # A dictionary action_name -> number of actions
+    tree_actions_num = None
+    # tree node name
+    tree_names = None
     # Limits of each dimension of the state space. Each row corresponds to one dimension and has two elements [min, max]
     statespace_limits = None  # was None
     #: Number of dimensions of the state space

@@ -26,7 +26,7 @@ class BinaryCompactRep(Representation):
                 diff[row_idx] = 1
         self.base = np.append([0], np.cumsum(diff))
 
-    ### State Representation ###
+    # State Representation
     def phi_sa(self, s, aID):
         pass
 
@@ -53,12 +53,11 @@ class BinaryCompactRep(Representation):
 
     def Qs_phi_s(self, phi_s):
         if self.model:
-            if dqnConfig["model"] == "graph":
-                return self.model.predict({'input':phi_s}).get('output')
-            else:
-                return self.model.predict(phi_s)
+            return self.model.predict({'input':phi_s})
+            #return self.model.predict(phi_s)
         else:
-            return np.zeros((phi_s.shape[0], self.domain.actions_num))
+            result = {key: np.zeros((phi_s.shape[0], size)) for key, size in self.domain.tree_actions_num.iteritems()}
+            return result
 
 
 
