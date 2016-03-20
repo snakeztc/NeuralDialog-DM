@@ -5,11 +5,11 @@ model_dir = root_path + 'Models/'
 
 generalConfig = {"global_seed": 100,
                  "greedy_temp": 0.5,
-                 "corpus_size": 1000,
+                 "corpus_size": 100,
                  "save_model": False}
 
 # Simple Yes/NO based Simulator
-pomdpConfig = {"loss_reward": -30.0,
+commandConfig = {"loss_reward": -30.0,
                "win_reward": 30.0,
                "step_reward": 0.0,
                "wrong_guess_reward": -10.0,

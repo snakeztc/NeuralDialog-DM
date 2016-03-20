@@ -1,4 +1,4 @@
-from Domains.PomdpSimulator20q import PomdpSimulator20q
+from Domains.CommandSimulator20q import CommandSimulator20q
 from Agents.WordLstmExpQLearning import WordLstmExpQLearning
 from Agents.QLearning import QLearning
 from Agents.EvalAgent import EvalAgent
@@ -15,8 +15,8 @@ def run():
     pprint.pprint(wordDqnConfig)
 
     # load the data from file
-    sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
-    test_sim20_evn = PomdpSimulator20q(generalConfig["global_seed"])
+    sim20_evn = CommandSimulator20q(generalConfig["global_seed"])
+    test_sim20_evn = CommandSimulator20q(generalConfig["global_seed"])
 
     test_interval = wordDqnConfig["test_interval"]
     sample_size = np.arange(0, wordDqnConfig["max_sample"], test_interval)

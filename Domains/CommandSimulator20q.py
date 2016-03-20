@@ -5,9 +5,9 @@ from Utils.domainUtil import DomainUtil
 import pprint
 
 
-class PomdpSimulator20q (Domain):
+class CommandSimulator20q (Domain):
 
-    pprint.pprint(pomdpConfig)
+    pprint.pprint(commandConfig)
 
     # global varaible
     print "loading corpus and question data"
@@ -17,8 +17,8 @@ class PomdpSimulator20q (Domain):
     question_data = DomainUtil.get_actions(action_path)
 
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
-    str_informs = {"all":'inform'}
-    str_response = ['yes', 'no', 'I do not know', 'I have told you', 'correct', 'wrong']
+    str_informs = {key:'inform_'+person.get('name').replace(" ", "") for key, person in corpus.iteritems()}
+    str_response = ['yes', 'no', 'I_do_not_know', 'I_have_told_you', 'correct', 'wrong']
     str_computer = ["yes_include", "no_exclude", "no_include", "yes_exclude"]
     str_result = [str(i) for i in range(0, len(corpus)+1)]
 
@@ -52,7 +52,7 @@ class PomdpSimulator20q (Domain):
     prob = DomainUtil.get_prior_dist(prior_dist, len(corpus))
     print "Using prior distribution " + prior_dist
 
-    # 20Q related
+    # internal state related
     unasked = 0
     hold_yes = 1
     hold_no = 2
@@ -64,16 +64,17 @@ class PomdpSimulator20q (Domain):
     resp_modality = [unasked, hold_yes, hold_no, hold_unknown]
     query_modality = [yes, no, unknown]
 
-    loss_reward = pomdpConfig["loss_reward"]
-    wrong_guess_reward = pomdpConfig["wrong_guess_reward"]
-    logic_error = pomdpConfig["logic_error"]
-    step_reward = pomdpConfig["step_reward"]
-    win_reward = pomdpConfig["win_reward"]
-    episode_cap = pomdpConfig["episode_cap"]
-    discount_factor = pomdpConfig.get("discount_factor")
+    loss_reward = commandConfig["loss_reward"]
+    wrong_guess_reward = commandConfig["wrong_guess_reward"]
+    logic_error = commandConfig["logic_error"]
+    step_reward = commandConfig["step_reward"]
+    win_reward = commandConfig["win_reward"]
+    episode_cap = commandConfig["episode_cap"]
+    discount_factor = commandConfig.get("discount_factor")
     # each value has a question, 1 inform and 3 computer operation
     actions_num = question_count + len(str_informs) + len(str_computer)
     action_types = ["question"] * question_count + ["inform"] + str_computer
+    actions_tree = ["output"] * actions_num
     print "Number of actions is " + str(actions_num)
 
     # raw state is
@@ -87,14 +88,23 @@ class PomdpSimulator20q (Domain):
     for d in range(question_count, question_count*2):
         statespace_limits[d, 1] = len(query_modality)
 
-    # add the extra dimension for query return size, turn count, informed not_yet/successful
-    statespace_limits = np.vstack((statespace_limits, [0, len(corpus)]))
-    statespace_limits = np.vstack((statespace_limits, [0, episode_cap]))
-    statespace_limits = np.vstack((statespace_limits, [0, 2]))
+    # query return size, turn count, inform_count, success_or_not
+    statespace_limits = np.vstack((statespace_limits, [0, len(corpus)])) # query return size
+    statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # turn count
+    statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # inform count
+    statespace_limits = np.vstack((statespace_limits, [0, 2])) # success or not
 
     # turn count is discrete and informed is categorical
     statespace_type = [Domain.categorical] * question_count * 2
-    statespace_type.extend([Domain.discrete, Domain.discrete, Domain.categorical])
+    statespace_type.extend([Domain.discrete, # query return size
+                            Domain.discrete, # turn count
+                            Domain.discrete, # inform count
+                            Domain.categorical]) # end
+
+    comp_idx = statespace_limits.shape[0]-4
+    turn_idx = statespace_limits.shape[0]-3
+    icnt_idx = statespace_limits.shape[0]-2
+    end_idx = statespace_limits.shape[0]-1
 
     print "Total number of questions " + str(len(question_data))
     print "Done initializing"
@@ -106,7 +116,7 @@ class PomdpSimulator20q (Domain):
     # state: state
 
     def __init__(self, seed):
-        super(PomdpSimulator20q, self).__init__(seed)
+        super(CommandSimulator20q, self).__init__(seed)
 
         # resetting the game
         self.person_inmind = None
@@ -206,7 +216,6 @@ class PomdpSimulator20q (Domain):
         t_hist = all_s[2]
         (ns, n_w_hist, n_t_hist) = self.get_next_state(s=s, w_hist=w_hist, t_hist=t_hist, aID=aID)
         reward = self.get_reward(s, ns, aID)
-        #reward += self.get_potential(s, ns)
 
         return reward, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
 
@@ -223,7 +232,7 @@ class PomdpSimulator20q (Domain):
         a_type = self.get_action_type(aID)
 
         # increment the counter
-        ns[0, -2] = s[0, -2] + 1
+        ns[0, self.turn_idx] = s[0, self.turn_idx] + 1
 
         if a_type == 'question':
             agent_utt = self.index_question[aID]
@@ -248,13 +257,15 @@ class PomdpSimulator20q (Domain):
                         ns[0, aID] = self.hold_no
                         resp = self.index_response.get("no")
                 else:
-                    resp = self.index_response.get("I do not know")
+                    resp = self.index_response.get("I_do_not_know")
                     # populate to all q_id for this slot_name
                     for q_id, qd in enumerate(self.question_data):
                         if qd[0] == slot_name:
                             ns[0, q_id] = self.hold_unknown
 
         elif a_type == "inform":
+            # increment the inform count
+            ns[0, self.icnt_idx] = s[0, self.icnt_idx] + 1
             # a is the inform
             results = self.get_inform(s)
             agent_utt = self.index_inform.get("all")
@@ -262,7 +273,7 @@ class PomdpSimulator20q (Domain):
                 guess = self.random_state.choice(results)
                 if self.person_inmind_key == guess:
                     # has informed successfully
-                    ns[0, -1] = 1
+                    ns[0, self.end_idx] = 1
                     resp = self.index_response.get('correct')
                 else:
                     resp = self.index_response.get('wrong')
@@ -290,8 +301,8 @@ class PomdpSimulator20q (Domain):
                 exit()
 
         new_results = self.get_inform(ns)
-        ns[0, -3] = len(new_results) if new_results else 0
-        cmp_resp = self.index_result.get(ns[0, -3])
+        ns[0, self.comp_idx] = len(new_results) if new_results else 0
+        cmp_resp = self.index_result.get(ns[0, self.comp_idx])
 
         # append the agent action and user response to the dialog hist
         n_w_hist.extend(agent_utt)
@@ -299,7 +310,7 @@ class PomdpSimulator20q (Domain):
         n_w_hist.extend(cmp_resp)
 
         # stack turn hist
-        n_t_hist = np.row_stack((t_hist, np.array([aID+1, resp[1]+1, ns[0, -3]])))
+        n_t_hist = np.row_stack((t_hist, np.array([aID+1, resp[1]+1, ns[0, self.comp_idx]])))
 
         return ns, n_w_hist, n_t_hist
 
@@ -311,11 +322,11 @@ class PomdpSimulator20q (Domain):
         query_s = s[0, self.question_count:self.question_count*2]
 
         # check loss condition
-        if ns[0, -1] == 1: # successfully inform
+        if ns[0, self.end_idx] == 1: # successfully inform
             reward = self.win_reward
-        elif ns[0, -1] == 0 and ns[0, -2] >= self.episode_cap:  # run out of turns or logic errors
+        elif ns[0, self.end_idx] == 0 and ns[0, self.turn_idx] >= self.episode_cap:  # run out of turns or logic errors
             reward = self.loss_reward
-        elif a_type == "inform" and ns[0, -1] == 0:
+        elif a_type == "inform" and ns[0, self.end_idx] == 0:
             reward = self.wrong_guess_reward
         elif a_type == "question" and s[0, aID] != self.unasked:
             reward = self.logic_error
@@ -326,15 +337,14 @@ class PomdpSimulator20q (Domain):
 
         return reward
 
-    def get_potential(self, s, ns):
-        s_potential = s[0, -3] if s[0, -3] > 0 else 200
-        ns_potential = ns[0, -3] if ns[0, -3] > 0 else 200
-        potential = (s_potential - ns_potential) / 10
-        return potential
-
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
-        if s[0, -1] > 0 or s[0, -2] >= self.episode_cap:
+        if s[0, self.end_idx] > 0 or s[0, self.turn_idx] >= self.episode_cap:
             return True
         else:
             return False
+
+    def action_prune(self, s):
+        return "output"
+
+

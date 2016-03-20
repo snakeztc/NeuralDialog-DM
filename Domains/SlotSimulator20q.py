@@ -104,8 +104,8 @@ class SlotSimulator20q (Domain):
     statespace_limits = np.vstack((statespace_limits, [0, len(query_modality)])) # prev_answer
     statespace_limits = np.vstack((statespace_limits, [0, len(corpus)])) # query return size
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # turn count
-    statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # action mode
-    statespace_limits = np.vstack((statespace_limits, [0, 2])) # inform count
+    statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # inform count
+    statespace_limits = np.vstack((statespace_limits, [0, 2])) # action mode
     statespace_limits = np.vstack((statespace_limits, [0, 2])) # success or not
     print "Constructing the state limit for each dimension of size " + str(statespace_limits.shape[0])
 
@@ -367,7 +367,7 @@ class SlotSimulator20q (Domain):
         n_w_hist.extend(cmp_resp)
 
         # stack turn hist
-        n_t_hist = np.row_stack((t_hist, np.array([aID+1, resp[1]+1, ns[0, -3]])))
+        n_t_hist = np.row_stack((t_hist, np.array([aID+1, resp[1]+1, ns[0, self.comp_idx]])))
 
         return ns, n_w_hist, n_t_hist
 

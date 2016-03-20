@@ -12,24 +12,25 @@ class Domain(object):
     discrete = 2
     continuous = 3
     #: The discount factor by which rewards are reduced
-    discount_factor = .9
+    discount_factor = None
     #: The number of Actions the agent can perform
-    actions_num = 0  # was None
-    #: Limits of each dimension of the state space. Each row corresponds to one dimension and has two elements
-    # [min, max]
+    actions_num = None  # was None
+    # Different type of actions
+    action_types = None
+    # The action hierarchy
+    actions_tree = None
+    # Limits of each dimension of the state space. Each row corresponds to one dimension and has two elements [min, max]
     statespace_limits = None  # was None
     #: Number of dimensions of the state space
     statespace_size = 0  # was None
     # a list of dimension type
-    statespace_type = []
+    statespace_type = None
     #: The cap used to bound each episode (return to state 0 after)
     episode_cap = None
     #: A simple object that records the prints in a file
     logger = None
     # A seeded numpy random number generator
     random_state = None
-    # Different type of actions
-    action_types = None
 
     def __init__(self, seed=1):
         self.logger = logging.getLogger("hrl.Domains." + self.__class__.__name__)
