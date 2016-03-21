@@ -30,24 +30,32 @@ class BatchAgent(object):
         """
         # experience is in (phi_s, a, r, phi_ns)
         num_samples = experiences.mini_batch_size
-        (phi_s, actions, rewards, phi_ns, sample_indices) = experiences.sample_mini_batch()
+        (phi_s, actions, rewards, phi_ns, policy_ns, sample_indices) = experiences.sample_mini_batch()
 
         # calculate the targets
         y = self.representation.Qs_phi_s(phi_s)
 
-        #nqs = self.representation.Qs_phi_s(phi_ns)
-        nqs = self.stack_all_qs(self.representation.Qs_phi_s(phi_ns), num_samples)
+        nqs = self.representation.Qs_phi_s(phi_ns)
+        #nqs = self.stack_all_qs(self.representation.Qs_phi_s(phi_ns), num_samples)
 
         # append next Qs into 1 matrix
         if self.doubleDQN:
             #nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
             #behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
 
-            nbqs = self.stack_all_qs(self.behavior_representation.Qs_phi_s(phi_ns), num_samples)
-            behavior_argmax = [int(v+i*nbqs.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
-            best_nqs = nqs.flat[behavior_argmax]
+            #nbqs = self.stack_all_qs(self.behavior_representation.Qs_phi_s(phi_ns), num_samples)
+            #behavior_argmax = [int(v+i*nbqs.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
+            #best_nqs = nqs.flat[behavior_argmax]
+
+            nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
+            best_nqs = np.zeros(num_samples)
+            for idx, p in enumerate(policy_ns):
+                best_nqs = nqs[p][idx, np.argmax(nbqs[p][idx, :])]
         else:
-            best_nqs = np.amax(nqs, axis=1).ravel()
+            best_nqs = np.zeros(num_samples)
+            for idx, p in enumerate(policy_ns):
+                best_nqs[idx] = np.amax(nqs[p][idx, :])
+            #best_nqs = np.amax(nqs, axis=1).ravel()
 
         targets = rewards + self.domain.discount_factor * best_nqs
         #indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
@@ -61,14 +69,15 @@ class BatchAgent(object):
         # update the y and td_error
         td_error = np.zeros(num_samples)
 
-        for name in self.domain.tree_names:
-            name_num = self.domain.tree_actions_num[name]
-            valid_mask = [i for i, v in enumerate(actions) if self.domain.tree_actions_name[int(v)] == name]
-            indices = [int(actions[i]+i*name_num) for i in valid_mask]
-            y[name].flat[indices] = targets[valid_mask]
+        for policy in self.domain.policy_names:
+            policy_num = self.domain.policy_action_num[policy]
+            base = self.domain.policy_bases[policy]
+            valid_mask = [i for i, v in enumerate(actions) if self.domain.action_to_policy[int(v)] == policy]
+            indices = [int(actions[i]-base + i*policy_num) for i in valid_mask]
+            y[policy].flat[indices] = targets[valid_mask]
 
             # td error
-            td_error[valid_mask] = np.abs(raw_by[name].flat[indices] - targets[valid_mask])
+            td_error[valid_mask] = np.abs(raw_by[policy].flat[indices] - targets[valid_mask])
 
         # update the priority
         experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
@@ -101,10 +110,10 @@ class BatchAgent(object):
     def stack_all_qs(self, Qs, num_samples):
         results = np.zeros((num_samples, self.domain.actions_num))
         base = 0
-        for name in self.domain.tree_names:
-            name_num = self.domain.tree_actions_num[name]
-            results[:, base:base+name_num] = Qs[name]
-            base += name_num
+        for policy in self.domain.policy_names:
+            policy_num = self.domain.policy_action_num[policy]
+            results[:, base:base+policy_num] = Qs[policy]
+            base += policy_num
         return results
 
     def init_model(self):

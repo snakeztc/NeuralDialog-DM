@@ -6,6 +6,7 @@ model_dir = root_path + 'Models/'
 generalConfig = {"global_seed": 100,
                  "greedy_temp": 0.5,
                  "corpus_size": 100,
+                 "q_verbal": False,
                  "save_model": False}
 
 # Simple Yes/NO based Simulator
@@ -21,10 +22,10 @@ commandConfig = {"loss_reward": -30.0,
 slotConfig = {"loss_reward": -30.0,
               "win_reward": 30.0,
               "step_reward": 0.0,
-              "wrong_guess_reward": -10.0,
+              "wrong_guess_reward": -5.0,
               "logic_error": -10.0,
-              "episode_cap": 100,
-              "discount_factor": 0.99}
+              "episode_cap": 80,
+              "discount_factor": 0.999}
 
 # The idea of this simulator is remove the need for slot filling
 # just remember the database via a neural network
@@ -37,18 +38,21 @@ end2endConfig = {"loss_reward": -30.0,
                  "discount_factor": 0.99}
 # Oracle State
 dqnConfig = {"test_interval": 5000,
-             "max_sample": 100001,
+             "max_sample": 150001,
              'ep_max': 1.0,
              "ep_min": 0.1,
-             "ep_min_step": 70000,
-             "exp_size": 100000,
+             "ep_min_step": 90000,
+             "exp_size": 150000,
              "mini_batch": 32,
              "freeze_frequency": 1000,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "first_hidden": 256,
-             "second_hidden": 128,
+             "l1-share": 512,
+             "l1-verbal": 256,
+             "l2-verbal": 128,
+             "l1-computer": 100,
+             "l2-computer": 30,
              "third_hidden": None,
              "dropout": 0.3}
 # Word LSTM

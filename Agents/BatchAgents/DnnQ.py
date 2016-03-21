@@ -50,16 +50,28 @@ class DnnQ(BatchAgent):
 
         graph = Graph()
         graph.add_input(name='input', input_shape=(self.representation.state_features_num,))
-        graph.add_node(Dense(dqnConfig["first_hidden"], activation="tanh"), name="l1", input="input")
-        graph.add_node(Dropout(dqnConfig["dropout"]), name="l1dp", input="l1")
 
-        graph.add_node(Dense(dqnConfig["second_hidden"], activation='tanh'), name="l2", input="l1dp")
-        graph.add_node(Dropout(dqnConfig["dropout"]), name="l2dp", input="l2")
+        # for each output
+        loss = {}
 
-        graph.add_node(Dense(self.domain.actions_num, activation='linear'), name="output", input='l2dp', create_output=True)
+        #graph.add_node(Dense(dqnConfig["l1-share"], activation="tanh"), name="l1-share", input="input")
+        #graph.add_node(Dropout(dqnConfig["dropout"]), name="l1dp-share", input="l1-share")
 
-        opt = RMSprop(clipvalue=1.0)
-        graph.compile(optimizer=opt, loss={'output':'mse'})
+        for p_name in self.domain.policy_names:
+
+            graph.add_node(Dense(dqnConfig["l1-"+p_name], activation="tanh"), name="l1-"+p_name, input="input")
+            graph.add_node(Dropout(dqnConfig["dropout"]), name="l1dp-"+p_name, input="l1-"+p_name)
+
+            graph.add_node(Dense(dqnConfig["l2-"+p_name], activation='tanh'), name="l2-"+p_name, input="l1dp-"+p_name)
+            graph.add_node(Dropout(dqnConfig["dropout"]), name="l2dp-"+p_name, input="l2-"+p_name)
+
+            graph.add_node(Dense(self.domain.policy_action_num[p_name], activation='linear'), name=p_name,
+                           input='l2dp-'+p_name, create_output=True)
+
+            loss[p_name] = "mse"
+
+        #opt = RMSprop(clipvalue=1.0)
+        graph.compile(optimizer="rmsprop", loss=loss)
 
         print graph.summary()
         print "Model created"

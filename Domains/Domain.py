@@ -19,11 +19,13 @@ class Domain(object):
     # Different type of actions
     action_types = None
     # The action hierarchy [action_name, ... ] num_actions
-    tree_actions_name = None
+    action_to_policy = None
     # A dictionary action_name -> number of actions
-    tree_actions_num = None
+    policy_action_num = None
     # tree node name
-    tree_names = None
+    policy_names = None
+    # the global index base of each policy
+    policy_bases = None
     # Limits of each dimension of the state space. Each row corresponds to one dimension and has two elements [min, max]
     statespace_limits = None  # was None
     #: Number of dimensions of the state space

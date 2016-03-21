@@ -16,7 +16,7 @@ class Experiences (object):
         self.mini_batch_size = mini_batch_size
         self.random_state = np.random.RandomState(seed)
 
-    def add_experience(self, phi_s, a, r, phi_ns, priority):
+    def add_experience(self, phi_s, a, r, phi_ns, policy_ns, priority):
         raise NotImplementedError("add experience")
 
     def update_priority(self, sample_indices, td_error):
@@ -25,7 +25,7 @@ class Experiences (object):
     def sample_mini_batch(self):
         """
         :param mini_batch_size:
-        :return: sampled (phi_s, a, r, phi_ns, batch_index)
+        :return: sampled (phi_s, a, r, phi_ns, policy_ns, batch_index)
         """
         raise NotImplementedError("sample mini_batch_size")
 

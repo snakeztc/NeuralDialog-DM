@@ -32,6 +32,7 @@ class SlotSimulator20q (Domain):
     str_result = [str(i) for i in range(0, len(corpus)+1)]
     question_count = len(question_data)
     inform_count = 1 # !! only 1 inform action
+    computer_count = len(str_computer)
 
     # find the vocab size of this world (question + inform + user_response + computer_command + computer_result)
     all_utt = str_questions + str_informs.values() + str_response + str_computer + str_result
@@ -85,8 +86,16 @@ class SlotSimulator20q (Domain):
     episode_cap = curConfig["episode_cap"]
     discount_factor = curConfig.get("discount_factor")
     # each value has a question, 1 inform and 3 computer operation
-    actions_num = question_count + inform_count + len(str_computer)
-    action_types = ["question"] * question_count + ["inform"] * inform_count + ["computer"] * len(str_computer)
+    actions_num = question_count + inform_count + computer_count
+    action_types = ["question"] * question_count + ["inform"] * inform_count + ["computer"] * computer_count
+    action_to_policy = ["verbal"] * (question_count+inform_count) + ["computer"] * computer_count
+    policy_action_num = {"verbal": (question_count+inform_count), "computer": computer_count}
+    policy_names = DomainUtil.remove_duplicate(action_to_policy)
+    prev_base = 0
+    policy_bases = {}
+    for p in policy_names:
+        policy_bases[p] = prev_base
+        prev_base += policy_action_num[p]
     print "Number of actions is " + str(actions_num)
 
     # raw state is
@@ -358,7 +367,7 @@ class SlotSimulator20q (Domain):
         new_results = self.get_inform(ns)
         ns[0, self.comp_idx] = len(new_results) if new_results else 0
         cmp_resp = self.index_result.get(ns[0, self.comp_idx])
-        if not len(new_results):
+        if self.person_inmind_key not in new_results:
             ns[0, self.turn_idx] = self.episode_cap
 
         # append the agent action and user response to the dialog hist
@@ -409,17 +418,13 @@ class SlotSimulator20q (Domain):
     def action_prune(self, all_s):
         # check if we have any query slots asked but not filled
         s = all_s[0]
-        mask = np.zeros(self.actions_num, dtype=bool)
         if s[0, self.mode_idx] == self.spk_mode:
-            mask[0:self.question_count+self.inform_count] = True
+            return "verbal"
         elif s[0, self.mode_idx] == self.slot_mode:
-            mask[self.question_count+self.inform_count:] = True
+            return "computer"
         else:
             print "state mode is wrong"
             exit(1)
-        return mask
-
-
 
 
 

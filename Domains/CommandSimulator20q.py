@@ -22,6 +22,8 @@ class CommandSimulator20q (Domain):
     str_response = ['yes', 'no', 'I_do_not_know', 'I_have_told_you', 'correct', 'wrong']
     str_computer = ["yes_include", "no_exclude", "no_include", "yes_exclude"]
     str_result = [str(i) for i in range(0, len(corpus)+1)]
+    question_count = len(question_data)
+    inform_count = 1 # !! only 1 inform action
 
     # find the vocab size of this world
     all_utt = str_questions + str_informs.values() + str_response + str_computer + str_result
@@ -44,8 +46,6 @@ class CommandSimulator20q (Domain):
     slot_names = DomainUtil.remove_duplicate([qd[0] for qd in question_data])
     slot_values = [all_slot_dict.get(field) for field in slot_names]
     slot_count = len(slot_names)
-    question_count = len(question_data)
-    inform_count = 1 # !! only 1 inform action
     print "slot names:",
     print slot_names
 
@@ -76,9 +76,15 @@ class CommandSimulator20q (Domain):
     # each value has a question, 1 inform and 3 computer operation
     actions_num = question_count + inform_count + len(str_computer)
     action_types = ["question"] * question_count + ["inform"] + str_computer
-    tree_actions_name = ["output"] * actions_num
-    tree_actions_num = {"output": actions_num}
-    tree_names = DomainUtil.remove_duplicate(tree_actions_name)
+    action_to_policy = ["output"] * actions_num
+    policy_action_num = {"output": actions_num}
+    policy_names = DomainUtil.remove_duplicate(action_to_policy)
+    prev_base = 0
+    policy_bases = {}
+    for p in policy_names:
+        policy_bases[p] = prev_base
+        prev_base += policy_action_num[p]
+
     print "Number of actions is " + str(actions_num)
 
     # raw state is

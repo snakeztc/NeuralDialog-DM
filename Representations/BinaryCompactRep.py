@@ -56,7 +56,7 @@ class BinaryCompactRep(Representation):
             return self.model.predict({'input':phi_s})
             #return self.model.predict(phi_s)
         else:
-            result = {key: np.zeros((phi_s.shape[0], size)) for key, size in self.domain.tree_actions_num.iteritems()}
+            result = {key: np.zeros((phi_s.shape[0], size)) for key, size in self.domain.policy_action_num.iteritems()}
             return result
 
 
