@@ -25,7 +25,7 @@ class SlotSimulator20q (Domain):
 
     # question action in natural language
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
-    str_informs = {key:'inform_'+person.get('name').replace(" ", "") for key, person in corpus.iteritems()}
+    str_informs = {key:'inform_'+unicode.encode(person.get('name'), 'utf8').replace(" ", "") for key, person in corpus.iteritems()}
     str_informs["none"] = "none"
     str_response = ['yes', 'no', 'I_do_not_know', 'correct', 'wrong']
     str_computer = ["c_unkown", "c_yes", "c_no"]

@@ -28,7 +28,7 @@ class DomainUtil:
             tokens = utt.split(" ")
             vocabs.extend(tokens)
         # remove duplicate
-        vocabs = natsorted(list(set(vocabs)))
+        vocabs = sorted(list(set(vocabs)))
         vocabs.append("EOS")
         # convert any vocab in unicode into utf8
         for idx, w in enumerate(vocabs):
