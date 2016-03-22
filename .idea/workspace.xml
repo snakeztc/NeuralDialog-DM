@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="5f205f89-a1d7-41c9-a7a4-173417943a5c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/BatchAgents/BatchAgent.py" afterPath="$PROJECT_DIR$/Agents/BatchAgents/BatchAgent.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py" afterPath="$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py" afterPath="$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/ExpQlearning.py" afterPath="$PROJECT_DIR$/Agents/ExpQlearning.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py" afterPath="$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domains/SlotSimulator20q.py" afterPath="$PROJECT_DIR$/Domains/SlotSimulator20q.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experience/Experience.py" afterPath="$PROJECT_DIR$/Experience/Experience.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experience/OracleStateExperience.py" afterPath="$PROJECT_DIR$/Experience/OracleStateExperience.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experience/TurnExperience.py" afterPath="$PROJECT_DIR$/Experience/TurnExperience.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/turn_lstm_dqn.py" afterPath="$PROJECT_DIR$/Experiments/turn_lstm_dqn.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Representations/TurnHistoryRep.py" afterPath="$PROJECT_DIR$/Representations/TurnHistoryRep.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Utils/config.py" afterPath="$PROJECT_DIR$/Utils/config.py" />
     </list>
     <ignored path="NeuralDM.iws" />
@@ -31,11 +33,11 @@
     <SUITE FILE_PATH="coverage/NeuralDM$model_evaluation.coverage" NAME="model_evaluation Coverage Results" MODIFIED="1456841587969" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$BinarySimulator20q.coverage" NAME="BinarySimulator20q Coverage Results" MODIFIED="1455473510532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Domains" />
     <SUITE FILE_PATH="coverage/NeuralDM$online_fqi.coverage" NAME="online_fqi Coverage Results" MODIFIED="1455231289864" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
-    <SUITE FILE_PATH="coverage/NeuralDM$binary_dqn.coverage" NAME="binary_dqn Coverage Results" MODIFIED="1458623440123" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
+    <SUITE FILE_PATH="coverage/NeuralDM$binary_dqn.coverage" NAME="binary_dqn Coverage Results" MODIFIED="1458652247098" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$Policy.coverage" NAME="Policy Coverage Results" MODIFIED="1455501248268" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Policies" />
     <SUITE FILE_PATH="coverage/NeuralDM$Simulator20q.coverage" NAME="Simulator20q Coverage Results" MODIFIED="1455165765557" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/NeuralDM$Nosetest_TestBinarySimulator20q_test_value_id_2_slot_id.coverage" NAME="Nosetest TestBinarySimulator20q.test_value_id_2_slot_id Coverage Results" MODIFIED="1455473506326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Domains" />
-    <SUITE FILE_PATH="coverage/NeuralDM$turn_lstm_dqn.coverage" NAME="turn_lstm_dqn Coverage Results" MODIFIED="1458104597740" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
+    <SUITE FILE_PATH="coverage/NeuralDM$turn_lstm_dqn.coverage" NAME="turn_lstm_dqn Coverage Results" MODIFIED="1458653660691" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -50,20 +52,8 @@
         <entry file="file://$PROJECT_DIR$/Domains/SlotSimulator20q.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="400" column="57" selection-start-line="400" selection-start-column="57" selection-end-line="400" selection-end-column="57" />
+              <caret line="413" column="37" selection-start-line="413" selection-start-column="29" selection-end-line="413" selection-end-column="37" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ExpQLearning.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="36" column="84" selection-start-line="36" selection-start-column="73" selection-end-line="36" selection-end-column="84" />
-              <folding>
-                <element signature="e#0#23#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -71,19 +61,21 @@
       <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Utils/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.88235295">
-              <caret line="43" column="29" selection-start-line="43" selection-start-column="29" selection-end-line="43" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.15426998">
+              <caret line="75" column="31" selection-start-line="75" selection-start-column="31" selection-end-line="75" selection-end-column="31" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Experience.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Experience/Experience.py">
+      <file leaf-file-name="TurnLstmExpQLearning.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="18" column="44" selection-start-line="18" selection-start-column="36" selection-end-line="18" selection-end-column="44" />
-              <folding />
+              <caret line="37" column="43" selection-start-line="37" selection-start-column="43" selection-end-line="37" selection-end-column="43" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -92,28 +84,20 @@
         <entry file="file://$PROJECT_DIR$/Experience/OracleStateExperience.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="45" column="65" selection-start-line="45" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+              <caret line="48" column="83" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="83" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LstmDnnQ.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/LstmDnnQ.py">
+      <file leaf-file-name="TurnLstmDnnQ.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TurnExperience.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Experience/TurnExperience.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-              <folding />
+              <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+              <folding>
+                <element signature="e#646#1866#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -122,7 +106,7 @@
         <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="64" column="114" selection-start-line="64" selection-start-column="114" selection-end-line="64" selection-end-column="114" />
+              <caret line="77" column="20" selection-start-line="47" selection-start-column="8" selection-end-line="77" selection-end-column="20" />
               <folding>
                 <element signature="e#453#1576#0" expanded="false" />
               </folding>
@@ -134,7 +118,7 @@
         <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/BatchAgent.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+              <caret line="117" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -142,11 +126,31 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="binary_dqn.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
+      <file leaf-file-name="WordExperience.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Experience/WordExperience.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="65" column="33" selection-start-line="65" selection-start-column="33" selection-end-line="65" selection-end-column="33" />
+              <caret line="37" column="82" selection-start-line="37" selection-start-column="82" selection-end-line="37" selection-end-column="82" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BinaryCompactRep.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Representations/BinaryCompactRep.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="58" column="119" selection-start-line="58" selection-start-column="11" selection-end-line="58" selection-end-column="119" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TurnHistoryRep.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Representations/TurnHistoryRep.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="74" column="25" selection-start-line="74" selection-start-column="19" selection-end-line="74" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -199,17 +203,11 @@
         <option value="$PROJECT_DIR$/Representations/WhCompactRep.py" />
         <option value="$PROJECT_DIR$/Representations/WordHistoryRep.py" />
         <option value="$PROJECT_DIR$/Agents/WordLstmExpQLearning.py" />
-        <option value="$PROJECT_DIR$/Experiments/turn_lstm_dqn.py" />
-        <option value="$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py" />
-        <option value="$PROJECT_DIR$/Experience/TurnExperience.py" />
-        <option value="$PROJECT_DIR$/Representations/TurnHistoryRep.py" />
-        <option value="$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py" />
         <option value="$PROJECT_DIR$/Domains/OldDomains/BinarySimulator20q.py" />
         <option value="$PROJECT_DIR$/Agents/QLearning.py" />
         <option value="$PROJECT_DIR$/Agents/Agent.py" />
         <option value="$PROJECT_DIR$/Domains/End2EndSimulator20q.py" />
         <option value="$PROJECT_DIR$/Policies/Policy.py" />
-        <option value="$PROJECT_DIR$/Agents/BatchAgents/LstmDnnQ.py" />
         <option value="$PROJECT_DIR$/Domains/PomdpSimulator20q.py" />
         <option value="$PROJECT_DIR$/Utils/domainUtil.py" />
         <option value="$PROJECT_DIR$/Representations/BinaryCompactRep.py" />
@@ -223,6 +221,12 @@
         <option value="$PROJECT_DIR$/Agents/BatchAgents/BatchAgent.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py" />
         <option value="$PROJECT_DIR$/Domains/SlotSimulator20q.py" />
+        <option value="$PROJECT_DIR$/Experiments/turn_lstm_dqn.py" />
+        <option value="$PROJECT_DIR$/Experience/TurnExperience.py" />
+        <option value="$PROJECT_DIR$/Agents/BatchAgents/LstmDnnQ.py" />
+        <option value="$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py" />
+        <option value="$PROJECT_DIR$/Representations/TurnHistoryRep.py" />
+        <option value="$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py" />
         <option value="$PROJECT_DIR$/Utils/config.py" />
       </list>
     </option>
@@ -233,10 +237,10 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="36" />
+    <option name="x" value="11" />
     <option name="y" value="23" />
-    <option name="width" value="1434" />
-    <option name="height" value="849" />
+    <option name="width" value="1408" />
+    <option name="height" value="839" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -320,7 +324,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Experiments" />
+              <option name="myItemId" value="Experience" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -398,7 +402,7 @@
       <recent name="$PROJECT_DIR$/Experience" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.binary_dqn">
+  <component name="RunManager" selected="Python.turn_lstm_dqn">
     <configuration default="false" name="binary_dqn" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -691,8 +695,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.binary_dqn" />
-        <item index="1" class="java.lang.String" itemvalue="Python.turn_lstm_dqn" />
+        <item index="0" class="java.lang.String" itemvalue="Python.turn_lstm_dqn" />
+        <item index="1" class="java.lang.String" itemvalue="Python.binary_dqn" />
         <item index="2" class="java.lang.String" itemvalue="Python.model_evaluation" />
         <item index="3" class="java.lang.String" itemvalue="Python.binary_lstm_dqn" />
         <item index="4" class="java.lang.String" itemvalue="Python.Policy" />
@@ -709,12 +713,6 @@
       <created>1453141026937</created>
       <option name="number" value="Default" />
       <updated>1453141026937</updated>
-    </task>
-    <task id="LOCAL-00026" summary="fix not deep copy bug">
-      <created>1456032856931</created>
-      <option name="number" value="00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1456032856931</updated>
     </task>
     <task id="LOCAL-00027" summary="change log print">
       <created>1456033719681</created>
@@ -1004,7 +1002,13 @@
       <option name="project" value="LOCAL" />
       <updated>1458563667364</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="improve efficiency in batch agent">
+      <created>1458623528937</created>
+      <option name="number" value="00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1458623528938</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1049,22 +1053,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="36" y="23" width="1434" height="849" extended-state="0" />
+    <frame x="11" y="23" width="1408" height="839" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21048851" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21449487" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27380952" sideWeight="0.49690402" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6598916" sideWeight="0.13043478" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39365917" sideWeight="0.56707317" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32939634" sideWeight="0.4878049" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.60474306" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.47657296" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3258278" sideWeight="0.49125364" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5889328" sideWeight="0.87108016" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1106,7 +1110,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add experienece for bindary dqn" />
     <MESSAGE value="add model evaluation and configurable pooling type" />
     <MESSAGE value="move word lstm to expereince" />
     <MESSAGE value="group batch agents" />
@@ -1131,7 +1134,8 @@
     <MESSAGE value="update the command simulator" />
     <MESSAGE value="working command simulator with full graph support" />
     <MESSAGE value="finally working slot dm" />
-    <option name="LAST_COMMIT_MESSAGE" value="finally working slot dm" />
+    <MESSAGE value="improve efficiency in batch agent" />
+    <option name="LAST_COMMIT_MESSAGE" value="improve efficiency in batch agent" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1241,31 +1245,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/turn_lstm_dqn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="78" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Domains/OldDomains/Simulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="11" selection-start-line="7" selection-start-column="11" selection-end-line="7" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/WordLstmExpQLearning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1297,13 +1280,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Representations/TurnHistoryRep.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="12" selection-start-line="44" selection-start-column="12" selection-end-line="44" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Representations/WhApproxRep.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1332,13 +1308,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47738692">
-          <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Agents/Agent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27360776">
@@ -1350,13 +1319,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Representations/BinaryApproxRep.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="42" column="44" selection-start-line="42" selection-start-column="38" selection-end-line="42" selection-end-column="44" />
         </state>
       </provider>
     </entry>
@@ -1405,32 +1367,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experience/WordExperience.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="37" column="82" selection-start-line="37" selection-start-column="82" selection-end-line="37" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/anaconda/lib/python2.7/site-packages/keras/layers/containers.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="356" column="0" selection-start-line="356" selection-start-column="0" selection-end-line="356" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Representations/BinaryCompactRep.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="39" column="40" selection-start-line="39" selection-start-column="40" selection-end-line="39" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="65" column="33" selection-start-line="65" selection-start-column="33" selection-end-line="65" selection-end-column="33" />
           <folding />
         </state>
       </provider>
@@ -1449,18 +1389,34 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Representations/BinaryApproxRep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.1406844">
+          <caret line="42" column="44" selection-start-line="42" selection-start-column="38" selection-end-line="42" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Representations/Representation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33169532">
+        <state vertical-scroll-proportion="0.4296578">
           <caret line="51" column="0" selection-start-line="51" selection-start-column="0" selection-end-line="51" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experience/TurnExperience.py">
+    <entry file="file://$PROJECT_DIR$/Experiments/binary_dqn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <caret line="66" column="41" selection-start-line="66" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/WordLstmExpQLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43505156">
+          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1468,27 +1424,19 @@
     <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="84" selection-start-line="36" selection-start-column="73" selection-end-line="36" selection-end-column="84" />
+          <caret line="67" column="30" selection-start-line="67" selection-start-column="8" selection-end-line="67" selection-end-column="30" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/LstmDnnQ.py">
+    <entry file="file://$PROJECT_DIR$/Experiments/turn_lstm_dqn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="45" column="0" selection-start-line="45" selection-start-column="0" selection-end-line="45" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="64" column="114" selection-start-line="64" selection-start-column="114" selection-end-line="64" selection-end-column="114" />
+          <caret line="69" column="49" selection-start-line="69" selection-start-column="49" selection-end-line="69" selection-end-column="49" />
           <folding>
-            <element signature="e#453#1576#0" expanded="false" />
+            <element signature="e#61#114#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1496,7 +1444,31 @@
     <entry file="file://$PROJECT_DIR$/Experience/Experience.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="18" column="44" selection-start-line="18" selection-start-column="36" selection-end-line="18" selection-end-column="44" />
+          <caret line="18" column="81" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experience/WordExperience.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="37" column="82" selection-start-line="37" selection-start-column="82" selection-end-line="37" selection-end-column="82" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experience/TurnExperience.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Domains/SlotSimulator20q.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="413" column="37" selection-start-line="413" selection-start-column="29" selection-end-line="413" selection-end-column="37" />
           <folding />
         </state>
       </provider>
@@ -1504,7 +1476,7 @@
     <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/BatchAgent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+          <caret line="117" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="117" selection-end-column="0" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
@@ -1514,23 +1486,71 @@
     <entry file="file://$PROJECT_DIR$/Experience/OracleStateExperience.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="45" column="65" selection-start-line="45" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <caret line="48" column="83" selection-start-line="48" selection-start-column="15" selection-end-line="48" selection-end-column="83" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Domains/SlotSimulator20q.py">
+    <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/LstmDnnQ.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.88082904">
+          <caret line="34" column="37" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="400" column="57" selection-start-line="400" selection-start-column="57" selection-end-line="400" selection-end-column="57" />
+          <caret line="77" column="20" selection-start-line="47" selection-start-column="8" selection-end-line="77" selection-end-column="20" />
+          <folding>
+            <element signature="e#453#1576#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="93" selection-end-column="0" />
+          <folding>
+            <element signature="e#646#1866#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Representations/BinaryCompactRep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="58" column="119" selection-start-line="58" selection-start-column="11" selection-end-line="58" selection-end-column="119" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Representations/TurnHistoryRep.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="74" column="25" selection-start-line="74" selection-start-column="19" selection-end-line="74" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/TurnLstmExpQLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="37" column="43" selection-start-line="37" selection-start-column="43" selection-end-line="37" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Utils/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.88235295">
-          <caret line="43" column="29" selection-start-line="43" selection-start-column="29" selection-end-line="43" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.15426998">
+          <caret line="75" column="31" selection-start-line="75" selection-start-column="31" selection-end-line="75" selection-end-column="31" />
           <folding />
         </state>
       </provider>

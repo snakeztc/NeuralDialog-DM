@@ -24,7 +24,8 @@ slotConfig = {"loss_reward": -30.0,
               "step_reward": 0.0,
               "wrong_guess_reward": -5.0,
               "logic_error": -10.0,
-              "episode_cap": 80,
+              "episode_cap": 100,
+              "max_inform": 10,
               "discount_factor": 0.99}
 
 # The idea of this simulator is remove the need for slot filling
@@ -38,19 +39,19 @@ end2endConfig = {"loss_reward": -30.0,
                  "discount_factor": 0.99}
 # Oracle State
 dqnConfig = {"test_interval": 5000,
-             "max_sample": 120001,
+             "max_sample": 150001,
              'ep_max': 1.0,
              "ep_min": 0.1,
              "ep_min_step": 70000,
-             "exp_size": 120000,
+             "exp_size": 150000,
              "mini_batch": 32,
              "freeze_frequency": 1000,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "l1-share": 256,
+             "l1-share": 300,
              "l1-verbal": 256,
-             "l2-verbal": 128,
+             "l2-verbal": 100,
              "l1-computer": 100,
              "l2-computer": 100,
              "third_hidden": None,
@@ -72,7 +73,7 @@ wordDqnConfig = {"test_interval": 4000,
                  "recurrent": "LSTM",
                  "first_hidden": 256,
                  "second_hidden": 128,
-                 "dropout": 0.2}
+                 "dropout": 0.3}
 # Turn LSTM
 turnDqnConfig = {"test_interval": 4000,
                  "max_sample": 100001,
@@ -88,8 +89,11 @@ turnDqnConfig = {"test_interval": 4000,
                  "embedding": 30,
                  "pooling": None,
                  "recurrent": "LSTM",
-                 "first_hidden": 256,
-                 "second_hidden": 128,
-                 "dropout": 0.2}
+                 "recurrent_size": 256,
+                 "l1-verbal": 128,
+                 "l2-verbal": 100,
+                 "l1-computer": 128,
+                 "l2-computer": 100,
+                 "dropout": 0.3}
 
 

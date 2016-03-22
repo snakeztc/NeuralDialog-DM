@@ -113,7 +113,7 @@ class SlotSimulator20q (Domain):
     statespace_limits = np.vstack((statespace_limits, [0, len(query_modality)])) # prev_answer
     statespace_limits = np.vstack((statespace_limits, [0, len(corpus)])) # query return size
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # turn count
-    statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # inform count
+    statespace_limits = np.vstack((statespace_limits, [0, slotConfig["max_inform"]])) # inform count
     statespace_limits = np.vstack((statespace_limits, [0, 2])) # action mode
     statespace_limits = np.vstack((statespace_limits, [0, 2])) # success or not
     print "Constructing the state limit for each dimension of size " + str(statespace_limits.shape[0])
@@ -410,7 +410,8 @@ class SlotSimulator20q (Domain):
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
-        if s[0, self.end_idx] > 0 or s[0, self.turn_idx] >= self.episode_cap:
+        if s[0, self.end_idx] > 0 or s[0, self.turn_idx] >= self.episode_cap\
+                or s[0, self.icnt_idx] >= slotConfig["max_inform"]:
             return True
         else:
             return False

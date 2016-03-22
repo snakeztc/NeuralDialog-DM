@@ -3,30 +3,40 @@ from Agents.BatchAgents.DnnQ import DnnQ
 from Experience.OracleStateExperience import OracleStateExperience
 from Policies.Policy import EpsilonGreedyPolicy
 from Representations.BinaryCompactRep import BinaryCompactRep
+from Utils.config import generalConfig
 
 
 class ExpQLearning(Agent):
 
     def learn(self, s, performance_run=False):
 
+        policy_name = self.domain.action_prune(s)
         # choose an action. If in learning, we use behavior policy, If not use target policy
-        mask = self.domain.action_prune(s)
         if performance_run:
             Qs = self.representation.Qs(s)
-            aID = self.performance_policy.choose_action(Qs, mask)
+            aID = self.performance_policy.choose_action(Qs.get(policy_name))
         else: # learning step
             Qs = self.behavior_representation.Qs(s)
-            aID = self.learning_policy.choose_action(Qs, mask)
+            aID = self.learning_policy.choose_action(Qs.get(policy_name))
 
-        (r, ns, terminal) = self.domain.step(s, aID)
+        # convert aID to global aID
+        flat_aID = aID + self.domain.policy_bases[policy_name]
 
-        if terminal and self.verbose:
-            self.print_episode(ns[1])
-            print "final reward is " + str(r)
+        (r, ns, terminal) = self.domain.step(s, flat_aID)
+
+        if self.verbose:
+            if generalConfig["q_verbal"]:
+                self.print_episode(ns[1])
+                print Qs.get(policy_name)
+            if terminal:
+                self.print_episode(ns[1])
+                print "final reward is " + str(r)
 
         if not performance_run:
             # check if exp_head is larger than buffer size
-            self.experience.add_experience(self.representation.phi_s(s), aID, r, self.representation.phi_s(ns), 20.0)
+            self.experience.add_experience(self.representation.phi_s(s), policy_name, aID, r,
+                                           self.representation.phi_s(ns),
+                                           self.domain.action_prune(ns), 20.0)
 
             if (self.experience.exp_actual_size > self.experience.mini_batch_size)\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:

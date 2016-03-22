@@ -3,24 +3,39 @@ from Policies.Policy import EpsilonGreedyPolicy
 from Agents.BatchAgents.TurnLstmDnnQ import TurnLstmDnnQ
 from Experience.TurnExperience import TurnExperience
 from Representations.TurnHistoryRep import TurnHistoryRep
+from Utils.config import generalConfig
 
 
 class TurnLstmExpQLearning(Agent):
 
     def learn(self, s, performance_run=False):
-        Qs = self.behavior_representation.Qs(s)
 
-        # choose an action
+        policy_name = self.domain.action_prune(s)
+        # choose an action. If in learning, we use behavior policy, If not use target policy
         if performance_run:
-            aID = self.performance_policy.choose_action(Qs)
-        else:
-            aID = self.learning_policy.choose_action(Qs)
+            Qs = self.representation.Qs(s)
+            aID = self.performance_policy.choose_action(Qs.get(policy_name))
+        else: # learning step
+            Qs = self.behavior_representation.Qs(s)
+            aID = self.learning_policy.choose_action(Qs.get(policy_name))
 
-        (r, ns, terminal) = self.domain.step(s, aID)
+        # convert aID to global aID
+        flat_aID = aID + self.domain.policy_bases[policy_name]
+
+        (r, ns, terminal) = self.domain.step(s, flat_aID)
+
+        if self.verbose:
+            if generalConfig["q_verbal"]:
+                self.print_episode(ns[1])
+                print Qs.get(policy_name)
+            if terminal:
+                self.print_episode(ns[1])
+                print "final reward is " + str(r)
 
         if not performance_run:
 
-            self.experience.add_experience(self.representation.phi_s(s), aID, r, self.representation.phi_s(ns), 20.0)
+            self.experience.add_experience(self.representation.phi_s(s), policy_name, aID, r,
+                                           self.representation.phi_s(ns), self.domain.action_prune(ns), 20.0)
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:
@@ -35,7 +50,7 @@ class TurnLstmExpQLearning(Agent):
         return r, ns, terminal
 
     def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10,
-                 exp_size=10000, mini_batch=3000, freeze_frequency=100, doubleDQN=False):
+                 exp_size=10000, mini_batch=3000, freeze_frequency=100, doubleDQN=False, verbose=False):
 
         super(TurnLstmExpQLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
@@ -54,6 +69,5 @@ class TurnLstmExpQLearning(Agent):
         self.learner = TurnLstmDnnQ(domain=domain, representation=representation,
                                     behavior_representation=self.behavior_representation,
                                     doubleDQN=doubleDQN, seed=seed)
-        print "Using epsilon " + str(epsilon)
-        print "Update_frequency " + str(self.update_frequency)
-        print "Mini-batch size is " + str(self.experience.mini_batch_size)
+        # print episode in testing or not
+        self.verbose = verbose
