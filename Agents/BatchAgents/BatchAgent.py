@@ -1,6 +1,7 @@
 import logging
 import numpy as np
 import os.path
+import time
 from Utils.config import dqnConfig
 
 
@@ -30,7 +31,7 @@ class BatchAgent(object):
         """
         # experience is in (phi_s, a, r, phi_ns)
         num_samples = experiences.mini_batch_size
-        (phi_s, actions, rewards, phi_ns, policy_ns, sample_indices) = experiences.sample_mini_batch()
+        (phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices) = experiences.sample_mini_batch()
 
         # calculate the targets
         y = self.representation.Qs_phi_s(phi_s)
@@ -49,8 +50,9 @@ class BatchAgent(object):
 
             nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
             best_nqs = np.zeros(num_samples)
+            max_pos = {p:np.argmax(nbqs[p], axis=1) for p in self.domain.policy_names}
             for idx, p in enumerate(policy_ns):
-                best_nqs = nqs[p][idx, np.argmax(nbqs[p][idx, :])]
+                best_nqs = nqs[p][idx, max_pos[p][idx]]
         else:
             best_nqs = np.zeros(num_samples)
             for idx, p in enumerate(policy_ns):
@@ -58,6 +60,7 @@ class BatchAgent(object):
             #best_nqs = np.amax(nqs, axis=1).ravel()
 
         targets = rewards + self.domain.discount_factor * best_nqs
+
         #indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
         # update the new y
         #y.flat[indices] = targets
@@ -71,12 +74,9 @@ class BatchAgent(object):
 
         for policy in self.domain.policy_names:
             policy_num = self.domain.policy_action_num[policy]
-            base = self.domain.policy_bases[policy]
-            valid_mask = [i for i, v in enumerate(actions) if self.domain.action_to_policy[int(v)] == policy]
-            indices = [int(actions[i]-base + i*policy_num) for i in valid_mask]
+            valid_mask = [i for i, v in enumerate(policy_s) if v == policy]
+            indices = [int(actions[i] + i*policy_num) for i in valid_mask]
             y[policy].flat[indices] = targets[valid_mask]
-
-            # td error
             td_error[valid_mask] = np.abs(raw_by[policy].flat[indices] - targets[valid_mask])
 
         # update the priority

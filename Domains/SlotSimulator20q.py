@@ -389,7 +389,7 @@ class SlotSimulator20q (Domain):
         # check loss condition
         if ns[0, self.end_idx] == 1: # successfully inform
             reward = self.win_reward
-        elif ns[0, self.end_idx] == 0 and ns[0, self.turn_idx] >= self.episode_cap:  # run out of turns or logic errors
+        elif ns[0, self.end_idx] == 0 and self.is_terminal(ns):  # run out of turns or logic errors
             reward = self.loss_reward
         elif a_type == "inform" and ns[0, self.end_idx] == 0:
             reward = self.wrong_guess_reward

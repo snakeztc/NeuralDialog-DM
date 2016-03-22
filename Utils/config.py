@@ -25,7 +25,7 @@ slotConfig = {"loss_reward": -30.0,
               "wrong_guess_reward": -5.0,
               "logic_error": -10.0,
               "episode_cap": 80,
-              "discount_factor": 0.999}
+              "discount_factor": 0.99}
 
 # The idea of this simulator is remove the need for slot filling
 # just remember the database via a neural network
@@ -38,21 +38,21 @@ end2endConfig = {"loss_reward": -30.0,
                  "discount_factor": 0.99}
 # Oracle State
 dqnConfig = {"test_interval": 5000,
-             "max_sample": 150001,
+             "max_sample": 120001,
              'ep_max': 1.0,
              "ep_min": 0.1,
-             "ep_min_step": 90000,
-             "exp_size": 150000,
+             "ep_min_step": 70000,
+             "exp_size": 120000,
              "mini_batch": 32,
              "freeze_frequency": 1000,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "l1-share": 512,
+             "l1-share": 256,
              "l1-verbal": 256,
              "l2-verbal": 128,
              "l1-computer": 100,
-             "l2-computer": 30,
+             "l2-computer": 100,
              "third_hidden": None,
              "dropout": 0.3}
 # Word LSTM
