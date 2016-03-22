@@ -3,7 +3,7 @@ corpus_path = root_path + 'Data/top100.json'
 action_path = root_path + 'Data/action_data.p'
 model_dir = root_path + 'Models/'
 
-generalConfig = {"global_seed": 100,
+generalConfig = {"global_seed": 2000,
                  "greedy_temp": 0.5,
                  "corpus_size": 100,
                  "q_verbal": False,
@@ -25,7 +25,7 @@ slotConfig = {"loss_reward": -30.0,
               "wrong_guess_reward": -5.0,
               "logic_error": -10.0,
               "episode_cap": 100,
-              "max_inform": 10,
+              "max_inform": 20,
               "discount_factor": 0.99}
 
 # The idea of this simulator is remove the need for slot filling
@@ -49,11 +49,11 @@ dqnConfig = {"test_interval": 5000,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "l1-share": 300,
+             "l1-share": 256,
              "l1-verbal": 256,
-             "l2-verbal": 100,
+             "l2-verbal": 128,
              "l1-computer": 100,
-             "l2-computer": 100,
+             "l2-computer": 128,
              "third_hidden": None,
              "dropout": 0.3}
 # Word LSTM

@@ -30,6 +30,11 @@ class DomainUtil:
         # remove duplicate
         vocabs = natsorted(list(set(vocabs)))
         vocabs.append("EOS")
+        # convert any vocab in unicode into utf8
+        for idx, w in enumerate(vocabs):
+            if type(w) is not str:
+                vocabs[idx] = unicode.encode(w, 'utf8')
+
         return vocabs
 
     @staticmethod
