@@ -14,7 +14,7 @@ class NatTurnHistoryRep(Representation):
         # initialize the model
         self.model = None
         # user response ngram size + action number + computer response
-        self.state_features_num = self.domain.ngram_size + self.domain.actions_num + 1
+        self.state_features_num = self.domain.actions_num + 1 + self.domain.ngram_size + 1
 
     # State Representation #
     def phi_sa(self, s, aID):
@@ -25,7 +25,7 @@ class NatTurnHistoryRep(Representation):
 
     def phi_s(self, s):
         # !! we assume "s" is just one sample, can never be more than that
-        phi_s = np.copy(s[2])
+        phi_s = s[2].toarray()
         # convert from 2d to 3d
         phi_s = np.reshape(phi_s, (1,) + phi_s.shape)
         return phi_s

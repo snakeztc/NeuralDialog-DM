@@ -2,6 +2,7 @@ import numpy as np
 from Domain import Domain
 from Utils.config import *
 from Utils.domainUtil import DomainUtil
+from scipy.sparse import coo_matrix, hstack, vstack
 import pprint
 
 
@@ -216,8 +217,11 @@ class NatSlotSimulator20q (Domain):
         s[0, self.comp_idx] = len(self.corpus)
 
         # get init turn
-        t = np.zeros((1, self.actions_num + self.ngram_size + 1))
-        t[0, -1] = len(self.corpus)
+        #
+        t = np.zeros((1, self.actions_num + 1 + self.ngram_size + 1))
+        t[0, 0] = 1 # the first action is no_action
+        t[0, -1] = 1.0
+        t = coo_matrix(t)
 
         return s, [self.eos], t
 
@@ -386,13 +390,12 @@ class NatSlotSimulator20q (Domain):
 
         # get new turn
         n_nat_resp = self.natural_resp[resp[1]][self.random_state.choice(self.natural_size[resp[1]])]
-        n_t = np.zeros(self.actions_num+self.ngram_size+1)
-        n_t[aID] = 1
-        n_t[self.actions_num:self.actions_num+self.ngram_size] = n_nat_resp.todense()
-        n_t[-1] = ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]
+        a_one_hot = np.zeros((1, self.actions_num+1))
+        a_one_hot[0, aID] = 1
+        n_t = hstack([n_nat_resp, coo_matrix(a_one_hot), ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]])
 
         # stack turn hist
-        n_t_hist = np.row_stack((t_hist, n_t))
+        n_t_hist = vstack([t_hist, n_t])
 
         return ns, n_w_hist, n_t_hist
 

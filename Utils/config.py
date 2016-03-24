@@ -68,11 +68,11 @@ wordDqnConfig = {"test_interval": 5000,
                  "dropout": 0.3}
 # Turn LSTM
 turnDqnConfig = {"test_interval": 5000,
-                 "max_sample": 150001,
+                 "max_sample": 120001,
                  'ep_max': 1.0,
                  "ep_min": 0.1,
                  "ep_min_step": 70000,
-                 "exp_size": 150000,
+                 "exp_size": 120000,
                  "mini_batch": 32,
                  "freeze_frequency": 1000,
                  "update_frequency": 4,

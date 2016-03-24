@@ -1,7 +1,7 @@
 from Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
 from Agents.BatchAgents.TurnLstmDnnQ import TurnLstmDnnQ
-from Experience.TurnExperience import TurnExperience
+from Experience.NatTurnExperience import NatTurnExperience
 from Representations.NatTurnHistoryRep import NatTurnHistoryRep
 from Utils.config import generalConfig
 
@@ -34,8 +34,8 @@ class NatTurnLstmExpQLearning(Agent):
 
         if not performance_run:
 
-            self.experience.add_experience(self.representation.phi_s(s), policy_name, aID, r,
-                                           self.representation.phi_s(ns), self.domain.action_prune(ns), 20.0)
+            self.experience.add_experience(s[2], policy_name, aID, r,
+                                           ns[2], self.domain.action_prune(ns), 20.0)
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:
@@ -56,7 +56,7 @@ class NatTurnLstmExpQLearning(Agent):
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
 
-        self.experience = TurnExperience(exp_size=exp_size, phi_s_size=representation.state_features_num,
+        self.experience = NatTurnExperience(exp_size=exp_size, phi_s_size=representation.state_features_num,
                                          max_len=domain.episode_cap, mini_batch_size=mini_batch,
                                          use_priority=True, seed=seed)
         # freeze model
