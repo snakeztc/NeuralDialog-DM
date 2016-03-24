@@ -69,11 +69,9 @@ class TurnHistoryRep(Representation):
         # we assume that phi_s is in the format of num_sample * time_stamp * dimension
         if self.model:
             return self.model.predict({'input':phi_s})
-            #return self.model.predict(phi_s)
         else:
             result = {key: np.zeros((phi_s.shape[0], size)) for key, size in self.domain.policy_action_num.iteritems()}
             return result
-            #return np.zeros((phi_s.shape[0], self.domain.actions_num))
 
 
 

@@ -1,50 +1,47 @@
-#from Domains.SlotSimulator20q import SlotSimulator20q
-#from Domains.CommandSimulator20q import CommandSimulator20q
 from Domains.NatSlotSimulator20q import NatSlotSimulator20q
-from Agents.ExpQLearning import ExpQLearning
+from Agents.NatTurnLstmExpQLearning import NatTurnLstmExpQLearning
 from Agents.EvalAgent import EvalAgent
-from Representations.BinaryCompactRep import BinaryCompactRep
+from Representations.NatTurnHistoryRep import NatTurnHistoryRep
 import numpy as np
 import matplotlib.pyplot as plt
-from Utils.config import *
+from Utils.config import generalConfig, turnDqnConfig, model_dir
 import pprint
 
 
 def run():
+    # print out system config
     pprint.pprint(generalConfig)
-    pprint.pprint(dqnConfig)
+    pprint.pprint(turnDqnConfig)
 
     # load the data from file
-    #sim20_evn = CommandSimulator20q(generalConfig["global_seed"])
-    #test_sim20_evn = CommandSimulator20q(generalConfig["global_seed"])
-    #sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
-    #test_sim20_evn = SlotSimulator20q(generalConfig["global_seed"])
     sim20_evn = NatSlotSimulator20q(generalConfig["global_seed"])
     test_sim20_evn = NatSlotSimulator20q(generalConfig["global_seed"])
 
-    test_interval = dqnConfig.get("test_interval")
-    sample_size = np.arange(0, dqnConfig.get("max_sample"), test_interval)
+    test_interval = turnDqnConfig["test_interval"]
+    sample_size = np.arange(0, turnDqnConfig["max_sample"], test_interval)
+    epsilon = turnDqnConfig["max_sample"]
+    ep_max = turnDqnConfig["ep_max"]
+    ep_min_step = turnDqnConfig["ep_min_step"]
+    ep_min = turnDqnConfig["ep_min"]
+    exp_size = turnDqnConfig["exp_size"]
+    mini_batch = turnDqnConfig["mini_batch"]
+    freeze_frequency = turnDqnConfig["freeze_frequency"]
+    update_frequency = turnDqnConfig["update_frequency"]
+    test_trial = turnDqnConfig["test_trial"]
+    doubleDQN = turnDqnConfig["doubleDQN"]
+
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
-    ep_max = dqnConfig["ep_max"]
-    ep_min_step = dqnConfig["ep_min_step"]
-    ep_min = dqnConfig["ep_min"]
-    exp_size = dqnConfig["exp_size"]
-    mini_batch = dqnConfig["mini_batch"]
-    freeze_frequency = dqnConfig["freeze_frequency"]
-    update_frequency = dqnConfig["update_frequency"]
-    test_trial = dqnConfig.get("test_trial")
-    doubleDQN = dqnConfig.get("doubleDQN")
 
-    representation = BinaryCompactRep(sim20_evn, seed = generalConfig["global_seed"])
-    agent = ExpQLearning(domain=sim20_evn, representation=representation, epsilon=ep_max,
-                         update_frequency=update_frequency, freeze_frequency=freeze_frequency, exp_size=exp_size,
-                         mini_batch=mini_batch, doubleDQN=doubleDQN)
+    representation = NatTurnHistoryRep(sim20_evn, seed = generalConfig["global_seed"])
+    agent = NatTurnLstmExpQLearning(domain=sim20_evn, representation=representation, epsilon=epsilon,
+                                 update_frequency=update_frequency, exp_size=exp_size, mini_batch=mini_batch,
+                                 freeze_frequency=freeze_frequency, doubleDQN=doubleDQN)
 
     print "evaluation at 0"
-    test_agent = ExpQLearning(test_sim20_evn, agent.representation, exp_size=0)
+    test_agent = NatTurnLstmExpQLearning(test_sim20_evn, agent.representation, exp_size=0)
     eval_agent = EvalAgent(test_agent)
     (eval_performance[bench_cnt], rewards) = eval_agent.eval(test_trial, discount=True)
     bench_cnt += 1
@@ -67,7 +64,7 @@ def run():
                 test_agent.verbose = False
                 bench_cnt += 1
                 if generalConfig["save_model"] and representation.model:
-                    representation.model.save_weights(model_dir+str(step_cnt)+'-dqn.h5')
+                    representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-turn.h5')
 
             if terminal or bench_cnt >= len(sample_size):
                 break

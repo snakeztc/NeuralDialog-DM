@@ -79,7 +79,6 @@ class TurnLstmDnnQ(BatchAgent):
         # add the shared to model to graph
         graph.add_node(shared_model, name="recurrent_layers", input="input")
 
-
         # add the policy networks
         for p_name in self.domain.policy_names:
 

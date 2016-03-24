@@ -114,5 +114,15 @@ class DomainUtil:
                 lookup[field] = field_lookup
         return lookup
 
+    @staticmethod
+    def get_usr_resp(path, str_response):
+        raw = p.load(open(path, 'rb'))
+        data = [raw[key] for key in str_response]
+        data_size = [utts.shape[0] for utts in data]
+        ngram_size = raw["yes"].shape[1]
+
+        return data, data_size, ngram_size
+
+
 
 

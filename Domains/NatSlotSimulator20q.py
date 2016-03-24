@@ -5,11 +5,12 @@ from Utils.domainUtil import DomainUtil
 import pprint
 
 
-class SlotSimulator20q (Domain):
+class NatSlotSimulator20q (Domain):
     """
     This domain will have 31 question 1 inform and 3 slot filling actions.
     The domain will alternating between question_selection and slot_filling
     The agent is allowed to ask the same quesiton again since user may lie
+    The agent will respond with one of the "natural sentences" from the pickle
     """
 
     # read config
@@ -27,12 +28,16 @@ class SlotSimulator20q (Domain):
     str_questions = ["Q"+str(i)+"-"+qd[0] for i, qd in enumerate(question_data)]
     str_informs = {key:'inform_'+unicode.encode(person.get('name'), 'utf8').replace(" ", "") for key, person in corpus.iteritems()}
     str_informs["none"] = "none"
-    str_response = ['yes', 'no', 'I_do_not_know', 'correct', 'wrong']
+    str_response = ['yes', 'no', 'unknown', 'correct', 'wrong']
     str_computer = ["c_unkown", "c_yes", "c_no"]
     str_result = [str(i) for i in range(0, len(corpus)+1)]
     question_count = len(question_data)
     inform_count = 1 # !! only 1 inform action
     computer_count = len(str_computer)
+
+
+    # get natural sentence of users' response
+    (natural_resp, natural_size, ngram_size) = DomainUtil.get_usr_resp(natural_path, str_response)
 
     # find the vocab size of this world (question + inform + user_response + computer_command + computer_result)
     all_utt = str_questions + str_informs.values() + str_response + str_computer + str_result
@@ -146,7 +151,7 @@ class SlotSimulator20q (Domain):
     # state: state
 
     def __init__(self, seed):
-        super(SlotSimulator20q, self).__init__(seed)
+        super(NatSlotSimulator20q, self).__init__(seed)
 
         # resetting the game
         self.person_inmind = None
@@ -168,6 +173,7 @@ class SlotSimulator20q (Domain):
             self.index_inform[key] = index_tokens
 
         # convert each possible user response to index
+        # a tuple (the string tokens and index in str_response)
         self.index_response = {}
         for idx, resp in enumerate(self.str_response):
             index_tokens = [self.vocabs.index(t) + 1 for t in resp.split(" ")]
@@ -210,8 +216,8 @@ class SlotSimulator20q (Domain):
         s[0, self.comp_idx] = len(self.corpus)
 
         # get init turn
-        # the action_id (1-based), user_resp_id (1-based), valid query size
-        t = np.atleast_2d([0.0, 0.0, len(self.corpus)])
+        t = np.zeros((1, self.actions_num + self.ngram_size + 1))
+        t[0, -1] = len(self.corpus)
 
         return s, [self.eos], t
 
@@ -305,7 +311,7 @@ class SlotSimulator20q (Domain):
                         ns[0, self.pans_idx] = self.no
                         resp = self.index_response.get("no")
                 else:
-                    resp = self.index_response.get("I_do_not_know")
+                    resp = self.index_response.get("unknown")
                     ns[0, self.pans_idx] = self.unknown
                     # populate to all q_id for this slot_name
                     for q_id, qd in enumerate(self.question_data):
@@ -318,7 +324,7 @@ class SlotSimulator20q (Domain):
                 elif s[0, aID] == self.hold_no:
                     resp = self.index_response.get("no")
                 elif s[0, aID] == self.hold_unknown:
-                    resp = self.index_response.get("I_do_not_know")
+                    resp = self.index_response.get("unknown")
                 else:
                     print "something wrong for question"
                     exit(1)
@@ -370,13 +376,23 @@ class SlotSimulator20q (Domain):
         if self.person_inmind_key not in new_results:
             ns[0, self.turn_idx] = self.episode_cap
 
+        if resp is None:
+            print "OK"
+
         # append the agent action and user response to the dialog hist
         n_w_hist.extend(agent_utt)
         n_w_hist.extend(resp[0])
         n_w_hist.extend(cmp_resp)
 
+        # get new turn
+        n_nat_resp = self.natural_resp[resp[1]][self.random_state.choice(self.natural_size[resp[1]])]
+        n_t = np.zeros(self.actions_num+self.ngram_size+1)
+        n_t[aID] = 1
+        n_t[self.actions_num:self.actions_num+self.ngram_size] = n_nat_resp.todense()
+        n_t[-1] = ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]
+
         # stack turn hist
-        n_t_hist = np.row_stack((t_hist, np.array([aID+1, resp[1]+1, ns[0, self.comp_idx]])))
+        n_t_hist = np.row_stack((t_hist, n_t))
 
         return ns, n_w_hist, n_t_hist
 

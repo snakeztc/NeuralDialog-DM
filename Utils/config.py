@@ -1,6 +1,7 @@
 root_path = '/Users/Tony/Dropbox/CMU_Grad/DialPort/NeuralDM/'
 corpus_path = root_path + 'Data/top100.json'
 action_path = root_path + 'Data/action_data.p'
+natural_path = root_path + 'Data/bigram_usr_resp.pkl'
 model_dir = root_path + 'Models/'
 
 generalConfig = {"global_seed": 100,
