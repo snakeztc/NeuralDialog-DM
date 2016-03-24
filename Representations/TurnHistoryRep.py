@@ -17,8 +17,8 @@ class TurnHistoryRep(Representation):
         # get state_feature_num
         # this state limit is different because we are not operating on the oracle state.
         # instead we are working on the turn output
-        self.turn_state_limits = np.atleast_2d([[-1, self.domain.actions_num],
-                                                [-1, len(self.domain.str_response)],
+        self.turn_state_limits = np.atleast_2d([[0, self.domain.actions_num+1],
+                                                [0, len(self.domain.str_response)+1],
                                                 [0, len(self.domain.corpus)]])
         self.turn_state_type = [self.domain.categorical, self.domain.categorical, self.domain.discrete]
 
