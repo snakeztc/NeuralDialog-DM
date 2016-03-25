@@ -10,7 +10,7 @@ from keras.layers.core import TimeDistributedMerge, TimeDistributedDense
 from keras.layers import containers
 
 
-class TurnLstmDnnQ(BatchAgent):
+class StructTurnLstmDnnQ(BatchAgent):
     mode_path = model_dir+"best-turn-lstm.h5"
 
     def init_model(self):
