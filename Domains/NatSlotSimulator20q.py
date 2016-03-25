@@ -360,7 +360,7 @@ class NatSlotSimulator20q (Domain):
             if s[0, self.mode_idx] != self.slot_mode:
                 print "something wrong for the action masking"
                 exit(1)
-            resp = ([], -1)
+            resp = ([], None)
             # update the query
             query_val = self.parse_computer_command(aID)
             # computer operator
@@ -384,21 +384,17 @@ class NatSlotSimulator20q (Domain):
         if self.person_inmind_key not in new_results:
             ns[0, self.turn_idx] = self.episode_cap
 
-        if resp is None:
-            print "OK"
-
         # append the agent action and user response to the dialog hist
         n_w_hist.extend(agent_utt)
         n_w_hist.extend(resp[0])
         n_w_hist.extend(cmp_resp)
 
         # get new turn
-        n_nat_resp = self.natural_resp[resp[1]][self.random_state.choice(self.natural_size[resp[1]])]
-        # a_one_hot = np.zeros((1, self.actions_num+1))
-        # a_one_hot[0, aID+1] = 1
-        #n_t = hstack([n_nat_resp, coo_matrix(a_one_hot), ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]])
-        # stack turn hist
-        #n_t_hist = vstack([t_hist, n_t])
+        if resp[1] is not None:
+            n_nat_resp = self.natural_resp[resp[1]][self.random_state.choice(self.natural_size[resp[1]])]
+        else:
+            n_nat_resp = coo_matrix((1, self.ngram_size))
+
         n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
                     "sys": t_hist["sys"] + [aID+1],
                     "cmp": t_hist["cmp"] + [ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]]}
