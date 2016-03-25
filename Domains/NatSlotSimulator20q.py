@@ -217,11 +217,15 @@ class NatSlotSimulator20q (Domain):
         s[0, self.comp_idx] = len(self.corpus)
 
         # get init turn
-        #
-        t = np.zeros((1, self.actions_num + 1 + self.ngram_size + 1))
-        t[0, 0] = 1 # the first action is no_action
-        t[0, -1] = 1.0
-        t = coo_matrix(t)
+        # {usr: sys: cmp:}
+        usr = coo_matrix((1, self.ngram_size))
+        sys = [0] # first action is no action
+        cmp = [1.0] # it's full size
+        t = {'usr':usr, "sys":sys, "cmp": cmp}
+        #t = np.zeros((1, self.actions_num + 1 + self.ngram_size + 1))
+        #t[0, 0] = 1 # the first action is no_action
+        #t[0, -1] = 1.0
+        #t = coo_matrix(t)
 
         return s, [self.eos], t
 
@@ -390,12 +394,14 @@ class NatSlotSimulator20q (Domain):
 
         # get new turn
         n_nat_resp = self.natural_resp[resp[1]][self.random_state.choice(self.natural_size[resp[1]])]
-        a_one_hot = np.zeros((1, self.actions_num+1))
-        a_one_hot[0, aID] = 1
-        n_t = hstack([n_nat_resp, coo_matrix(a_one_hot), ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]])
-
+        # a_one_hot = np.zeros((1, self.actions_num+1))
+        # a_one_hot[0, aID+1] = 1
+        #n_t = hstack([n_nat_resp, coo_matrix(a_one_hot), ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]])
         # stack turn hist
-        n_t_hist = vstack([t_hist, n_t])
+        #n_t_hist = vstack([t_hist, n_t])
+        n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
+                    "sys": t_hist["sys"] + [aID+1],
+                    "cmp": t_hist["cmp"] + [ns[0, self.comp_idx] / self.statespace_limits[self.comp_idx, 1]]}
 
         return ns, n_w_hist, n_t_hist
 

@@ -1,5 +1,6 @@
 import numpy as np
 from Experience import Experiences
+from scipy.sparse import coo_matrix
 
 
 class NatTurnExperience (Experiences):
@@ -30,7 +31,7 @@ class NatTurnExperience (Experiences):
             self.exp_head = 0
 
         # pad phi_s and phi_ns with 0 zeros in the front
-        self.experience[self.exp_head] = (phi_s, phi_ns)
+        self.experience[self.exp_head] = (coo_matrix(phi_s[0, :, :]), coo_matrix(phi_ns[0, :, :]))
         self.exp_ar[self.exp_head, 0] = a
         self.exp_ar[self.exp_head, 1] = r
         self.s_policies[self.exp_head] = policy_s
