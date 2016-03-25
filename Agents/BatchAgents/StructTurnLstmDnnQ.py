@@ -1,10 +1,11 @@
-from Utils.config import generalConfig, turnDqnConfig, model_dir
+from Utils.config import generalConfig, structDqnConfig, model_dir
 import numpy as np
 np.random.seed(generalConfig["global_seed"])
 from BatchAgent import BatchAgent
-from keras.models import Sequential, Graph
+from keras.models import Graph
 from keras.layers.recurrent import LSTM, GRU
 from keras.layers.core import Dense, Dropout, Activation, Masking
+from keras.layers.embeddings import Embedding
 from keras.optimizers import RMSprop
 from keras.layers.core import TimeDistributedMerge, TimeDistributedDense
 from keras.layers import containers
@@ -18,39 +19,43 @@ class StructTurnLstmDnnQ(BatchAgent):
 
     def get_graph_model(self):
         print "Creating model"
-        embed_size = turnDqnConfig["embedding"]
-        pooling_type = turnDqnConfig["pooling"]
-        use_pool = pooling_type is not None
 
         graph = Graph()
-        graph.add_input(name='input', input_shape=(None, self.representation.state_features_num))
+        # 3 types of input sys usr and cmp
+        graph.add_input(name='usr', input_shape=(None, self.representation.state_features_num))
+        graph.add_input(name='sys', input_shape=(1,), dtype=int)
+        graph.add_input(name='cmp', input_shape=(None, 1))
+
+        # add embedding layer for sys
+        graph.add_node(Embedding(self.domain.actions_num+1, structDqnConfig["sys_embed"], mask_zero=False),
+                       name="sys_embed", input="sys")
+        graph.add_node(TimeDistributedDense(structDqnConfig["usr_embed"],
+                                            input_dim=self.representation.state_features_num),
+                       name="usr_embed", input="usr")
+
+        embed_size = structDqnConfig["usr_embed"] + structDqnConfig["sys_embed"] + 1
 
         # for each output
         loss = {}
 
         # shared model
         shared_model = containers.Sequential()
-        shared_model.add(Masking(mask_value=0.0, input_shape=(None, self.representation.state_features_num)))
+        shared_model.add(Masking(mask_value=0.0, input_shape=(None, embed_size)))
 
-        shared_model.add(TimeDistributedDense(embed_size, input_dim=self.representation.state_features_num))
-
-        if turnDqnConfig["recurrent"] == "LSTM":
-            shared_model.add(LSTM(turnDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=use_pool))
+        if structDqnConfig["recurrent"] == "LSTM":
+            shared_model.add(LSTM(structDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=False))
         else:
-            shared_model.add(GRU(turnDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=use_pool))
-        shared_model.add(Dropout(turnDqnConfig["dropout"]))
-
-        if use_pool:
-            shared_model.add(TimeDistributedMerge(pooling_type))
+            shared_model.add(GRU(structDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=False))
+        shared_model.add(Dropout(structDqnConfig["dropout"]))
 
         # add the shared to model to graph
-        graph.add_node(shared_model, name="recurrent_layers", input="input")
+        graph.add_node(shared_model, name="recurrent_layers", inputs=["sys_embed", "usr_embed", "cmp"], merge_mode='concat')
 
         # add the policy networks
         for p_name in self.domain.policy_names:
 
-            graph.add_node(Dense(turnDqnConfig["l1-"+p_name], activation='tanh'), name="l1-"+p_name, input="recurrent_layers")
-            graph.add_node(Dropout(turnDqnConfig["dropout"]), name="l1dp-"+p_name, input="l1-"+p_name)
+            graph.add_node(Dense(structDqnConfig["l1-"+p_name], activation='tanh'), name="l1-"+p_name, input="recurrent_layers")
+            graph.add_node(Dropout(structDqnConfig["dropout"]), name="l1dp-"+p_name, input="l1-"+p_name)
 
             graph.add_node(Dense(self.domain.policy_action_num[p_name], activation='linear'), name=p_name,
                            input='l1dp-'+p_name, create_output=True)

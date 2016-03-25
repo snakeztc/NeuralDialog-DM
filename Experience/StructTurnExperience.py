@@ -22,16 +22,29 @@ class StructTurnExperience (Experiences):
         self.exp_actual_size = 0
         self.phi_s_size = phi_s_size
 
-        # experience is a list of 2D sparse matrix
-        self.experience = [None] * self.exp_size
+        # sys and cmp are array num_sample * max_len * 2 (s and ns)
+        self.sys = np.zeros((exp_size, self.max_len, 2))
+        self.cmp = np.zeros((exp_size, self.max_len, 2))
+        self.usr = [None] * exp_size
+
 
     def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority):
         if self.exp_head >= self.exp_size:
             print "** reset exp header **"
             self.exp_head = 0
 
+        s_len = len(phi_s["sys"])
+        ns_len = len(phi_ns["sys"])
+
+
         # pad phi_s and phi_ns with 0 zeros in the front
-        self.experience[self.exp_head] = (coo_matrix(phi_s[0, :, :]), coo_matrix(phi_ns[0, :, :]))
+        self.usr[self.exp_head] = (phi_s["usr"], phi_ns["usr"])
+        self.sys[self.exp_head, self.max_len-s_len:self.max_len, 0] = phi_s["sys"]
+        self.sys[self.exp_head, self.max_len-ns_len:self.max_len, 1] = phi_ns["sys"]
+
+        self.cmp[self.exp_head, self.max_len-s_len:self.max_len, 0] = phi_s["cmp"]
+        self.cmp[self.exp_head, self.max_len-ns_len:self.max_len, 1] = phi_ns["cmp"]
+
         self.exp_ar[self.exp_head, 0] = a
         self.exp_ar[self.exp_head, 1] = r
         self.s_policies[self.exp_head] = policy_s
@@ -47,21 +60,25 @@ class StructTurnExperience (Experiences):
         prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
         sample_indices = self.random_state.choice(a=sample_size, size=self.mini_batch_size, p=prob, replace=False)
 
-        # allocate dense 3d tensor num_sample * max_len * dimension
-        phi_s = np.zeros((self.mini_batch_size, self.max_len, self.phi_s_size))
-        phi_ns = np.zeros((self.mini_batch_size, self.max_len, self.phi_s_size))
+        phi_s = {"usr": np.zeros((self.mini_batch_size, self.max_len, self.phi_s_size)),
+                 "sys": self.sys[sample_indices, :, 0],
+                 "cmp": self.cmp[sample_indices, :, 0:1]}
 
-        # fill in the dense matrix
+        phi_ns = {"usr": np.zeros((self.mini_batch_size, self.max_len, self.phi_s_size)),
+                  "sys": self.sys[sample_indices, :, 1],
+                  "cmp": self.cmp[sample_indices, :, 1:2]}
+
+        # fill in the dense matrix for usr
         for idx, sample_idx in enumerate(sample_indices):
-            (dense_s, dense_ns) = self.experience[sample_idx]
+            (dense_s, dense_ns) = self.usr[sample_idx]
             dense_s = dense_s.toarray()
             dense_ns = dense_ns.toarray()
             # to 3D tensor
             dense_s = np.reshape(dense_s, (1,) + dense_s.shape)
             dense_ns = np.reshape(dense_ns, (1,) + dense_ns.shape)
 
-            phi_s[idx, self.max_len-dense_s.shape[1]:self.max_len, :] = dense_s
-            phi_ns[idx, self.max_len-dense_ns.shape[1]:self.max_len, :] = dense_ns
+            phi_s["usr"][idx, self.max_len-dense_s.shape[1]:self.max_len, :] = dense_s
+            phi_ns["usr"][idx, self.max_len-dense_ns.shape[1]:self.max_len, :] = dense_ns
 
         actions = self.exp_ar[sample_indices, 0]
         rewards = self.exp_ar[sample_indices, 1]

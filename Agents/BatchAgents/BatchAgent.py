@@ -88,7 +88,10 @@ class BatchAgent(object):
                 self.representation.model = self.init_model()
 
         # fit the deep neural nets!!
-        y["input"] = phi_s
+        #if type(phi_s) == dict:
+        #    y["input"] = phi_s
+        for key, val in phi_s.iteritems():
+            y[key] = val
         self.behavior_representation.model.fit(y, batch_size=num_samples, nb_epoch=1, verbose=0)
         #self.behavior_representation.model.fit(phi_s, y, batch_size=num_samples, nb_epoch=1, verbose=0)
 

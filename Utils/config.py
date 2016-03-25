@@ -88,4 +88,27 @@ turnDqnConfig = {"test_interval": 5000,
                  "l2-computer": 100,
                  "dropout": 0.3}
 
+# struct Turn LSTM
+structDqnConfig = {"test_interval": 5000,
+                   "max_sample": 120001,
+                   "ep_max": 1.0,
+                   "ep_min": 0.1,
+                   "ep_min_step": 70000,
+                   "exp_size": 120000,
+                   "mini_batch": 32,
+                   "freeze_frequency": 1000,
+                   "update_frequency": 4,
+                   "test_trial": 200,
+                   "doubleDQN": True,
+                   "sys_embed": 15,
+                   "usr_embed": 14,
+                   "recurrent": "LSTM",
+                   "recurrent_size": 256,
+                   "l1-verbal": 128,
+                   "l2-verbal": 100,
+                   "l1-computer": 128,
+                   "l2-computer": 100,
+                   "dropout": 0.3}
+
+
 
