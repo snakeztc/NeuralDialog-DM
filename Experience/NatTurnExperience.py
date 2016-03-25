@@ -31,7 +31,7 @@ class NatTurnExperience (Experiences):
             self.exp_head = 0
 
         # pad phi_s and phi_ns with 0 zeros in the front
-        self.experience[self.exp_head] = (coo_matrix(phi_s[0, :, :]), coo_matrix(phi_ns[0, :, :]))
+        self.experience[self.exp_head] = (coo_matrix(phi_s["input"][0, :, :]), coo_matrix(phi_ns["input"][0, :, :]))
         self.exp_ar[self.exp_head, 0] = a
         self.exp_ar[self.exp_head, 1] = r
         self.s_policies[self.exp_head] = policy_s
@@ -67,7 +67,7 @@ class NatTurnExperience (Experiences):
         rewards = self.exp_ar[sample_indices, 1]
         policy_ns = [self.ns_policies[i] for i in sample_indices]
         policy_s = [self.s_policies[i] for i in sample_indices]
-        return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
+        return {"input": phi_s}, policy_s, actions, rewards, {"input": phi_ns}, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
         self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0

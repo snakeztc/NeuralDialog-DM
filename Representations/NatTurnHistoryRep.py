@@ -35,7 +35,8 @@ class NatTurnHistoryRep(Representation):
 
         # convert from 2d to 3d
         phi_s = np.reshape(phi_s, (1,) + phi_s.shape)
-        return phi_s
+
+        return {"input": phi_s}
 
     def phi_s_phi_a(self, phi_s, phi_a):
         pass
@@ -54,9 +55,9 @@ class NatTurnHistoryRep(Representation):
     def Qs_phi_s(self, phi_s):
         # we assume that phi_s is in the format of num_sample * time_stamp * dimension
         if self.model:
-            return self.model.predict({'input':phi_s})
+            return self.model.predict(phi_s)
         else:
-            result = {key: np.zeros((phi_s.shape[0], size)) for key, size in self.domain.policy_action_num.iteritems()}
+            result = {key: np.zeros((phi_s["input"].shape[0], size)) for key, size in self.domain.policy_action_num.iteritems()}
             return result
 
 
