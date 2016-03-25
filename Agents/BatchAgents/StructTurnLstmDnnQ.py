@@ -23,11 +23,11 @@ class StructTurnLstmDnnQ(BatchAgent):
         graph = Graph()
         # 3 types of input sys usr and cmp
         graph.add_input(name='usr', input_shape=(None, self.representation.state_features_num))
-        graph.add_input(name='sys', input_shape=(1,), dtype=int)
+        graph.add_input(name='sys', input_shape=(None, self.domain.actions_num+1))
         graph.add_input(name='cmp', input_shape=(None, 1))
 
         # add embedding layer for sys
-        graph.add_node(Embedding(self.domain.actions_num+1, structDqnConfig["sys_embed"], mask_zero=False),
+        graph.add_node(TimeDistributedDense(structDqnConfig["sys_embed"], input_dim=self.domain.actions_num+1),
                        name="sys_embed", input="sys")
         graph.add_node(TimeDistributedDense(structDqnConfig["usr_embed"],
                                             input_dim=self.representation.state_features_num),

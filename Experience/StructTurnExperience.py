@@ -8,7 +8,7 @@ class StructTurnExperience (Experiences):
     max_len = None
     exp_ar = None
 
-    def __init__(self, exp_size, phi_s_size, max_len, mini_batch_size, use_priority, seed):
+    def __init__(self, exp_size, usr_size, sys_size, max_len, mini_batch_size, use_priority, seed):
         super(StructTurnExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size, seed=seed)
 
         self.exp_ar = np.zeros((exp_size, 2))
@@ -20,13 +20,13 @@ class StructTurnExperience (Experiences):
         self.max_len = max_len + 1
         self.exp_head = 0
         self.exp_actual_size = 0
-        self.phi_s_size = phi_s_size
+        self.usr_size = usr_size
+        self.sys_size = sys_size
 
         # sys and cmp are array num_sample * max_len * 2 (s and ns)
-        self.sys = np.zeros((exp_size, self.max_len, 2))
+        self.sys = np.zeros((exp_size, self.max_len, 2 * self.sys_size))
         self.cmp = np.zeros((exp_size, self.max_len, 2))
         self.usr = [None] * exp_size
-
 
     def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority):
         if self.exp_head >= self.exp_size:
@@ -36,11 +36,20 @@ class StructTurnExperience (Experiences):
         s_len = len(phi_s["sys"])
         ns_len = len(phi_ns["sys"])
 
+        sys_s = np.zeros((s_len, self.sys_size))
+        sys_ns = np.zeros((ns_len, self.sys_size))
+        # populate sys s
+        indices_s = [int(v + idx*self.sys_size) for idx, v in enumerate(phi_s["sys"])]
+        sys_s.flat[indices_s] = 1
+        # populate ns
+        indices_ns = [int(v + idx*self.sys_size) for idx, v in enumerate(phi_ns["sys"])]
+        sys_ns.flat[indices_ns] = 1
+
 
         # pad phi_s and phi_ns with 0 zeros in the front
         self.usr[self.exp_head] = (phi_s["usr"], phi_ns["usr"])
-        self.sys[self.exp_head, self.max_len-s_len:self.max_len, 0] = phi_s["sys"]
-        self.sys[self.exp_head, self.max_len-ns_len:self.max_len, 1] = phi_ns["sys"]
+        self.sys[self.exp_head, self.max_len-s_len:self.max_len, 0:self.sys_size] = sys_s
+        self.sys[self.exp_head, self.max_len-ns_len:self.max_len, self.sys_size:] = sys_ns
 
         self.cmp[self.exp_head, self.max_len-s_len:self.max_len, 0] = phi_s["cmp"]
         self.cmp[self.exp_head, self.max_len-ns_len:self.max_len, 1] = phi_ns["cmp"]
@@ -60,12 +69,12 @@ class StructTurnExperience (Experiences):
         prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
         sample_indices = self.random_state.choice(a=sample_size, size=self.mini_batch_size, p=prob, replace=False)
 
-        phi_s = {"usr": np.zeros((self.mini_batch_size, self.max_len, self.phi_s_size)),
-                 "sys": self.sys[sample_indices, :, 0],
+        phi_s = {"usr": np.zeros((self.mini_batch_size, self.max_len, self.usr_size)),
+                 "sys": np.zeros((self.mini_batch_size, self.max_len, self.sys_size)),
                  "cmp": self.cmp[sample_indices, :, 0:1]}
 
-        phi_ns = {"usr": np.zeros((self.mini_batch_size, self.max_len, self.phi_s_size)),
-                  "sys": self.sys[sample_indices, :, 1],
+        phi_ns = {"usr": np.zeros((self.mini_batch_size, self.max_len, self.usr_size)),
+                  "sys": np.zeros((self.mini_batch_size, self.max_len, self.sys_size)),
                   "cmp": self.cmp[sample_indices, :, 1:2]}
 
         # fill in the dense matrix for usr
@@ -79,6 +88,10 @@ class StructTurnExperience (Experiences):
 
             phi_s["usr"][idx, self.max_len-dense_s.shape[1]:self.max_len, :] = dense_s
             phi_ns["usr"][idx, self.max_len-dense_ns.shape[1]:self.max_len, :] = dense_ns
+
+            phi_s["sys"][idx, :, :] = self.sys[idx, :, 0:self.sys_size]
+            phi_s["sys"][idx, :, :] = self.sys[idx, :, self.sys_size:]
+
 
         actions = self.exp_ar[sample_indices, 0]
         rewards = self.exp_ar[sample_indices, 1]

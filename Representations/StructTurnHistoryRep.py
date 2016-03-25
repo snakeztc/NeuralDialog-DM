@@ -15,6 +15,7 @@ class StructTurnHistoryRep(Representation):
         self.model = None
         # user response ngram size + action number + computer response
         self.state_features_num = self.domain.ngram_size
+        self.sys_feature_num = self.domain.actions_num+1
         self.ngram_base = self.domain.actions_num + 1
 
     # State Representation #
@@ -28,8 +29,13 @@ class StructTurnHistoryRep(Representation):
         # !! we assume "s" is just one sample, can never be more than that
         t_hist = s[2]
         usr_resp = t_hist["usr"].toarray()
+
+        sys_resp = np.zeros((usr_resp.shape[0], self.sys_feature_num))
+        indices = [int(v + idx*self.sys_feature_num) for idx, v in enumerate(t_hist["sys"])]
+        sys_resp.flat[indices] = 1
+
         phi_s = {"usr": np.reshape(usr_resp, (1,) + usr_resp.shape),
-                 "sys": np.atleast_2d(t_hist["sys"]),
+                 "sys": np.reshape(sys_resp, (1,) + sys_resp.shape),
                  "cmp": np.atleast_3d(t_hist["cmp"])}
         return phi_s
 
