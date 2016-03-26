@@ -64,7 +64,7 @@ def run():
                 test_agent.verbose = False
                 bench_cnt += 1
                 if generalConfig["save_model"] and representation.model:
-                    representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-turn.h5')
+                    representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-struct.h5')
 
             if terminal or bench_cnt >= len(sample_size):
                 break
