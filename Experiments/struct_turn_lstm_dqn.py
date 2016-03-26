@@ -4,31 +4,31 @@ from Agents.EvalAgent import EvalAgent
 from Representations.StructTurnHistoryRep import StructTurnHistoryRep
 import numpy as np
 import matplotlib.pyplot as plt
-from Utils.config import generalConfig, turnDqnConfig, model_dir
+from Utils.config import generalConfig, structDqnConfig, model_dir
 import pprint
 
 
 def run():
     # print out system config
     pprint.pprint(generalConfig)
-    pprint.pprint(turnDqnConfig)
+    pprint.pprint(structDqnConfig)
 
     # load the data from file
     sim20_evn = NatSlotSimulator20q(generalConfig["global_seed"])
     test_sim20_evn = NatSlotSimulator20q(generalConfig["global_seed"])
 
-    test_interval = turnDqnConfig["test_interval"]
-    sample_size = np.arange(0, turnDqnConfig["max_sample"], test_interval)
-    epsilon = turnDqnConfig["max_sample"]
-    ep_max = turnDqnConfig["ep_max"]
-    ep_min_step = turnDqnConfig["ep_min_step"]
-    ep_min = turnDqnConfig["ep_min"]
-    exp_size = turnDqnConfig["exp_size"]
-    mini_batch = turnDqnConfig["mini_batch"]
-    freeze_frequency = turnDqnConfig["freeze_frequency"]
-    update_frequency = turnDqnConfig["update_frequency"]
-    test_trial = turnDqnConfig["test_trial"]
-    doubleDQN = turnDqnConfig["doubleDQN"]
+    test_interval = structDqnConfig["test_interval"]
+    sample_size = np.arange(0, structDqnConfig["max_sample"], test_interval)
+    epsilon = structDqnConfig["max_sample"]
+    ep_max = structDqnConfig["ep_max"]
+    ep_min_step = structDqnConfig["ep_min_step"]
+    ep_min = structDqnConfig["ep_min"]
+    exp_size = structDqnConfig["exp_size"]
+    mini_batch = structDqnConfig["mini_batch"]
+    freeze_frequency = structDqnConfig["freeze_frequency"]
+    update_frequency = structDqnConfig["update_frequency"]
+    test_trial = structDqnConfig["test_trial"]
+    doubleDQN = structDqnConfig["doubleDQN"]
 
     eval_performance = np.zeros(len(sample_size))
     step_cnt = 0

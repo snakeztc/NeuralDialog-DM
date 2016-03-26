@@ -15,7 +15,7 @@ class StructTurnHistoryRep(Representation):
         self.model = None
         # user response ngram size + action number + computer response
         self.state_features_num = self.domain.ngram_size
-        self.sys_feature_num = self.domain.actions_num+1
+        self.sys_feature_num = self.domain.actions_num + 1
         self.ngram_base = self.domain.actions_num + 1
 
     # State Representation #
