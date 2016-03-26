@@ -26,12 +26,18 @@ class StructTurnLstmDnnQ(BatchAgent):
         graph.add_input(name='sys', input_shape=(None, self.domain.actions_num+1))
         graph.add_input(name='cmp', input_shape=(None, 1))
 
+        # add masking
+        graph.add_node(Masking(mask_value=0.0, input_shape=(None, self.representation.state_features_num)), name="usr_mask", input="usr")
+        graph.add_node(Masking(mask_value=0.0, input_shape=(None, self.domain.actions_num+1)), name="sys_mask", input="sys")
+        graph.add_node(Masking(mask_value=0.0, input_shape=(None, 1)), name="cmp_mask", input="cmp")
+
         # add embedding layer for sys
         graph.add_node(TimeDistributedDense(structDqnConfig["sys_embed"], input_dim=self.domain.actions_num+1),
-                       name="sys_embed", input="sys")
+                       name="sys_embed", input="sys_mask")
+
         graph.add_node(TimeDistributedDense(structDqnConfig["usr_embed"],
                                             input_dim=self.representation.state_features_num),
-                       name="usr_embed", input="usr")
+                       name="usr_embed", input="usr_mask")
 
         embed_size = structDqnConfig["usr_embed"] + structDqnConfig["sys_embed"] + 1
 
@@ -40,7 +46,6 @@ class StructTurnLstmDnnQ(BatchAgent):
 
         # shared model
         shared_model = containers.Sequential()
-        shared_model.add(Masking(mask_value=0.0, input_shape=(None, embed_size)))
 
         if structDqnConfig["recurrent"] == "LSTM":
             shared_model.add(LSTM(structDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=False))
@@ -49,7 +54,7 @@ class StructTurnLstmDnnQ(BatchAgent):
         shared_model.add(Dropout(structDqnConfig["dropout"]))
 
         # add the shared to model to graph
-        graph.add_node(shared_model, name="recurrent_layers", inputs=["sys_embed", "usr_embed", "cmp"], merge_mode='concat')
+        graph.add_node(shared_model, name="recurrent_layers", inputs=["sys_embed", "usr_embed", "cmp_mask"], merge_mode='concat')
 
         # add the policy networks
         for p_name in self.domain.policy_names:
