@@ -8,7 +8,7 @@ generalConfig = {"global_seed": 100,
                  "greedy_temp": 0.5,
                  "corpus_size": 100,
                  "q_verbal": False,
-                 "save_model": False}
+                 "save_model": True}
 
 # Simple Yes/NO based Simulator
 commandConfig = {"loss_reward": -30.0,
@@ -100,8 +100,9 @@ structDqnConfig = {"test_interval": 5000,
                    "update_frequency": 4,
                    "test_trial": 200,
                    "doubleDQN": True,
-                   "sys_embed": 15,
-                   "usr_embed": 14,
+                   "sys_embed": 16,
+                   "usr_middle": 64,
+                   "usr_embed": 8,
                    "recurrent": "LSTM",
                    "recurrent_size": 256,
                    "l1-verbal": 128,

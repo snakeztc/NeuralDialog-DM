@@ -34,9 +34,17 @@ class StructTurnLstmDnnQ(BatchAgent):
         graph.add_node(TimeDistributedDense(structDqnConfig["sys_embed"], input_dim=self.domain.actions_num+1),
                        name="sys_embed", input="sys_mask")
 
-        graph.add_node(TimeDistributedDense(structDqnConfig["usr_embed"],
-                                            input_dim=self.representation.state_features_num),
-                       name="usr_embed", input="usr_mask")
+        if structDqnConfig["usr_middle"] is None:
+            graph.add_node(TimeDistributedDense(structDqnConfig["usr_embed"],
+                                                input_dim=self.representation.state_features_num),
+                           name="usr_embed", input="usr_mask")
+        else:
+            graph.add_node(TimeDistributedDense(structDqnConfig["usr_middle"], activation="linear",
+                                                input_dim=self.representation.state_features_num),
+                           name="usr_middle", input="usr_mask")
+            graph.add_node(TimeDistributedDense(structDqnConfig["usr_embed"], activation= "tanh",
+                                                input_dim=structDqnConfig["usr_middle"]),
+                           name="usr_embed", input="usr_middle")
 
         embed_size = structDqnConfig["usr_embed"] + structDqnConfig["sys_embed"] + 1
 
