@@ -1,8 +1,6 @@
 import logging
 import numpy as np
 import os.path
-import time
-from Utils.config import dqnConfig
 
 
 class BatchAgent(object):

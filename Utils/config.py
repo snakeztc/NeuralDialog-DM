@@ -1,7 +1,7 @@
 root_path = '/Users/Tony/Dropbox/CMU_Grad/DialPort/NeuralDM/'
 corpus_path = root_path + 'Data/top100.json'
 action_path = root_path + 'Data/action_data.p'
-natural_path = root_path + 'Data/bigram_usr_resp.pkl'
+natural_path = root_path + 'Data/100-bigram_usr_resp.pkl'
 model_dir = root_path + 'Models/'
 
 generalConfig = {"global_seed": 100,
@@ -101,8 +101,8 @@ structDqnConfig = {"test_interval": 5000,
                    "test_trial": 200,
                    "doubleDQN": True,
                    "sys_embed": 16,
-                   "usr_middle": 64,
-                   "usr_embed": 8,
+                   "usr_middle": None,
+                   "usr_embed": 16,
                    "recurrent": "LSTM",
                    "recurrent_size": 256,
                    "l1-verbal": 128,

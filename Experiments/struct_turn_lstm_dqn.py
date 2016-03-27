@@ -65,6 +65,10 @@ def run():
                 bench_cnt += 1
                 if generalConfig["save_model"] and representation.model:
                     representation.model.save_weights(model_dir+str(step_cnt)+'-lstm-struct.h5')
+                    # save model as well in first bench
+                    if bench_cnt == 2:
+                        json_string = representation.model.to_json()
+                        open(model_dir+"lstm-struct.json", "w").write(json_string)
 
             if terminal or bench_cnt >= len(sample_size):
                 break
