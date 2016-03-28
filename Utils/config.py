@@ -27,6 +27,7 @@ slotConfig = {"loss_reward": -30.0,
               "logic_error": -10.0,
               "episode_cap": 100,
               "max_inform": 10,
+              "use_shape": True,
               "discount_factor": 0.99}
 
 # Oracle State

@@ -222,10 +222,6 @@ class NatSlotSimulator20q (Domain):
         sys = [0] # first action is no action
         cmp = [1.0] # it's full size
         t = {'usr':usr, "sys":sys, "cmp": cmp}
-        #t = np.zeros((1, self.actions_num + 1 + self.ngram_size + 1))
-        #t[0, 0] = 1 # the first action is no_action
-        #t[0, -1] = 1.0
-        #t = coo_matrix(t)
 
         return s, [self.eos], t
 
@@ -267,6 +263,9 @@ class NatSlotSimulator20q (Domain):
         t_hist = all_s[2]
         (ns, n_w_hist, n_t_hist) = self.get_next_state(s=s, w_hist=w_hist, t_hist=t_hist, aID=aID)
         reward = self.get_reward(s, ns, aID)
+
+        if self.curConfig["use_shape"]:
+            reward += self.get_reward_shape(s, ns)
 
         return reward, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
 
@@ -428,6 +427,12 @@ class NatSlotSimulator20q (Domain):
                     reward = self.logic_error
 
         return reward
+
+    def get_reward_shape(self, s, ns):
+        upper_bnd = self.statespace_limits[self.comp_idx, 1] / 2.0
+        s_potential = s[0][self.comp_idx]/upper_bnd if s[0][self.comp_idx] > 0 else 1.0
+        ns_potential = ns[0][self.comp_idx]/upper_bnd if ns[0][self.comp_idx] > 0 else 1.0
+        return s_potential - ns_potential
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
