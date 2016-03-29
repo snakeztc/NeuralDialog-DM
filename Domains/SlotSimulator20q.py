@@ -253,6 +253,7 @@ class SlotSimulator20q (Domain):
         t_hist = all_s[2]
         (ns, n_w_hist, n_t_hist) = self.get_next_state(s=s, w_hist=w_hist, t_hist=t_hist, aID=aID)
         reward = self.get_reward(s, ns, aID)
+        reward += self.get_reward_shape(s, ns)
 
         return reward, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
 
@@ -407,6 +408,13 @@ class SlotSimulator20q (Domain):
                     reward = self.logic_error
 
         return reward
+
+    def get_reward_shape(self, s, ns):
+        upper_bnd = self.statespace_limits[self.comp_idx, 1] / 2.0
+        s_potential = s[0][self.comp_idx]/upper_bnd if s[0][self.comp_idx] > 0 else 2.0
+        ns_potential = ns[0][self.comp_idx]/upper_bnd if ns[0][self.comp_idx] > 0 else 2.0
+        # since s_potential and ns_potential should be negative here
+        return s_potential - self.discount_factor * ns_potential
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
