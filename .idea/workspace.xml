@@ -6,7 +6,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Data/bigram_usr_resp.pkl" afterPath="$PROJECT_DIR$/Data/bigram_usr_resp.pkl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Data/unigram_usr_resp.pkl" afterPath="$PROJECT_DIR$/Data/unigram_usr_resp.pkl" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Data/utts.pkl" afterPath="$PROJECT_DIR$/Data/utts.pkl" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Domains/NatSlotSimulator20q.py" afterPath="$PROJECT_DIR$/Domains/NatSlotSimulator20q.py" />
     </list>
     <ignored path="NeuralDM.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -61,7 +60,7 @@
       <file leaf-file-name="NatSlotSimulator20q.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Domains/NatSlotSimulator20q.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6117166">
+            <state vertical-scroll-proportion="0.613388">
               <caret line="436" column="0" selection-start-line="436" selection-start-column="0" selection-end-line="436" selection-end-column="0" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -672,12 +671,6 @@
       <option name="number" value="Default" />
       <updated>1453141026937</updated>
     </task>
-    <task id="LOCAL-00050" summary="add experienece for bindary dqn">
-      <created>1456787965826</created>
-      <option name="number" value="00050" />
-      <option name="project" value="LOCAL" />
-      <updated>1456787965828</updated>
-    </task>
     <task id="LOCAL-00051" summary="add model evaluation and configurable pooling type">
       <created>1456795855388</created>
       <option name="number" value="00051" />
@@ -966,7 +959,13 @@
       <option name="project" value="LOCAL" />
       <updated>1459194374554</updated>
     </task>
-    <option name="localTasksCounter" value="99" />
+    <task id="LOCAL-00099" summary="use cleaned data and change shape">
+      <created>1459279901132</created>
+      <option name="number" value="00099" />
+      <option name="project" value="LOCAL" />
+      <updated>1459279901132</updated>
+    </task>
+    <option name="localTasksCounter" value="100" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1016,6 +1015,7 @@
     <layout>
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.14479639" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27380952" sideWeight="0.49690402" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6598916" sideWeight="0.13043478" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.09988649" sideWeight="0.56707317" order="8" side_tool="false" content_ui="tabs" />
@@ -1024,7 +1024,6 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3258278" sideWeight="0.49125364" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1068,7 +1067,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="working command simulator with full graph support" />
     <MESSAGE value="finally working slot dm" />
     <MESSAGE value="improve efficiency in batch agent" />
     <MESSAGE value="migrate to turn LSTM with graph model" />
@@ -1093,7 +1091,8 @@
     <MESSAGE value="change unigram daata" />
     <MESSAGE value="save model for nature turn" />
     <MESSAGE value="introduce shape into the model" />
-    <option name="LAST_COMMIT_MESSAGE" value="introduce shape into the model" />
+    <MESSAGE value="use cleaned data and change shape" />
+    <option name="LAST_COMMIT_MESSAGE" value="use cleaned data and change shape" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1472,7 +1471,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Domains/NatSlotSimulator20q.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6117166">
+        <state vertical-scroll-proportion="0.613388">
           <caret line="436" column="0" selection-start-line="436" selection-start-column="0" selection-end-line="436" selection-end-column="0" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
