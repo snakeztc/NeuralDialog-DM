@@ -413,10 +413,10 @@ class SlotSimulator20q (Domain):
 
     def get_reward_shape(self, s, ns):
         upper_bnd = self.statespace_limits[self.comp_idx, 1] / 2.0
-        s_potential = s[0][self.comp_idx]/upper_bnd if s[0][self.comp_idx] > 0 else 2.0
-        ns_potential = ns[0][self.comp_idx]/upper_bnd if ns[0][self.comp_idx] > 0 else 2.0
+        s_potential = 2.0 - s[0][self.comp_idx]/upper_bnd if s[0][self.comp_idx] > 0 else 0.0
+        ns_potential = 2.0 - ns[0][self.comp_idx]/upper_bnd if ns[0][self.comp_idx] > 0 else 0.0
         # since s_potential and ns_potential should be negative here
-        return s_potential - self.discount_factor * ns_potential
+        return self.discount_factor * ns_potential - s_potential
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
