@@ -7,6 +7,8 @@ import pprint
 
 class CommandSimulator20q (Domain):
 
+    # This simulator has hard code 4 possible actions yes->no/yes, no->yes/no
+
     pprint.pprint(commandConfig)
 
     # global varaible
