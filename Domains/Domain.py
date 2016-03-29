@@ -5,6 +5,10 @@ from Utils.domainUtil import DomainUtil
 
 
 class Domain(object):
+    # terminal predicate
+    end_idx = None
+    end_success = 1
+
     # NL interface
     vocabs = None
     nb_words = 0
