@@ -15,7 +15,7 @@ commandConfig = {"loss_reward": -30.0,
                  "win_reward": 30.0,
                  "step_reward": 0.0,
                  "wrong_guess_reward": -10.0,
-                 "logic_error": -10.0,
+                 "logic_error": 0.0,
                  "episode_cap": 40,
                  "discount_factor": 0.99}
 
@@ -24,11 +24,12 @@ slotConfig = {"loss_reward": -30.0,
               "win_reward": 30.0,
               "step_reward": 0.0,
               "wrong_guess_reward": -5.0,
-              "logic_error": -10.0,
+              "logic_error": 0.0,
               "episode_cap": 100,
               "max_inform": 10,
               "use_shape": True,
               "discount_factor": 0.99}
+
 
 # Oracle State
 dqnConfig = {"test_interval": 5000,

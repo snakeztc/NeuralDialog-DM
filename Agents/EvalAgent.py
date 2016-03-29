@@ -23,7 +23,7 @@ class EvalAgent(object):
                 local_step += 1
 
                 if terminal:
-                    if ns[0][0, self.agent.domain.end_idx] == self.agent.domain.end_success:
+                    if r == self.agent.domain.win_reward:
                         win_cnt += 1.0
                     break
 

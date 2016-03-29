@@ -255,9 +255,11 @@ class SlotSimulator20q (Domain):
         reward = self.get_reward(s, ns, aID)
 
         if self.curConfig["use_shape"]:
-            reward += self.get_reward_shape(s, ns)
+            shape = self.get_reward_shape(s, ns)
+        else:
+            shape = 0.0
 
-        return reward, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
+        return reward, shape, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
 
     def get_next_state(self, s, w_hist, t_hist, aID):
         """

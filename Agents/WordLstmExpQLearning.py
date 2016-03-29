@@ -16,7 +16,10 @@ class WordLstmExpQLearning(Agent):
         else:
             aID = self.learning_policy.choose_action(Qs)
 
-        (r, ns, terminal) = self.domain.step(s, aID)
+        (r, shape, ns, terminal) = self.domain.step(s, aID)
+
+        if not performance_run:
+            r += shape
 
         if not performance_run:
 

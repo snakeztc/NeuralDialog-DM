@@ -2,7 +2,6 @@ from Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
 
 class QLearning(Agent):
-
     def learn(self, s, performance_run=False):
         Qs = self.representation.Qs(s)
 
@@ -12,7 +11,10 @@ class QLearning(Agent):
         else:
             aID = self.learning_policy.choose_action(Qs)
 
-        (r, ns, terminal) = self.domain.step(s, aID)
+        (r, shape, ns, terminal) = self.domain.step(s, aID)
+
+        if not performance_run:
+            r += shape
 
         if not performance_run:
             self.logger.info("Learning here for tabular")
