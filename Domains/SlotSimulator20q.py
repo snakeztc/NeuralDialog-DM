@@ -253,7 +253,9 @@ class SlotSimulator20q (Domain):
         t_hist = all_s[2]
         (ns, n_w_hist, n_t_hist) = self.get_next_state(s=s, w_hist=w_hist, t_hist=t_hist, aID=aID)
         reward = self.get_reward(s, ns, aID)
-        reward += self.get_reward_shape(s, ns)
+
+        if self.curConfig["use_shape"]:
+            reward += self.get_reward_shape(s, ns)
 
         return reward, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
 
