@@ -30,8 +30,8 @@ class TurnExperience (Experiences):
             self.exp_head = 0
 
         # pad phi_s and phi_ns with 0 zeros in the front
-        self.experience[self.exp_head, self.max_len-phi_s.shape[1]:self.max_len, 0:self.phi_s_size] = phi_s
-        self.experience[self.exp_head, self.max_len-phi_ns.shape[1]:self.max_len, self.phi_s_size:] = phi_ns
+        self.experience[self.exp_head, self.max_len-phi_s["input"].shape[1]:self.max_len, 0:self.phi_s_size] = phi_s["input"]
+        self.experience[self.exp_head, self.max_len-phi_ns["input"].shape[1]:self.max_len, self.phi_s_size:] = phi_ns["input"]
 
         self.exp_ar[self.exp_head, 0] = a
         self.exp_ar[self.exp_head, 1] = r
@@ -55,7 +55,7 @@ class TurnExperience (Experiences):
         phi_ns = mini_batch_exp[:,:,self.phi_s_size:]
         policy_ns = [self.ns_policies[i] for i in sample_indices]
         policy_s = [self.s_policies[i] for i in sample_indices]
-        return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
+        return {"input": phi_s}, policy_s, actions, rewards, {"input": phi_ns}, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
         self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0
