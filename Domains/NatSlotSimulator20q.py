@@ -199,6 +199,10 @@ class NatSlotSimulator20q (Domain):
         # to make the agent life easier we have a set of result have been informed
         self.wrong_keys = set()
 
+        # calculate reward shape upper bound
+        self.shape_upper = self.curConfig["shape_upper"]
+        self.shape_normalizer = self.statespace_limits[self.comp_idx, 1] / self.shape_upper
+
         print "Done indexing"
 
     def init_user(self):
@@ -436,9 +440,8 @@ class NatSlotSimulator20q (Domain):
         return reward
 
     def get_reward_shape(self, s, ns):
-        upper_bnd = self.statespace_limits[self.comp_idx, 1] / 2.0
-        s_potential = 2.0 - s[0][self.comp_idx]/upper_bnd if s[0][self.end_idx] != self.db_error else 0.0
-        ns_potential = 2.0 - ns[0][self.comp_idx]/upper_bnd if ns[0][self.end_idx] != self.db_error else 0.0
+        s_potential = self.shape_upper - s[0][self.comp_idx]/self.shape_normalizer if s[0][self.end_idx] != self.db_error else 0.0
+        ns_potential = self.shape_upper - ns[0][self.comp_idx]/self.shape_normalizer if ns[0][self.end_idx] != self.db_error else 0.0
         # since s_potential and ns_potential should be negative here
         return self.discount_factor * ns_potential - s_potential
 

@@ -28,6 +28,7 @@ slotConfig = {"loss_reward": -30.0,
               "episode_cap": 100,
               "max_inform": 10,
               "use_shape": True,
+              'shape_upper': 5.0,
               "discount_factor": 0.99}
 
 
