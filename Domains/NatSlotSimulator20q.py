@@ -78,6 +78,11 @@ class NatSlotSimulator20q (Domain):
     unknown = 0
     yes = 1
     no = 2
+    # terminal state
+    in_game = 0
+    game_success = 1
+    db_error = 2
+
     # mode related
     spk_mode = 0
     slot_mode = 1
@@ -348,7 +353,7 @@ class NatSlotSimulator20q (Domain):
                 agent_utt = self.index_inform.get(guess)
                 if self.person_inmind_key == guess:
                     # has informed successfully
-                    ns[0, self.end_idx] = 1
+                    ns[0, self.end_idx] = self.game_success
                     resp = self.index_response.get('correct')
                 else:
                     resp = self.index_response.get('wrong')
@@ -383,7 +388,7 @@ class NatSlotSimulator20q (Domain):
         ns[0, self.comp_idx] = len(new_results) if new_results else 0
         cmp_resp = self.index_result.get(ns[0, self.comp_idx])
         if self.person_inmind_key not in new_results:
-            ns[0, self.turn_idx] = self.episode_cap
+            ns[0, self.end_idx] = self.db_error
 
         # append the agent action and user response to the dialog hist
         n_w_hist.extend(agent_utt)
@@ -409,11 +414,11 @@ class NatSlotSimulator20q (Domain):
         prev_a_type = self.get_prev_action_type(s[0, self.prev_idx])
 
         # check loss condition
-        if ns[0, self.end_idx] == 1: # successfully inform
+        if ns[0, self.end_idx] == self.game_success: # successfully inform
             reward = self.win_reward
-        elif ns[0, self.end_idx] == 0 and self.is_terminal(ns):  # run out of turns or logic errors
+        elif ns[0, self.end_idx] != self.game_success and self.is_terminal(ns):  # run out of turns or logic errors
             reward = self.loss_reward
-        elif a_type == "inform" and ns[0, self.end_idx] == 0:
+        elif a_type == "inform" and ns[0, self.end_idx] == self.in_game:
             reward = self.wrong_guess_reward
         elif a_type == "computer":
             # don't fill slot for unasked
@@ -432,14 +437,14 @@ class NatSlotSimulator20q (Domain):
 
     def get_reward_shape(self, s, ns):
         upper_bnd = self.statespace_limits[self.comp_idx, 1] / 2.0
-        s_potential = 2.0 - s[0][self.comp_idx]/upper_bnd if s[0][self.comp_idx] > 0 else 0.0
-        ns_potential = 2.0 - ns[0][self.comp_idx]/upper_bnd if ns[0][self.comp_idx] > 0 else 0.0
+        s_potential = 2.0 - s[0][self.comp_idx]/upper_bnd if s[0][self.end_idx] != self.db_error else 0.0
+        ns_potential = 2.0 - ns[0][self.comp_idx]/upper_bnd if ns[0][self.end_idx] != self.db_error else 0.0
         # since s_potential and ns_potential should be negative here
         return self.discount_factor * ns_potential - s_potential
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
-        if s[0, self.end_idx] > 0 or s[0, self.turn_idx] >= self.episode_cap\
+        if s[0, self.end_idx] != self.in_game or s[0, self.turn_idx] >= self.episode_cap\
                 or s[0, self.icnt_idx] >= slotConfig["max_inform"]:
             return True
         else:
