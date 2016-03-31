@@ -312,7 +312,8 @@ class NatSlotSimulator20q (Domain):
 
             if ns[0, aID] == self.unasked:
                 chosen_answer = self.person_inmind.get(slot_name)
-                if chosen_answer:
+                dice = self.random_state.random_sample()
+                if chosen_answer and dice > self.curConfig["unknown_chance"]:
                     if type(chosen_answer) != list:
                         chosen_answer = [chosen_answer]
                     # check if any of chosen answer is in the set
