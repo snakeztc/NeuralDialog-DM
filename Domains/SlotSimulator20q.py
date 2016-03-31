@@ -196,6 +196,10 @@ class SlotSimulator20q (Domain):
         self.shape_upper = self.curConfig["shape_upper"]
         self.shape_normalizer = self.statespace_limits[self.comp_idx, 1] / self.shape_upper
 
+        # init unknown mask
+        self.unknown_mask = {}
+        for slot_name in self.slot_names:
+            self.unknown_mask[slot_name] = False
 
         print "Done indexing"
 
@@ -203,7 +207,15 @@ class SlotSimulator20q (Domain):
         # initialize the user here
         selected_key = self.random_state.choice(self.corpus.keys(), p=self.prob)
         selected_person = self.corpus.get(selected_key)
+        # set have guessed
         self.wrong_keys = set()
+        # unknown mask for this
+        for slot_name in self.slot_names:
+            if self.random_state.random_sample() < self.curConfig["unknown_chance"]:
+                self.unknown_mask[slot_name] = True
+            else:
+                self.unknown_mask[slot_name] = False
+
         return selected_key, selected_person
 
     def s0(self):
@@ -303,8 +315,7 @@ class SlotSimulator20q (Domain):
 
             if ns[0, aID] == self.unasked:
                 chosen_answer = self.person_inmind.get(slot_name)
-                dice = self.random_state.random_sample()
-                if chosen_answer and dice > self.curConfig["unknown_chance"]:
+                if chosen_answer and not self.unknown_mask[slot_name]:
                     if type(chosen_answer) != list:
                         chosen_answer = [chosen_answer]
                     # check if any of chosen answer is in the set
