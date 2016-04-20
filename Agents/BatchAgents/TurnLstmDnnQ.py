@@ -2,12 +2,11 @@ from Utils.config import generalConfig, turnDqnConfig, model_dir
 import numpy as np
 np.random.seed(generalConfig["global_seed"])
 from BatchAgent import BatchAgent
-from keras.models import Sequential, Graph
-from keras.layers.recurrent import LSTM, GRU
-from keras.layers.core import Dense, Dropout, Activation, Masking
+from keras.models import Model
+from keras.layers.recurrent import LSTM
+from keras.layers import Dropout, Masking, Input, Dense, TimeDistributed
 from keras.optimizers import RMSprop
-from keras.layers.core import TimeDistributedMerge, TimeDistributedDense
-from keras.layers import containers
+from keras.utils.visualize_util import plot
 
 
 class TurnLstmDnnQ(BatchAgent):
@@ -16,86 +15,38 @@ class TurnLstmDnnQ(BatchAgent):
     def init_model(self):
         return self.get_graph_model()
 
-    def get_seq_model(self):
-        print "Creating model"
-        embed_size = turnDqnConfig["embedding"]
-        pooling_type = turnDqnConfig["pooling"]
-        use_pool = pooling_type is not None
-
-        model = Sequential()
-        model.add(Masking(mask_value=0.0, input_shape=(None, self.representation.state_features_num)))
-
-        model.add(TimeDistributedDense(embed_size, input_dim=self.representation.state_features_num))
-
-        if turnDqnConfig["recurrent"] == "LSTM":
-            model.add(LSTM(turnDqnConfig["first_hidden"], input_dim=embed_size, return_sequences=use_pool))
-        else:
-            model.add(GRU(turnDqnConfig["first_hidden"], input_dim=embed_size, return_sequences=use_pool))
-        model.add(Dropout(0.2))
-
-        if use_pool:
-            model.add(TimeDistributedMerge(pooling_type))
-
-        model.add(Dense(turnDqnConfig["second_hidden"], init='lecun_uniform'))
-        model.add(Activation('tanh'))
-        model.add(Dropout(0.2))
-
-        model.add(Dense(self.domain.actions_num, init='lecun_uniform'))
-        model.add(Activation('linear'))
-
-        opt = RMSprop(clipvalue=1.0)
-        model.compile(loss='mse', optimizer=opt)
-        print "Model created"
-        print model.summary()
-        return model
-
     def get_graph_model(self):
         print "Creating model"
         embed_size = turnDqnConfig["embedding"]
-        pooling_type = turnDqnConfig["pooling"]
-        use_pool = pooling_type is not None
 
-        graph = Graph()
-        graph.add_input(name='input', input_shape=(None, self.representation.state_features_num))
-
-        # for each output
         loss = {}
+        outputs = []
 
-        # shared model
-        shared_model = containers.Sequential()
-        shared_model.add(Masking(mask_value=0.0, input_shape=(None, self.representation.state_features_num)))
-
-        shared_model.add(TimeDistributedDense(embed_size, input_dim=self.representation.state_features_num))
-
-        if turnDqnConfig["recurrent"] == "LSTM":
-            shared_model.add(LSTM(turnDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=use_pool))
-        else:
-            shared_model.add(GRU(turnDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=use_pool))
-        shared_model.add(Dropout(turnDqnConfig["dropout"]))
-
-        if use_pool:
-            shared_model.add(TimeDistributedMerge(pooling_type))
-
-        # add the shared to model to graph
-        graph.add_node(shared_model, name="recurrent_layers", input="input")
+        model_input = Input(shape=(None, self.representation.state_features_num), name='input')
+        input_mask = Masking(mask_value=0.0, input_shape=(None, self.representation.state_features_num),
+                             name='input_mask')(model_input)
+        turn_embed = TimeDistributed(Dense(embed_size, input_dim=self.representation.state_features_num),
+                                     name='turn_embed')(input_mask)
+        dialog_embed = LSTM(turnDqnConfig["recurrent_size"], input_dim=embed_size, return_sequences=False,
+                            name='dialog_embed')(turn_embed)
+        dropped_dialog = Dropout(turnDqnConfig["dropout"])(dialog_embed)
 
         # add the policy networks
         for p_name in self.domain.policy_names:
+            str_name = self.domain.policy_str_name[p_name]
+            l1 = Dense(turnDqnConfig["l1-"+str_name], activation='tanh', name="l1-"+str_name)(dropped_dialog)
+            dl1 = Dropout(turnDqnConfig["dropout"], name="l1dp-"+str_name)(l1)
+            o = Dense(self.domain.policy_action_num[p_name], activation='linear', name=str_name)(dl1)
+            loss[str_name] = "mse"
+            outputs.append(o)
 
-            graph.add_node(Dense(turnDqnConfig["l1-"+p_name], activation='tanh'), name="l1-"+p_name, input="recurrent_layers")
-            graph.add_node(Dropout(turnDqnConfig["dropout"]), name="l1dp-"+p_name, input="l1-"+p_name)
-
-            graph.add_node(Dense(self.domain.policy_action_num[p_name], activation='linear'), name=p_name,
-                           input='l1dp-'+p_name, create_output=True)
-
-            loss[p_name] = "mse"
-
+        model = Model(input=model_input, output=outputs)
         opt = RMSprop(clipvalue=1.0)
-        graph.compile(optimizer=opt, loss=loss)
-
-        print graph.summary()
+        model.compile(optimizer=opt, loss=loss)
+        plot(model, to_file='model.png')
+        print model.summary()
         print "Model created"
-        return graph
+        return model
 
 
 

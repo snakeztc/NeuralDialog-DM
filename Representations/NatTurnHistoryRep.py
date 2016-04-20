@@ -57,7 +57,7 @@ class NatTurnHistoryRep(Representation):
         if self.model:
             return self.model.predict(phi_s)
         else:
-            result = {key: np.zeros((phi_s["input"].shape[0], size)) for key, size in self.domain.policy_action_num.iteritems()}
+            result = [np.zeros((phi_s["input"].shape[0], size)) for size in self.domain.policy_action_num]
             return result
 
 

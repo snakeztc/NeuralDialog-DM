@@ -28,6 +28,8 @@ class Domain(object):
     policy_action_num = None
     # tree node name
     policy_names = None
+    # tree node string name
+    policy_str_name = None
     # the global index base of each policy
     policy_bases = None
     # Limits of each dimension of the state space. Each row corresponds to one dimension and has two elements [min, max]

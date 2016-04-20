@@ -22,7 +22,10 @@ class ExpQLearning(Agent):
         # convert aID to global aID
         flat_aID = aID + self.domain.policy_bases[policy_name]
 
-        (r, ns, terminal) = self.domain.step(s, flat_aID)
+        (r, shape, ns, terminal) = self.domain.step(s, flat_aID)
+
+        if not performance_run:
+            r += shape
 
         if self.verbose:
             if generalConfig["q_verbal"]:

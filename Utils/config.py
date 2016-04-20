@@ -24,34 +24,39 @@ slotConfig = {"loss_reward": -30.0,
               "win_reward": 30.0,
               "step_reward": 0.0,
               "wrong_guess_reward": -5.0,
-              "logic_error": 0.0,
+              "logic_error": -5.0,
               "episode_cap": 100,
               "max_inform": 10,
               "use_shape": True,
-              'shape_upper': 2.0,
-              "unknown_chance": 0.1,
+              'shape_upper': 4.0,
+              "unknown_chance": 0.0,
               "discount_factor": 0.99}
 
 
+########################################################
+##                      MODEL                         ##
+########################################################
+
 # Oracle State
 dqnConfig = {"test_interval": 5000,
-             "max_sample": 150001,
+             "max_sample": 120001,
              'ep_max': 1.0,
              "ep_min": 0.1,
              "ep_min_step": 70000,
-             "exp_size": 150000,
+             "exp_size": 120000,
              "mini_batch": 32,
              "freeze_frequency": 1000,
              "update_frequency": 4,
              "test_trial": 200,
              "doubleDQN": True,
-             "l1-share": 700,
+             "l1-share": 256,
              "l1-verbal": 256,
              "l2-verbal": 128,
              "l1-computer": 256,
              "l2-computer": 128,
              "third_hidden": None,
              "dropout": 0.3}
+
 # Word LSTM
 wordDqnConfig = {"test_interval": 5000,
                  "max_sample": 100001,
@@ -114,6 +119,3 @@ structDqnConfig = {"test_interval": 5000,
                    "l1-computer": 128,
                    "l2-computer": 100,
                    "dropout": 0.3}
-
-
-

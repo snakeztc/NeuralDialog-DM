@@ -358,6 +358,6 @@ class CommandSimulator20q (Domain):
             return False
 
     def action_prune(self, s):
-        return "output"
+        return 0
 
 

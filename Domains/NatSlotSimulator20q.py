@@ -97,14 +97,17 @@ class NatSlotSimulator20q (Domain):
     episode_cap = curConfig["episode_cap"]
     discount_factor = curConfig.get("discount_factor")
     # each value has a question, 1 inform and 3 computer operation
+    VERBAL = 0
+    COMPUTER = 1
     actions_num = question_count + inform_count + computer_count
     action_types = ["question"] * question_count + ["inform"] * inform_count + ["computer"] * computer_count
-    action_to_policy = ["verbal"] * (question_count+inform_count) + ["computer"] * computer_count
-    policy_action_num = {"verbal": (question_count+inform_count), "computer": computer_count}
-    policy_names = DomainUtil.remove_duplicate(action_to_policy)
+    action_to_policy = [0] * (question_count+inform_count) + [1] * computer_count
+    policy_names = [VERBAL, COMPUTER]
+    policy_str_name = ["verbal", "computer"]
+    policy_action_num = [(question_count+inform_count), computer_count]
     prev_base = 0
     policy_bases = {}
-    for p in policy_names:
+    for p in range(len(policy_names)):
         policy_bases[p] = prev_base
         prev_base += policy_action_num[p]
     print "Number of actions is " + str(actions_num)
@@ -140,7 +143,7 @@ class NatSlotSimulator20q (Domain):
                             Domain.categorical, # action mode
                             Domain.categorical]) # end
     prev_idx = statespace_limits.shape[0]-7 # prev_action is 1 based 0 leave for no_action
-    pans_idx = statespace_limits.shape[0]-6 # previous answer
+    pans_idx = statespace_limits.shape[0]-6 # previous answerp
     comp_idx = statespace_limits.shape[0]-5
     turn_idx = statespace_limits.shape[0]-4
     icnt_idx = statespace_limits.shape[0]-3
@@ -468,9 +471,9 @@ class NatSlotSimulator20q (Domain):
         # check if we have any query slots asked but not filled
         s = all_s[0]
         if s[0, self.mode_idx] == self.spk_mode:
-            return "verbal"
+            return self.VERBAL
         elif s[0, self.mode_idx] == self.slot_mode:
-            return "computer"
+            return self.COMPUTER
         else:
             print "state mode is wrong"
             exit(1)

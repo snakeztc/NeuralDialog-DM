@@ -14,10 +14,10 @@ class NatTurnLstmExpQLearning(Agent):
         # choose an action. If in learning, we use behavior policy, If not use target policy
         if performance_run:
             Qs = self.representation.Qs(s)
-            aID = self.performance_policy.choose_action(Qs.get(policy_name))
+            aID = self.performance_policy.choose_action(Qs[policy_name])
         else: # learning step
             Qs = self.behavior_representation.Qs(s)
-            aID = self.learning_policy.choose_action(Qs.get(policy_name))
+            aID = self.learning_policy.choose_action(Qs[policy_name])
 
         # convert aID to global aID
         flat_aID = aID + self.domain.policy_bases[policy_name]

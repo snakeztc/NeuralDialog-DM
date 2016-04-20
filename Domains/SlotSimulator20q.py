@@ -120,7 +120,7 @@ class SlotSimulator20q (Domain):
     statespace_limits = np.vstack((statespace_limits, [0, episode_cap])) # turn count
     statespace_limits = np.vstack((statespace_limits, [0, slotConfig["max_inform"]])) # inform count
     statespace_limits = np.vstack((statespace_limits, [0, 2])) # action mode
-    statespace_limits = np.vstack((statespace_limits, [0, 2])) # success or not
+    statespace_limits = np.vstack((statespace_limits, [0, 3])) # success or not
     print "Constructing the state limit for each dimension of size " + str(statespace_limits.shape[0])
 
 

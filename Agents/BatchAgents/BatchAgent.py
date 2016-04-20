@@ -50,7 +50,7 @@ class BatchAgent(object):
             best_nqs = np.zeros(num_samples)
             max_pos = {p:np.argmax(nbqs[p], axis=1) for p in self.domain.policy_names}
             for idx, p in enumerate(policy_ns):
-                best_nqs = nqs[p][idx, max_pos[p][idx]]
+                best_nqs[idx] = nqs[p][idx, max_pos[p][idx]]
         else:
             best_nqs = np.zeros(num_samples)
             for idx, p in enumerate(policy_ns):
@@ -85,10 +85,7 @@ class BatchAgent(object):
             if os.path.exists(self.mode_path):
                 self.representation.model = self.init_model()
 
-        # fit the deep neural nets!!
-        for key, val in phi_s.iteritems():
-            y[key] = val
-        self.behavior_representation.model.fit(y, batch_size=num_samples, nb_epoch=1, verbose=0)
+        self.behavior_representation.model.fit(x=phi_s, y=y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def update_target_model(self):
         """
