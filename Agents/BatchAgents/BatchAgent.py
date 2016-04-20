@@ -96,11 +96,7 @@ class BatchAgent(object):
             self.representation.model = self.init_model()
 
         # copy weights value to targets
-        for target_layer, behavior_layer in zip(self.representation.model.nodes.values(), self.behavior_representation.model.nodes.values()):
-            target_layer.set_weights(behavior_layer.get_weights())
-
-        #for target_layer, behavior_layer in zip(self.representation.model.layers, self.behavior_representation.model.layers):
-        #    target_layer.set_weights(behavior_layer.get_weights())
+        self.representation.model.set_weights(self.behavior_representation.model.get_weights())
 
     def stack_all_qs(self, Qs, num_samples):
         results = np.zeros((num_samples, self.domain.actions_num))
