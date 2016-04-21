@@ -35,17 +35,9 @@ class BatchAgent(object):
         y = self.representation.Qs_phi_s(phi_s)
 
         nqs = self.representation.Qs_phi_s(phi_ns)
-        #nqs = self.stack_all_qs(self.representation.Qs_phi_s(phi_ns), num_samples)
 
         # append next Qs into 1 matrix
         if self.doubleDQN:
-            #nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
-            #behavior_argmax = [int(v+i*y.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
-
-            #nbqs = self.stack_all_qs(self.behavior_representation.Qs_phi_s(phi_ns), num_samples)
-            #behavior_argmax = [int(v+i*nbqs.shape[1]) for i, v, in enumerate(np.argmax(nbqs, axis=1))]
-            #best_nqs = nqs.flat[behavior_argmax]
-
             nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
             best_nqs = np.zeros(num_samples)
             max_pos = {p:np.argmax(nbqs[p], axis=1) for p in self.domain.policy_names}
@@ -55,17 +47,11 @@ class BatchAgent(object):
             best_nqs = np.zeros(num_samples)
             for idx, p in enumerate(policy_ns):
                 best_nqs[idx] = np.amax(nqs[p][idx, :])
-            #best_nqs = np.amax(nqs, axis=1).ravel()
 
         targets = rewards + self.domain.discount_factor * best_nqs
 
-        #indices = [int(v+i*y.shape[1]) for i, v, in enumerate(actions)]
-        # update the new y
-        #y.flat[indices] = targets
-
         # compute the TD-error
         raw_by = self.behavior_representation.Qs_phi_s(phi_s)
-        #td_error = np.abs(raw_by.flat[indices] - targets)
 
         # update the y and td_error
         td_error = np.zeros(num_samples)
@@ -97,15 +83,6 @@ class BatchAgent(object):
 
         # copy weights value to targets
         self.representation.model.set_weights(self.behavior_representation.model.get_weights())
-
-    def stack_all_qs(self, Qs, num_samples):
-        results = np.zeros((num_samples, self.domain.actions_num))
-        base = 0
-        for policy in self.domain.policy_names:
-            policy_num = self.domain.policy_action_num[policy]
-            results[:, base:base+policy_num] = Qs[policy]
-            base += policy_num
-        return results
 
     def init_model(self):
         raise NotImplementedError("Models")
