@@ -6,7 +6,6 @@ from keras.models import Model
 from keras.layers.recurrent import LSTM
 from keras.layers import Dropout, Masking, Input, Dense, TimeDistributed
 from keras.optimizers import RMSprop
-from keras.utils.visualize_util import plot
 
 
 class TurnLstmDnnQ(BatchAgent):
@@ -43,7 +42,6 @@ class TurnLstmDnnQ(BatchAgent):
         model = Model(input=model_input, output=outputs)
         opt = RMSprop(clipvalue=1.0)
         model.compile(optimizer=opt, loss=loss)
-        plot(model, to_file='model.png')
         print model.summary()
         print "Model created"
         return model
