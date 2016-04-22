@@ -38,7 +38,7 @@ class HybridTurnExperience (Experiences):
             self.exp_head = 0
 
         # pad phi_s and phi_ns with 0 zeros in the front
-        self.experience[self.exp_head] = (coo_matrix(phi_s["input"][0, :, :]), coo_matrix(phi_ns["input"][0, :, :]))
+        self.experience[self.exp_head] = (coo_matrix(phi_s[0, :, :]), coo_matrix(phi_ns[0, :, :]))
         self.exp_ar[self.exp_head, 0] = a
         self.exp_ar[self.exp_head, 1] = r
         self.s_policies[self.exp_head] = policy_s
@@ -85,7 +85,33 @@ class HybridTurnExperience (Experiences):
         rewards = self.exp_ar[sample_indices, 1]
         policy_ns = [self.ns_policies[i] for i in sample_indices]
         policy_s = [self.s_policies[i] for i in sample_indices]
-        return {"input": phi_s}, policy_s, actions, rewards, {"input": phi_ns}, policy_ns, sample_indices
+        return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
+
+    def get_batch_data(self):
+        sample_size = np.min([self.exp_actual_size, self.exp_size])
+        sample_indices = range(sample_size)
+
+        # allocate dense 3d tensor num_sample * max_len * dimension
+        phi_s = np.zeros((sample_size, self.max_len, self.phi_s_size))
+        phi_ns = np.zeros((sample_size, self.max_len, self.phi_s_size))
+
+        # fill in the dense matrix
+        for idx, sample_idx in enumerate(sample_indices):
+            (dense_s, dense_ns) = self.experience[sample_idx]
+            dense_s = dense_s.toarray()
+            dense_ns = dense_ns.toarray()
+            # to 3D tensor
+            dense_s = np.reshape(dense_s, (1,) + dense_s.shape)
+            dense_ns = np.reshape(dense_ns, (1,) + dense_ns.shape)
+
+            phi_s[idx, self.max_len-dense_s.shape[1]:self.max_len, :] = dense_s
+            phi_ns[idx, self.max_len-dense_ns.shape[1]:self.max_len, :] = dense_ns
+
+        actions = self.exp_ar[sample_indices, 0]
+        rewards = self.exp_ar[sample_indices, 1]
+        policy_ns = [self.ns_policies[i] for i in sample_indices]
+        policy_s = [self.s_policies[i] for i in sample_indices]
+        return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
         self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0

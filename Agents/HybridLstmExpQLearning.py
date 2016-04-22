@@ -49,11 +49,12 @@ class HybridLstmExpQLearning(Agent):
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:
 
-                self.learner.learn(self.experience)
+                #self.learner.learn(self.experience)
                 # update target model
                 self.update_cnt += 1
 
                 if self.update_cnt % self.freeze_frequency == 0:
+                    self.learner.batch_learn(self.experience)
                     self.learner.update_target_model()
 
         return r, ns, terminal
