@@ -425,7 +425,7 @@ class NatHybridSimulator20q (Domain):
         else:
             n_nat_resp = coo_matrix((1, self.ngram_size))
 
-        prev_h = ns[0, self.question_count + aID]
+        prev_h = ns[0, self.question_count + aID] if a_type == "question" else 0
 
         n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
                     "sys": t_hist["sys"] + [aID+1],
