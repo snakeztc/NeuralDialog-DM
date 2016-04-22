@@ -457,7 +457,7 @@ class NatHybridSimulator20q (Domain):
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
-        if s[0, self.end_idx] == self.game_success or s[0, self.turn_idx] >= self.episode_cap\
+        if s[0, self.end_idx] != self.in_game or s[0, self.turn_idx] >= self.episode_cap\
                 or s[0, self.icnt_idx] >= slotConfig["max_inform"]:
             return True
         else:

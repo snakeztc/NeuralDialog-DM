@@ -36,7 +36,6 @@ class NatSlotSimulator20q (Domain):
     inform_count = 1 # !! only 1 inform action
     computer_count = len(str_computer)
 
-
     # get natural sentence of users' response
     (natural_resp, natural_size, ngram_size) = DomainUtil.get_usr_resp(natural_path, str_response)
 
