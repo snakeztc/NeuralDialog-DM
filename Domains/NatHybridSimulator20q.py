@@ -439,7 +439,7 @@ class NatHybridSimulator20q (Domain):
                     "sys": t_hist["sys"] + [aID+1]}
 
         # get supervised labels for s
-        spl_targets = [ns[0, aID], ns[0, self.comp_idx]/len(self.corpus)]
+        spl_targets = [ns[0, aID], ns[0, self.comp_idx]/float(len(self.corpus))]
 
         return ns, n_w_hist, n_t_hist, spl_targets
 
