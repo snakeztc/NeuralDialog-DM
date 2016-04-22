@@ -15,7 +15,7 @@ class HybridTurnExperience (Experiences):
         self.exp_ar = np.zeros((exp_size, 2))
         self.s_policies = [None] * exp_size
         self.ns_policies = [None] * exp_size
-        self.spl_targets = [np.zeros(exp_size, dtype='int8')]
+        self.spl_targets = [np.zeros(exp_size, dtype='int8'), np.zeros(exp_size)]
 
         self.priority = np.zeros(exp_size)
         self.exp_size = exp_size
@@ -39,14 +39,15 @@ class HybridTurnExperience (Experiences):
         self.s_policies[self.exp_head] = policy_s
         self.ns_policies[self.exp_head] = policy_ns
         self.priority[self.exp_head] = 20.0
-        self.spl_targets[0][self.exp_head] = spl_targets
+        self.spl_targets[0][self.exp_head] = spl_targets[0]
+        self.spl_targets[1][self.exp_head] = spl_targets[1]
 
         # increment the write head
         self.exp_head += 1
         self.exp_actual_size += 1
 
     def get_spl_experience(self, sample_indices):
-        results = [to_categorical(self.spl_targets[0][sample_indices], 4)]
+        results = [to_categorical(self.spl_targets[0][sample_indices], 4), self.spl_targets[1][sample_indices]]
         return results
 
     def sample_mini_batch(self):

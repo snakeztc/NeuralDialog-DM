@@ -118,10 +118,10 @@ class NatHybridSimulator20q (Domain):
     print "Number of actions is " + str(actions_num)
 
     # supervised signals
-    spl_str_name = ['prev-slot']
-    spl_indexs = [1]
-    spl_modality = [len(resp_modality)]
-    spl_type = [Domain.categorical]
+    spl_str_name = ['prev-slot', 'db']
+    spl_indexs = [1, 2]
+    spl_modality = [len(resp_modality), 1]
+    spl_type = [Domain.categorical, Domain.discrete]
 
     # raw state is
     # [[unasked yes no] [....] ... turn_cnt informed]
@@ -255,9 +255,10 @@ class NatHybridSimulator20q (Domain):
         # {usr: sys: prev_h: prev_db}
         usr = coo_matrix((1, self.ngram_size))
         sys = [0]  # first action is no action
-        prev_h = [0]  # prev hypothesis is unasked
-        prev_db = [1.0] # full data set
-        t = {'usr': usr, "sys": sys, "prev_h": prev_h, "prev_db": prev_db}
+        #prev_h = [0]  # prev hypothesis is unasked
+        #prev_db = [1.0] # full data set
+        #t = {'usr': usr, "sys": sys, "prev_h": prev_h, "prev_db": prev_db}
+        t = {'usr': usr, "sys": sys}
 
         return s, [self.eos], t
 
@@ -432,15 +433,13 @@ class NatHybridSimulator20q (Domain):
         else:
             n_nat_resp = coo_matrix((1, self.ngram_size))
 
-        prev_h = ns[0, self.question_count + aID] if a_type == "question" else 0
+        #prev_h = ns[0, self.question_count + aID] if a_type == "question" else 0
 
         n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
-                    "sys": t_hist["sys"] + [aID+1],
-                    "prev_h": t_hist["prev_h"] + [prev_h],
-                    "prev_db": t_hist["prev_db"] + [ns[0, self.comp_idx]/float(len(self.corpus))]}
+                    "sys": t_hist["sys"] + [aID+1]}
 
         # get supervised labels for s
-        spl_targets = ns[0, aID]
+        spl_targets = [ns[0, aID], ns[0, self.comp_idx]/len(self.corpus)]
 
         return ns, n_w_hist, n_t_hist, spl_targets
 
