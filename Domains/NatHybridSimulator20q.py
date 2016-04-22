@@ -263,7 +263,7 @@ class NatHybridSimulator20q (Domain):
 
     def get_inform(self, s):
         filters = []
-        if self.performance_run and False:
+        if self.performance_run:
             for q_id in range(0, self.question_count):
                 if s[0, self.question_count + q_id] == self.yes:
                     filters.append((q_id, True))
