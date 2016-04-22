@@ -15,7 +15,12 @@ class HybridTurnExperience (Experiences):
         self.exp_ar = np.zeros((exp_size, 2))
         self.s_policies = [None] * exp_size
         self.ns_policies = [None] * exp_size
-        self.spl_targets = [np.zeros(exp_size) for i in range(32)]
+        self.spl_targets = []
+        for i in range(32):
+            if i == 0:
+                self.spl_targets.append(np.zeros(exp_size, dtype='float32'))
+            else:
+                self.spl_targets.append(np.zeros(exp_size, dtype='int8'))
 
         self.priority = np.zeros(exp_size)
         self.exp_size = exp_size
