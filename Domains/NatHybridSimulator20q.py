@@ -256,20 +256,27 @@ class NatHybridSimulator20q (Domain):
         usr = coo_matrix((1, self.ngram_size))
         sys = [0]  # first action is no action
         prev_h = [0]  # prev hypothesis is unasked
-        prev_db = [1.0] # full dataset
+        prev_db = [1.0] # full data set
         t = {'usr': usr, "sys": sys, "prev_h": prev_h, "prev_db": prev_db}
 
         return s, [self.eos], t
 
     def get_inform(self, s):
         filters = []
-        for q_id in range(0, self.question_count):
-            if s[0, self.question_count + q_id] == self.yes:
-                filters.append((q_id, True))
-            elif s[0, self.question_count + q_id] == self.no:
-                filters.append((q_id, False))
-        return list(self.search(filters) - set(self.wrong_keys))
-
+        if self.performance_run and False:
+            for q_id in range(0, self.question_count):
+                if s[0, self.question_count + q_id] == self.yes:
+                    filters.append((q_id, True))
+                elif s[0, self.question_count + q_id] == self.no:
+                    filters.append((q_id, False))
+            return list(self.search(filters) - set(self.wrong_keys))
+        else:
+            for q_id in range(0, self.question_count):
+                if s[0, q_id] == self.hold_yes:
+                    filters.append((q_id, True))
+                elif s[0, q_id] == self.hold_no :
+                    filters.append((q_id, False))
+            return list(self.search(filters) - set(self.wrong_keys))
     # filters a list (question_id, true or false)
     def search(self, filters):
         # return a list of person IDs
@@ -460,7 +467,7 @@ class NatHybridSimulator20q (Domain):
 
     def is_terminal(self, s):
         # either we already have informed or we used all the turns
-        if s[0, self.end_idx] != self.in_game or s[0, self.turn_idx] >= self.episode_cap\
+        if s[0, self.end_idx] == self.game_success or s[0, self.turn_idx] >= self.episode_cap\
                 or s[0, self.icnt_idx] >= slotConfig["max_inform"]:
             return True
         else:

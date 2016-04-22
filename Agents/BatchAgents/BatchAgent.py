@@ -33,7 +33,7 @@ class BatchAgent(object):
         (phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices) = experiences.sample_mini_batch()
 
         # calculate the targets
-        y = self.representation.Qs_phi_s(phi_s)
+        # y = self.representation.Qs_phi_s(phi_s)
 
         nqs = self.representation.Qs_phi_s(phi_ns)
 
@@ -61,8 +61,8 @@ class BatchAgent(object):
             valid_mask = [i for i, v in enumerate(policy_s) if v == policy]
             indices = [int(actions[i] + i*policy_num) for i in valid_mask]
             td_error[valid_mask] = np.abs(raw_by[policy].flat[indices] - targets[valid_mask])
-            y[policy].flat[indices] = targets[valid_mask]
-            #raw_by[policy].flat[indices] = targets[valid_mask]
+            #y[policy].flat[indices] = targets[valid_mask]
+            raw_by[policy].flat[indices] = targets[valid_mask]
 
         # update the priority
         experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
@@ -76,11 +76,11 @@ class BatchAgent(object):
         spl_targets = experiences.get_spl_experience(sample_indices)
         if spl_targets is not None:
             for s_idx, target in zip(self.domain.spl_indexs, spl_targets):
-                y[s_idx] = target
-                #raw_by[s_idx] = target
+                #y[s_idx] = target
+                raw_by[s_idx] = target
 
-        self.behavior_representation.model.train_on_batch(x=phi_s, y=y)
-        #self.behavior_representation.model.train_on_batch(x=phi_s, y=raw_by)
+        #self.behavior_representation.model.train_on_batch(x=phi_s, y=y)
+        self.behavior_representation.model.train_on_batch(x=phi_s, y=raw_by)
 
     def update_target_model(self):
         """
