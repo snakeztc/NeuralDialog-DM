@@ -52,7 +52,6 @@ class HybridTurnExperience (Experiences):
             if i == 0:
                 results[i] = self.spl_targets[i][sample_indices]
             else:
-                print self.spl_targets[i][sample_indices]
                 results[i] = to_categorical(self.spl_targets[i][sample_indices], 4)
         return results
 
