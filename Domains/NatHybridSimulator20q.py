@@ -254,8 +254,8 @@ class NatHybridSimulator20q (Domain):
         # get init turn
         # {usr: sys: prev_h: prev_db}
         usr = coo_matrix((1, self.ngram_size))
-        sys = [0] # first action is no action
-        prev_h = [0] # prev hypothesis is unasked
+        sys = [0]  # first action is no action
+        prev_h = [0]  # prev hypothesis is unasked
         prev_db = [1.0] # full dataset
         t = {'usr': usr, "sys": sys, "prev_h": prev_h, "prev_db": prev_db}
 
@@ -323,6 +323,7 @@ class NatHybridSimulator20q (Domain):
 
         # get action type of aID
         a_type = self.get_action_type(aID)
+        preva_type = self.get_prev_action_type(s[0, self.prev_idx])
 
         # increment the counter
         ns[0, self.turn_idx] = s[0, self.turn_idx] + 1
@@ -398,10 +399,12 @@ class NatHybridSimulator20q (Domain):
             return None
 
         # update hypothesis using supervised signals
-        # only if the action is a question and turn > 0
+        # only if the previous action is a question and turn > 0
         # the prediction is for the previous action
-        if s[0, self.turn_idx] > 0 and a_type == "question":
+        spl_resp = []
+        if s[0, self.turn_idx] > 0 and preva_type == "question":
             # update the slot for the previous action
+            spl_resp = self.index_computer[np.argmax(Qs[1])]
             ns[0, self.question_count + s[0, self.prev_idx] - 1] = np.argmax(Qs[1])
 
         new_results = self.get_inform(ns)
@@ -411,9 +414,9 @@ class NatHybridSimulator20q (Domain):
             ns[0, self.end_idx] = self.db_error
 
         # append the agent action and user response to the dialog hist
+        n_w_hist.extend(spl_resp)
         n_w_hist.extend(agent_utt)
         n_w_hist.extend(resp[0])
-        n_w_hist.extend(self.index_computer[np.argmax(Qs[1])])
         n_w_hist.extend(cmp_resp)
 
         # get new turn
@@ -422,7 +425,7 @@ class NatHybridSimulator20q (Domain):
         else:
             n_nat_resp = coo_matrix((1, self.ngram_size))
 
-        prev_h = ns[0, self.question_count + aID] if a_type == "question" else 0
+        prev_h = ns[0, self.question_count + aID]
 
         n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
                     "sys": t_hist["sys"] + [aID+1],
