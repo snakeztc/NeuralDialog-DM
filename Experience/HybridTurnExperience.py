@@ -1,6 +1,7 @@
 import numpy as np
 from Experience import Experiences
 from scipy.sparse import coo_matrix
+from keras.utils.np_utils import to_categorical
 
 
 class HybridTurnExperience (Experiences):
@@ -14,7 +15,7 @@ class HybridTurnExperience (Experiences):
         self.exp_ar = np.zeros((exp_size, 2))
         self.s_policies = [None] * exp_size
         self.ns_policies = [None] * exp_size
-        self.spl_targets = [np.zeros((exp_size, 1))] + [np.zeros((exp_size, 4)) for i in range(31)]
+        self.spl_targets = [np.zeros((exp_size, 1)) for i in range(32)]
 
         self.priority = np.zeros(exp_size)
         self.exp_size = exp_size
@@ -48,7 +49,10 @@ class HybridTurnExperience (Experiences):
     def get_spl_experience(self, sample_indices):
         results = [None] * len(self.spl_targets)
         for i in range(len(self.spl_targets)):
-            results[i] = self.spl_targets[i][sample_indices, :]
+            if i == 0:
+                results[i] = self.spl_targets[i][sample_indices, :]
+            else:
+                results[i] = to_categorical(self.spl_targets[i][sample_indices, :], 4)
         return results
 
     def sample_mini_batch(self):

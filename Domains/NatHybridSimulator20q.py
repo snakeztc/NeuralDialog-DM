@@ -309,11 +309,9 @@ class NatHybridSimulator20q (Domain):
 
     def spl_targets(self, all_s):
         s = all_s[0]
-        result = [None] * len(self.spl_indexs)
+        result = np.zeros(len(self.spl_indexs))
         result[0] = s[0, self.comp_idx] / float(len(self.corpus))
-        for idx in range(self.question_count):
-            result[idx+1] = np.zeros(4)
-            result[idx+1][s[0, idx]] = 1.0
+        result[1:self.question_count+1] = s[0, 0:self.question_count]
         return result
 
     # Main Logic
