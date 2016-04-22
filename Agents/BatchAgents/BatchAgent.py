@@ -77,7 +77,9 @@ class BatchAgent(object):
             for s_idx, target in zip(self.domain.spl_indexs, spl_targets):
                 y[s_idx] = target
 
-        self.behavior_representation.model.fit(x=phi_s, y=y, batch_size=num_samples, nb_epoch=1, verbose=0)
+        #print "begin fit"
+        self.behavior_representation.model.train_on_batch(x=phi_s, y=y)
+        #print "end fit"
 
     def update_target_model(self):
         """

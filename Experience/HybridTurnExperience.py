@@ -18,7 +18,7 @@ class HybridTurnExperience (Experiences):
         self.spl_targets = []
         for i in range(32):
             if i == 0:
-                self.spl_targets.append(np.zeros(exp_size, dtype='float32'))
+                self.spl_targets.append(np.zeros(exp_size))
             else:
                 self.spl_targets.append(np.zeros(exp_size, dtype='int8'))
 
