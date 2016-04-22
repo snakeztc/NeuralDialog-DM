@@ -1,6 +1,7 @@
 import numpy as np
 from Experience import Experiences
 from scipy.sparse import coo_matrix
+from Utils.config import generalConfig
 
 
 class NatTurnExperience (Experiences):
@@ -44,7 +45,11 @@ class NatTurnExperience (Experiences):
 
     def sample_mini_batch(self):
         sample_size = np.min([self.exp_actual_size, self.exp_size])
-        prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
+        if generalConfig["use-prosample"]:
+            prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
+        else:
+            prob = np.ones(sample_size) / sample_size
+
         sample_indices = self.random_state.choice(a=sample_size, size=self.mini_batch_size, p=prob, replace=False)
 
         # allocate dense 3d tensor num_sample * max_len * dimension
@@ -70,9 +75,5 @@ class NatTurnExperience (Experiences):
         return {"input": phi_s}, policy_s, actions, rewards, {"input": phi_ns}, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
-        self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0
-
-
-
-
-
+        if generalConfig["use-prosample"]:
+            self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0

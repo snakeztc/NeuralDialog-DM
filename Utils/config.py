@@ -7,6 +7,7 @@ model_dir = root_path + 'Models/'
 generalConfig = {"global_seed": 100,
                  "greedy_temp": 0.5,
                  "corpus_size": 100,
+                 "use-prosample": False,
                  "q_verbal": False,
                  "save_model": True}
 
