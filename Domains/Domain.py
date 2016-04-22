@@ -32,6 +32,14 @@ class Domain(object):
     policy_str_name = None
     # the global index base of each policy
     policy_bases = None
+    # the string name of supervised learning signals
+    spl_str_name = None
+    # the index of supervised learning outputs
+    spl_indexs = None
+    # the modality of spl signals
+    spl_modality = None
+    # the variable type of spl
+    spl_type = None
     # Limits of each dimension of the state space. Each row corresponds to one dimension and has two elements [min, max]
     statespace_limits = None  # was None
     #: Number of dimensions of the state space
@@ -61,6 +69,12 @@ class Domain(object):
 
     def s0(self):
         raise NotImplementedError("Implement initial state method")
+
+    def spl_step(self, ns, Qs):
+        pass
+
+    def spl_targets(self, s):
+        pass
 
     def step(self, s, aID):
         """

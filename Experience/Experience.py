@@ -16,7 +16,11 @@ class Experiences (object):
         self.mini_batch_size = mini_batch_size
         self.random_state = np.random.RandomState(seed)
 
-    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority):
+    # used by the hybrid system to add supervised aux signals
+    def get_spl_experience(self, sample_indices):
+        return None
+
+    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority, spl_targets=None):
         raise NotImplementedError("add experience")
 
     def update_priority(self, sample_indices, td_error):

@@ -71,6 +71,12 @@ class BatchAgent(object):
             if os.path.exists(self.mode_path):
                 self.representation.model = self.init_model()
 
+        # check if there is supervised signal
+        spl_targets = experiences.get_spl_experience(sample_indices)
+        if spl_targets is not None:
+            for s_idx, target in zip(self.domain.spl_indexs, spl_targets):
+                y[s_idx] = target
+
         self.behavior_representation.model.fit(x=phi_s, y=y, batch_size=num_samples, nb_epoch=1, verbose=0)
 
     def update_target_model(self):

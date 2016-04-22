@@ -3,17 +3,18 @@ from Experience import Experiences
 from scipy.sparse import coo_matrix
 
 
-class NatTurnExperience (Experiences):
+class HybridTurnExperience (Experiences):
     phi_s_size = None
     max_len = None
     exp_ar = None
 
     def __init__(self, exp_size, phi_s_size, max_len, mini_batch_size, use_priority, seed):
-        super(NatTurnExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size, seed=seed)
+        super(HybridTurnExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size, seed=seed)
 
         self.exp_ar = np.zeros((exp_size, 2))
         self.s_policies = [None] * exp_size
         self.ns_policies = [None] * exp_size
+        self.spl_targets = [np.zeros((exp_size, 1))] + [np.zeros((exp_size, 4)) for i in range(31)]
 
         self.priority = np.zeros(exp_size)
         self.exp_size = exp_size
@@ -37,10 +38,18 @@ class NatTurnExperience (Experiences):
         self.s_policies[self.exp_head] = policy_s
         self.ns_policies[self.exp_head] = policy_ns
         self.priority[self.exp_head] = 20.0
+        for idx, target in enumerate(spl_targets):
+            self.spl_targets[idx][self.exp_head, :] = target
 
         # increment the write head
         self.exp_head += 1
         self.exp_actual_size += 1
+
+    def get_spl_experience(self, sample_indices):
+        results = [None] * len(self.spl_targets)
+        for i in range(len(self.spl_targets)):
+            results[i] = self.spl_targets[i][sample_indices, :]
+        return results
 
     def sample_mini_batch(self):
         sample_size = np.min([self.exp_actual_size, self.exp_size])
