@@ -70,18 +70,20 @@ class Domain(object):
     def s0(self):
         raise NotImplementedError("Implement initial state method")
 
-    def spl_step(self, ns, Qs):
-        pass
-
-    def spl_targets(self, s):
-        pass
-
     def step(self, s, aID):
         """
         :param s: the state vector
         :param aID: the action index
-        :return: The tuple (r, shape, ns, t, p_actions) =
-            (Reward [value], next observed state, isTerminal [boolean], observation (string from environment))
+        :return: reward, shape, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
+        """
+        raise NotImplementedError("Any domain needs to implement step function")
+
+    def hybrid_step(self, s, aID, Qs):
+        """
+        :param s: the state vector
+        :param aID: the action index
+        :param Qs: the Qs contains supervised signal
+        :return: reward, shape, (ns, n_w_hist, n_t_hist), self.is_terminal(ns), spl_targets
         """
         raise NotImplementedError("Any domain needs to implement step function")
 

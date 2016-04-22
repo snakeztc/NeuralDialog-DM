@@ -75,15 +75,16 @@ class NatHybridSimulator20q (Domain):
     print "Using prior distribution " + prior_dist
 
     # 20Q related
-    unasked = 0
+    hold_unasked = 0
     hold_unknown = 1
     hold_yes = 2
     hold_no = 3
 
     # query related
-    unknown = 0
-    yes = 1
-    no = 2
+    unasked = 0
+    unknown = 1
+    yes = 2
+    no = 3
 
     # terminal state
     in_game = 0
@@ -92,8 +93,8 @@ class NatHybridSimulator20q (Domain):
 
     # mode related
     spk_mode = 0
-    resp_modality = [unasked, hold_unknown, hold_yes, hold_no]
-    query_modality = [unknown, yes, no]
+    resp_modality = [hold_unasked, hold_unknown, hold_yes, hold_no]
+    query_modality = [unasked, unknown, yes, no]
 
     loss_reward = curConfig["loss_reward"]
     wrong_guess_reward = curConfig["wrong_guess_reward"]
@@ -117,10 +118,10 @@ class NatHybridSimulator20q (Domain):
     print "Number of actions is " + str(actions_num)
 
     # supervised signals
-    spl_str_name = ['db'] + ['slot-'+str(i) for i in range(question_count)]
-    spl_indexs = range(1, 2+question_count)
-    spl_modality = [1] + [len(resp_modality)] * question_count
-    spl_type = [Domain.discrete] + [Domain.categorical] * question_count
+    spl_str_name = ['prev-slot']
+    spl_indexs = [1]
+    spl_modality = [len(resp_modality)]
+    spl_type = [Domain.categorical]
 
     # raw state is
     # [[unasked yes no] [....] ... turn_cnt informed]
@@ -251,27 +252,22 @@ class NatHybridSimulator20q (Domain):
         s[0, self.comp_idx] = len(self.corpus)
 
         # get init turn
-        # {usr: sys: cmp:}
+        # {usr: sys: prev_h: prev_db}
         usr = coo_matrix((1, self.ngram_size))
         sys = [0] # first action is no action
-        t = {'usr':usr, "sys":sys}
+        prev_h = [0] # prev hypothesis is unasked
+        prev_db = [1.0] # full dataset
+        t = {'usr': usr, "sys": sys, "prev_h": prev_h, "prev_db": prev_db}
 
         return s, [self.eos], t
 
     def get_inform(self, s):
         filters = []
-        if self.performance_run:
-            for q_id in range(0, self.question_count):
-                if s[0, self.question_count + q_id] == self.yes:
-                    filters.append((q_id, True))
-                elif s[0, self.question_count + q_id] == self.no:
-                    filters.append((q_id, False))
-        else: # use true user intent to get oracle query
-            for q_id in range(0, self.question_count):
-                if s[0, q_id] == self.hold_yes:
-                    filters.append((q_id, True))
-                elif s[0, q_id] == self.hold_no:
-                    filters.append((q_id, False))
+        for q_id in range(0, self.question_count):
+            if s[0, self.question_count + q_id] == self.yes:
+                filters.append((q_id, True))
+            elif s[0, self.question_count + q_id] == self.no:
+                filters.append((q_id, False))
         return list(self.search(filters) - set(self.wrong_keys))
 
     # filters a list (question_id, true or false)
@@ -293,33 +289,12 @@ class NatHybridSimulator20q (Domain):
     def get_prev_action_type(self, prev_a):
         return self.get_action_type(prev_a-1)
 
-    def spl_step(self, all_s, Qs):
-        s = all_s[0]
-        w_hist = all_s[1]
-        t_hist = all_s[2]
-        for idx, name in zip(self.spl_indexs, self.spl_str_name):
-            if name == 'db':
-                continue
-            # idx - 2 is the query index
-            predicted = np.argmax(Qs[idx])
-            slot_val = predicted-1 if predicted != self.unasked else 0
-            s[0, self.question_count + idx-2] = np.argmax(Qs[idx])
-
-        return s, w_hist, t_hist
-
-    def spl_targets(self, all_s):
-        s = all_s[0]
-        result = np.zeros(len(self.spl_indexs))
-        result[0] = s[0, self.comp_idx] / float(len(self.corpus))
-        result[1:self.question_count+1] = s[0, 0:self.question_count]
-        return result
-
     # Main Logic
-    def step(self, all_s, aID):
+    def hybrid_step(self, all_s, aID, Qs):
         s = all_s[0]
         w_hist = all_s[1]
         t_hist = all_s[2]
-        (ns, n_w_hist, n_t_hist) = self.get_next_state(s=s, w_hist=w_hist, t_hist=t_hist, aID=aID)
+        (ns, n_w_hist, n_t_hist, spl_target) = self.hybrid_next_state(s=s, w_hist=w_hist, t_hist=t_hist, aID=aID, Qs=Qs)
         reward = self.get_reward(s, ns, aID)
 
         if self.curConfig["use_shape"]:
@@ -327,20 +302,27 @@ class NatHybridSimulator20q (Domain):
         else:
             shape = 0.0
 
-        return reward, shape, (ns, n_w_hist, n_t_hist), self.is_terminal(ns)
+        return reward, shape, (ns, n_w_hist, n_t_hist), self.is_terminal(ns), spl_target
 
-    def get_next_state(self, s, w_hist, t_hist, aID):
+    def step(self, s, aID):
+        print "should not call this function for hybrid domain. Use hybrid_step"
+        exit()
+        pass
+
+    def hybrid_next_state(self, s, w_hist, t_hist, aID, Qs):
         """
-        :param s: the current hidden state
-        :param hist: the dialog history
-        :return: (ns, nhist)
+        :param s: current oracle s
+        :param w_hist: current word hist
+        :param t_hist: current turn hist
+        :param aID: action
+        :param Qs: all Q
+        :return: (ns, n_w_hist, n_t_hist, spl_target)
         """
         ns = np.copy(s)
         n_w_hist = list(w_hist)
 
         # get action type of aID
         a_type = self.get_action_type(aID)
-        prev_a_type = self.get_prev_action_type(s[0, self.prev_idx])
 
         # increment the counter
         ns[0, self.turn_idx] = s[0, self.turn_idx] + 1
@@ -348,13 +330,14 @@ class NatHybridSimulator20q (Domain):
         # record action
         ns[0, self.prev_idx] = aID + 1
 
+        # based on action update
         if a_type == 'question':
             agent_utt = self.index_question[aID]
             resp = None
             slot_name = self.question_data[aID][0]
             true_set = self.question_data[aID][2]
 
-            if ns[0, aID] == self.unasked:
+            if ns[0, aID] == self.hold_unasked:
                 chosen_answer = self.person_inmind.get(slot_name)
                 if chosen_answer and not self.unknown_mask[slot_name]:
                     if type(chosen_answer) != list:
@@ -414,6 +397,13 @@ class NatHybridSimulator20q (Domain):
             exit(1)
             return None
 
+        # update hypothesis using supervised signals
+        # only if the action is a question and turn > 0
+        # the prediction is for the previous action
+        if s[0, self.turn_idx] > 0 and a_type == "question":
+            # update the slot for the previous action
+            ns[0, self.question_count + s[0, self.prev_idx] - 1] = np.argmax(Qs[1])
+
         new_results = self.get_inform(ns)
         ns[0, self.comp_idx] = len(new_results) if new_results else 0
         cmp_resp = self.index_result.get(ns[0, self.comp_idx])
@@ -431,10 +421,17 @@ class NatHybridSimulator20q (Domain):
         else:
             n_nat_resp = coo_matrix((1, self.ngram_size))
 
-        n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
-                    "sys": t_hist["sys"] + [aID+1]}
+        prev_h = ns[0, self.question_count + aID] if a_type == "question" else 0
 
-        return ns, n_w_hist, n_t_hist
+        n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
+                    "sys": t_hist["sys"] + [aID+1],
+                    "prev_h": t_hist["prev_h"] + [prev_h],
+                    "prev_db": t_hist["prev_db"] + [ns[0, self.comp_idx]/float(len(self.corpus))]}
+
+        # get supervised labels for s
+        spl_targets = ns[0, aID]
+
+        return ns, n_w_hist, n_t_hist, spl_targets
 
     def get_reward(self, s, ns, aID):
         reward = self.step_reward

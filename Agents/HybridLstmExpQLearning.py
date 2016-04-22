@@ -22,12 +22,7 @@ class HybridLstmExpQLearning(Agent):
         # convert aID to global aID
         flat_aID = aID + self.domain.policy_bases[policy_name]
 
-        (r, shape, ns, terminal) = self.domain.step(s, flat_aID)
-
-        # use supervised outputs to update ns
-        # to speed up, we only do this for performance run
-        if performance_run:
-            ns = self.domain.spl_step(ns, Qs)
+        (r, shape, ns, terminal, spl_targets) = self.domain.hybrid_step(s, flat_aID, Qs)
 
         if not performance_run:
             r += shape
@@ -44,17 +39,16 @@ class HybridLstmExpQLearning(Agent):
 
             self.experience.add_experience(self.representation.phi_s(s), policy_name, aID, r,
                                            self.representation.phi_s(ns), self.domain.action_prune(ns), 20.0,
-                                           self.domain.spl_targets(s))
+                                           spl_targets)
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:
 
-                #self.learner.learn(self.experience)
+                self.learner.learn(self.experience)
                 # update target model
                 self.update_cnt += 1
 
                 if self.update_cnt % self.freeze_frequency == 0:
-                    self.learner.batch_learn(self.experience)
                     self.learner.update_target_model()
 
         return r, ns, terminal

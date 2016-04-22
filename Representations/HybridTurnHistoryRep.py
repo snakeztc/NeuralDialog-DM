@@ -13,9 +13,10 @@ class HybridTurnHistoryRep(Representation):
         super(HybridTurnHistoryRep, self).__init__(domain, seed)
         # initialize the model
         self.model = None
-        # user response ngram size + action number + computer response
-        self.state_features_num = self.domain.actions_num + 1 + self.domain.ngram_size
+        # user response ngram size + action number + prev_hypothesis + prev_db_count
+        self.state_features_num = self.domain.actions_num + 1 + self.domain.ngram_size + len(self.domain.query_modality) + 1
         self.ngram_base = self.domain.actions_num + 1
+        self.hyp_base = self.ngram_base + self.domain.ngram_size
 
     # State Representation #
     def phi_sa(self, s, aID):
@@ -28,9 +29,14 @@ class HybridTurnHistoryRep(Representation):
         # !! we assume "s" is just one sample, can never be more than that
         t_hist = s[2]
         phi_s = np.zeros((len(t_hist["sys"]), self.state_features_num))
-        phi_s[:, self.ngram_base:] = t_hist["usr"].toarray()
-        indices = [int(v + idx*self.state_features_num) for idx, v in enumerate(t_hist["sys"])]
-        phi_s.flat[indices] = 1
+        phi_s[:, self.ngram_base:self.hyp_base] = t_hist["usr"].toarray()
+        sys_indices = [int(v + idx*self.state_features_num) for idx, v in enumerate(t_hist["sys"])]
+        phi_s.flat[sys_indices] = 1
+        # for prev_hyp
+        hyp_indices = [int(self.hyp_base + v + idx*self.state_features_num) for idx, v in enumerate(t_hist["prev_h"])]
+        phi_s.flat[hyp_indices] = 1
+        # for db
+        phi_s[:, -1] = t_hist["prev_db"]
 
         # convert from 2d to 3d
         phi_s = np.reshape(phi_s, (1,) + phi_s.shape)
