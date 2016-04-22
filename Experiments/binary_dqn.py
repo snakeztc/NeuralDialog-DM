@@ -1,6 +1,4 @@
 from Domains.SlotSimulator20q import SlotSimulator20q
-#from Domains.CommandSimulator20q import CommandSimulator20q
-#from Domains.NatSlotSimulator20q import NatSlotSimulator20q
 from Agents.ExpQLearning import ExpQLearning
 from Agents.EvalAgent import EvalAgent
 from Representations.BinaryCompactRep import BinaryCompactRep

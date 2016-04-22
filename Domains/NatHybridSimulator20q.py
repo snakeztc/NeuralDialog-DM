@@ -36,7 +36,7 @@ class NatHybridSimulator20q (Domain):
     str_informs = {key:'inform_'+unicode.encode(person.get('name'), 'utf8').replace(" ", "") for key, person in corpus.iteritems()}
     str_informs["none"] = "none"
     str_response = ['yes', 'no', 'unknown', 'correct', 'wrong']
-    str_computer = ["c_unkown", "c_yes", "c_no"]
+    str_computer = ["c_unasked", "c_unkown", "c_yes", "c_no"]
     str_result = [str(i) for i in range(0, len(corpus)+1)]
     question_count = len(question_data)
     inform_count = 1 # !! only 1 inform action
@@ -413,6 +413,7 @@ class NatHybridSimulator20q (Domain):
         # append the agent action and user response to the dialog hist
         n_w_hist.extend(agent_utt)
         n_w_hist.extend(resp[0])
+        n_w_hist.extend(self.index_computer[np.argmax(Qs[1])])
         n_w_hist.extend(cmp_resp)
 
         # get new turn

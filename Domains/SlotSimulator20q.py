@@ -93,16 +93,16 @@ class SlotSimulator20q (Domain):
     # each value has a question, 1 inform and 3 computer operation
     actions_num = question_count + inform_count + computer_count
     action_types = ["question"] * question_count + ["inform"] * inform_count + ["computer"] * computer_count
-    action_to_policy = ["verbal"] * (question_count+inform_count) + ["computer"] * computer_count
-    policy_action_num = {"verbal": (question_count+inform_count), "computer": computer_count}
-    policy_names = DomainUtil.remove_duplicate(action_to_policy)
+    action_to_policy = [spk_mode] * (question_count+inform_count) + [slot_mode] * computer_count
+    policy_names = [spk_mode, slot_mode]
+    policy_str_name = ["verbal", "computer"]
+    policy_action_num = [(question_count+inform_count), computer_count]
     prev_base = 0
     policy_bases = {}
     for p in policy_names:
         policy_bases[p] = prev_base
         prev_base += policy_action_num[p]
     print "Number of actions is " + str(actions_num)
-
     # raw state is
     # [[unasked yes no] [....] ... turn_cnt informed]
     # 0: init, 1 yes, 3 no
@@ -452,13 +452,10 @@ class SlotSimulator20q (Domain):
     def action_prune(self, all_s):
         # check if we have any query slots asked but not filled
         s = all_s[0]
-        if s[0, self.mode_idx] == self.spk_mode:
-            return "verbal"
-        elif s[0, self.mode_idx] == self.slot_mode:
-            return "computer"
-        else:
+        if s[0, self.mode_idx] not in self.policy_names:
             print "state mode is wrong"
             exit(1)
+        return s[0, self.mode_idx]
 
 
 

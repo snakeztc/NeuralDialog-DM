@@ -22,13 +22,13 @@ commandConfig = {"loss_reward": -30.0,
 # Slot filling where the agent should fill the slots
 slotConfig = {"loss_reward": -30.0,
               "win_reward": 30.0,
-              "step_reward": 0.0,
+              "step_reward": -0.5,
               "wrong_guess_reward": -5.0,
               "logic_error": -5.0,
               "episode_cap": 100,
               "max_inform": 10,
               "use_shape": True,
-              'shape_upper': 4.0,
+              'shape_upper': 2.0,
               "unknown_chance": 0.0,
               "discount_factor": 0.99}
 

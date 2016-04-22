@@ -7,7 +7,6 @@ from keras.layers.recurrent import LSTM, GRU
 from keras.layers.embeddings import Embedding
 from keras.layers.core import Dense, Dropout, Activation
 from keras.optimizers import RMSprop
-from keras.layers.core import TimeDistributedMerge
 
 
 class LstmDnnQ(BatchAgent):
