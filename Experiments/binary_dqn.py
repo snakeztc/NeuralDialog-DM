@@ -26,6 +26,8 @@ def run():
     step_cnt = 0
     bench_cnt = 0
     epi_cnt = 0
+    alpha_max = generalConfig["max_alpha"]
+    alpha_min = generalConfig["min_alpha"]
     ep_max = dqnConfig["ep_max"]
     ep_min_step = dqnConfig["ep_min_step"]
     ep_min = dqnConfig["ep_min"]
@@ -52,8 +54,10 @@ def run():
         s = sim20_evn.s0()
         while True:
             cur_epsilon = max(ep_max-((ep_max-ep_min)*step_cnt/ep_min_step), ep_min)
+            cur_alpha = max(alpha_max-((alpha_max-alpha_min)*step_cnt/ep_min_step), alpha_min)
             # set the current epslion
             agent.learning_policy.set_epsilon(epsilon=cur_epsilon)
+            agent.experience.set_alpha(cur_alpha)
             (r, ns, terminal) = agent.learn(s, performance_run=False)
             step_cnt += 1
             s = ns

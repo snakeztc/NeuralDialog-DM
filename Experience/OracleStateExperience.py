@@ -5,8 +5,9 @@ from Experience import Experiences
 class OracleStateExperience (Experiences):
     phi_s_size = None
 
-    def __init__(self, exp_size, phi_s_size, mini_batch_size, use_priority, seed):
-        super(OracleStateExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size, seed=seed)
+    def __init__(self, exp_size, phi_s_size, mini_batch_size, use_priority, alpha_priority, seed):
+        super(OracleStateExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size,
+                                                    seed=seed, alpha_priority=alpha_priority)
         self.experience = np.zeros((exp_size, phi_s_size * 2 + 2))
         self.priority = np.zeros(exp_size)
         self.s_policies = [None] * exp_size
@@ -16,7 +17,7 @@ class OracleStateExperience (Experiences):
         self.exp_actual_size = 0
         self.phi_s_size = phi_s_size
 
-    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority):
+    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority, spl_targets=None):
         if self.exp_head >= self.exp_size:
             print "** reset exp header **"
             self.exp_head = 0
@@ -35,7 +36,13 @@ class OracleStateExperience (Experiences):
 
     def sample_mini_batch(self):
         sample_size = np.min([self.exp_actual_size, self.exp_size])
-        prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
+
+        if self.use_priority:
+            temp_prob = np.power(self.priority[0:sample_size], self.alpha_priority)
+            prob = temp_prob / np.sum(temp_prob)
+        else:
+            prob = np.ones(sample_size) / sample_size
+
         sample_indices = self.random_state.choice(a=sample_size, size=self.mini_batch_size, p=prob, replace=False)
 
         mini_batch_exp = self.experience[sample_indices, :]
@@ -49,7 +56,7 @@ class OracleStateExperience (Experiences):
         return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
-        self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0
+        self.priority[sample_indices] = np.clip(td_error, 0, 20.0) + 1.0
 
 
 

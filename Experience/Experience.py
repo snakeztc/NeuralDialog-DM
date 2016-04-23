@@ -10,9 +10,11 @@ class Experiences (object):
     use_priority = None
     random_state = None
     mini_batch_size = None
+    alpha_priority = None
 
-    def __init__(self, use_priority, mini_batch_size, seed):
+    def __init__(self, use_priority, alpha_priority, mini_batch_size, seed):
         self.use_priority = use_priority
+        self.alpha_priority = alpha_priority
         self.mini_batch_size = mini_batch_size
         self.random_state = np.random.RandomState(seed)
 
@@ -25,6 +27,9 @@ class Experiences (object):
 
     def update_priority(self, sample_indices, td_error):
         raise NotImplementedError("update priority")
+
+    def set_alpha(self, cur_alpha):
+        self.alpha_priority = cur_alpha
 
     def sample_mini_batch(self):
         """

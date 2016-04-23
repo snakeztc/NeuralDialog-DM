@@ -8,6 +8,8 @@ generalConfig = {"global_seed": 100,
                  "greedy_temp": 0.5,
                  "corpus_size": 100,
                  "use-prosample": True,
+                 "max_alpha": 1.0,
+                 "min_alpha": 0.5,
                  "q_verbal": False,
                  "save_model": False}
 
