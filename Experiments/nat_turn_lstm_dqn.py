@@ -20,6 +20,9 @@ def run():
     test_interval = turnDqnConfig["test_interval"]
     sample_size = np.arange(0, turnDqnConfig["max_sample"], test_interval)
     epsilon = turnDqnConfig["max_sample"]
+
+    alpha_max = generalConfig["max_alpha"]
+    alpha_min = generalConfig["min_alpha"]
     ep_max = turnDqnConfig["ep_max"]
     ep_min_step = turnDqnConfig["ep_min_step"]
     ep_min = turnDqnConfig["ep_min"]
@@ -51,8 +54,11 @@ def run():
         s = sim20_evn.s0()
         while True:
             cur_epsilon = max(ep_max-((ep_max-ep_min)*step_cnt/ep_min_step), ep_min)
+            cur_alpha = max(alpha_max-((alpha_max-alpha_min)*step_cnt/ep_min_step), alpha_min)
             # set the current epslion
             agent.learning_policy.set_epsilon(epsilon=cur_epsilon)
+            agent.experience.set_alpha(cur_alpha)
+
             (r, ns, terminal) = agent.learn(s, performance_run=False)
             step_cnt += 1
             s = ns
