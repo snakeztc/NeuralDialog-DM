@@ -49,7 +49,7 @@ class TurnHistoryRep(Representation):
         phi_s = self.expand_state_space(s[2], self.turn_state_type, self.turn_state_limits)
         # convert from 2d to 3d
         phi_s = np.reshape(phi_s, (1,) + phi_s.shape)
-        return {"input": phi_s}
+        return phi_s
 
     def phi_s_phi_a(self, phi_s, phi_a):
         pass
@@ -70,7 +70,7 @@ class TurnHistoryRep(Representation):
         if self.model:
             return self.model.predict(phi_s)
         else:
-            result = {key: np.zeros((phi_s["input"].shape[0], size)) for key, size in self.domain.policy_action_num.iteritems()}
+            result = [np.zeros((phi_s.shape[0], size)) for size in self.domain.policy_action_num]
             return result
 
 
