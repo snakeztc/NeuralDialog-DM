@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5f205f89-a1d7-41c9-a7a4-173417943a5c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/NatTurnLstmExpQLearning.py" afterPath="$PROJECT_DIR$/Agents/NatTurnLstmExpQLearning.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experience/NatTurnExperience.py" afterPath="$PROJECT_DIR$/Experience/NatTurnExperience.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/nat_turn_lstm_dqn.py" afterPath="$PROJECT_DIR$/Experiments/nat_turn_lstm_dqn.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Agents/HybridLstmExpQLearning.py" afterPath="$PROJECT_DIR$/Agents/HybridLstmExpQLearning.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experience/HybridTurnExperience.py" afterPath="$PROJECT_DIR$/Experience/HybridTurnExperience.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Experiments/hybrid_lstm_dqn.py" afterPath="$PROJECT_DIR$/Experiments/hybrid_lstm_dqn.py" />
     </list>
     <ignored path="NeuralDM.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,7 +25,7 @@
     <SUITE FILE_PATH="coverage/NeuralDM$wh_dqn.coverage" NAME="wh_dqn Coverage Results" MODIFIED="1455428576224" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$binary_lstm_dqn.coverage" NAME="binary_lstm_dqn Coverage Results" MODIFIED="1456799947747" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$binary_online_fqi.coverage" NAME="binary_online_fqi Coverage Results" MODIFIED="1455250109767" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
-    <SUITE FILE_PATH="coverage/NeuralDM$hybrid_lstm_dqn.coverage" NAME="hybrid_lstm_dqn Coverage Results" MODIFIED="1461416753375" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
+    <SUITE FILE_PATH="coverage/NeuralDM$hybrid_lstm_dqn.coverage" NAME="hybrid_lstm_dqn Coverage Results" MODIFIED="1461426052978" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$nat_turn_lstm_dqn.coverage" NAME="nat_turn_lstm_dqn Coverage Results" MODIFIED="1461424840160" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$model_evaluation.coverage" NAME="model_evaluation Coverage Results" MODIFIED="1456841587969" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Experiments" />
     <SUITE FILE_PATH="coverage/NeuralDM$BinarySimulator20q.coverage" NAME="BinarySimulator20q Coverage Results" MODIFIED="1455473510532" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Domains" />
@@ -50,20 +50,18 @@
         <entry file="file://$PROJECT_DIR$/Experiments/nat_turn_lstm_dqn.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+              <caret line="59" column="23" selection-start-line="59" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="turn_lstm_dqn.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Experiments/turn_lstm_dqn.py">
+      <file leaf-file-name="hybrid_lstm_dqn.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Experiments/hybrid_lstm_dqn.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="61" column="30" selection-start-line="61" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
-              <folding>
-                <element signature="e#61#114#0" expanded="true" />
-              </folding>
+              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -72,17 +70,17 @@
         <entry file="file://$PROJECT_DIR$/Experience/NatTurnExperience.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="54" column="66" selection-start-line="54" selection-start-column="66" selection-end-line="54" selection-end-column="66" />
+              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExpQLearning.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
+      <file leaf-file-name="HybridLstmExpQLearning.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Agents/HybridLstmExpQLearning.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="63" column="103" selection-start-line="62" selection-start-column="76" selection-end-line="63" selection-end-column="103" />
+            <state vertical-scroll-proportion="1.8047338">
+              <caret line="66" column="22" selection-start-line="66" selection-start-column="22" selection-end-line="66" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -92,27 +90,17 @@
         <entry file="file://$PROJECT_DIR$/Agents/NatTurnLstmExpQLearning.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="69" column="70" selection-start-line="69" selection-start-column="70" selection-end-line="69" selection-end-column="70" />
+              <caret line="64" column="99" selection-start-line="63" selection-start-column="43" selection-end-line="64" selection-end-column="99" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Utils/config.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6152344">
-              <caret line="41" column="42" selection-start-line="41" selection-start-column="41" selection-end-line="41" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TurnExperience.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Experience/TurnExperience.py">
+      <file leaf-file-name="HybridTurnExperience.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Experience/HybridTurnExperience.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="50" column="48" selection-start-line="50" selection-start-column="48" selection-end-line="50" selection-end-column="48" />
+              <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -163,9 +151,7 @@
         <option value="$PROJECT_DIR$/Agents/QLearning.py" />
         <option value="$PROJECT_DIR$/Domains/CommandSimulator20q.py" />
         <option value="$PROJECT_DIR$/Representations/NatTurnHistoryRep.py" />
-        <option value="$PROJECT_DIR$/Experiments/hybrid_lstm_dqn.py" />
         <option value="$PROJECT_DIR$/Domains/Domain.py" />
-        <option value="$PROJECT_DIR$/Agents/HybridLstmExpQLearning.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgents/HybridLstmDnnQ.py" />
         <option value="$PROJECT_DIR$/Agents/BatchAgents/TurnLstmDnnQ.py" />
         <option value="$PROJECT_DIR$/Representations/Representation.py" />
@@ -174,7 +160,6 @@
         <option value="$PROJECT_DIR$/Agents/BatchAgents/DnnQ.py" />
         <option value="$PROJECT_DIR$/Domains/SlotSimulator20q.py" />
         <option value="$PROJECT_DIR$/Domains/NatSlotSimulator20q.py" />
-        <option value="$PROJECT_DIR$/Experience/HybridTurnExperience.py" />
         <option value="$PROJECT_DIR$/Representations/HybridTurnHistoryRep.py" />
         <option value="$PROJECT_DIR$/Representations/TurnHistoryRep.py" />
         <option value="$PROJECT_DIR$/Domains/NatHybridSimulator20q.py" />
@@ -190,6 +175,9 @@
         <option value="$PROJECT_DIR$/Experiments/nat_turn_lstm_dqn.py" />
         <option value="$PROJECT_DIR$/Experience/NatTurnExperience.py" />
         <option value="$PROJECT_DIR$/Agents/NatTurnLstmExpQLearning.py" />
+        <option value="$PROJECT_DIR$/Experiments/hybrid_lstm_dqn.py" />
+        <option value="$PROJECT_DIR$/Agents/HybridLstmExpQLearning.py" />
+        <option value="$PROJECT_DIR$/Experience/HybridTurnExperience.py" />
       </list>
     </option>
   </component>
@@ -199,9 +187,9 @@
     <detection-done>true</detection-done>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="118" />
+    <option name="x" value="100" />
     <option name="y" value="23" />
-    <option name="width" value="1268" />
+    <option name="width" value="1277" />
     <option name="height" value="823" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -229,7 +217,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -339,6 +326,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -364,7 +352,7 @@
       <recent name="$PROJECT_DIR$/Agents" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.nat_turn_lstm_dqn">
+  <component name="RunManager" selected="Python.hybrid_lstm_dqn">
     <configuration default="false" name="binary_dqn" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -657,10 +645,10 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.nat_turn_lstm_dqn" />
-        <item index="1" class="java.lang.String" itemvalue="Python.turn_lstm_dqn" />
-        <item index="2" class="java.lang.String" itemvalue="Python.binary_dqn" />
-        <item index="3" class="java.lang.String" itemvalue="Python.hybrid_lstm_dqn" />
+        <item index="0" class="java.lang.String" itemvalue="Python.hybrid_lstm_dqn" />
+        <item index="1" class="java.lang.String" itemvalue="Python.nat_turn_lstm_dqn" />
+        <item index="2" class="java.lang.String" itemvalue="Python.turn_lstm_dqn" />
+        <item index="3" class="java.lang.String" itemvalue="Python.binary_dqn" />
         <item index="4" class="java.lang.String" itemvalue="Python.struct_turn_lstm_dqn" />
       </list>
     </recent_temporary>
@@ -675,12 +663,6 @@
       <created>1453141026937</created>
       <option name="number" value="Default" />
       <updated>1453141026937</updated>
-    </task>
-    <task id="LOCAL-00093" summary="change file name">
-      <created>1459005591331</created>
-      <option name="number" value="00093" />
-      <option name="project" value="LOCAL" />
-      <updated>1459005591331</updated>
     </task>
     <task id="LOCAL-00094" summary="add user middle layer">
       <created>1459043443233</created>
@@ -970,7 +952,13 @@
       <option name="project" value="LOCAL" />
       <updated>1461421107137</updated>
     </task>
-    <option name="localTasksCounter" value="142" />
+    <task id="LOCAL-00142" summary="add alpha decay for natural turn">
+      <created>1461424883203</created>
+      <option name="number" value="00142" />
+      <option name="project" value="LOCAL" />
+      <updated>1461424883204</updated>
+    </task>
+    <option name="localTasksCounter" value="143" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1015,22 +1003,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="118" y="23" width="1268" height="823" extended-state="0" />
+    <frame x="100" y="23" width="1277" height="823" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21696573" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21862349" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27380952" sideWeight="0.49690402" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.6598916" sideWeight="0.13043478" order="11" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32968536" sideWeight="0.56707317" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29210526" sideWeight="0.4878049" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2612859" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2701228" sideWeight="0.8695652" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3258278" sideWeight="0.49125364" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32201087" sideWeight="0.87108016" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1072,7 +1060,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="fix weights update" />
     <MESSAGE value="clean up batch agent&#10;" />
     <MESSAGE value="first working commit for hybrid model&#10;" />
     <MESSAGE value="make it more memory efficient" />
@@ -1097,17 +1084,11 @@
     <MESSAGE value="fix bug in spl targets for hybrid" />
     <MESSAGE value="add alpha decay for oracle" />
     <MESSAGE value="add alpha decay for turn lstm" />
-    <option name="LAST_COMMIT_MESSAGE" value="add alpha decay for turn lstm" />
+    <MESSAGE value="add alpha decay for natural turn" />
+    <option name="LAST_COMMIT_MESSAGE" value="add alpha decay for natural turn" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="python-line">
-          <url>file://$PROJECT_DIR$/Experience/HybridTurnExperience.py</url>
-          <line>35</line>
-          <option name="timeStamp" value="827" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -1267,14 +1248,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="60" column="56" selection-start-line="60" selection-start-column="56" selection-end-line="60" selection-end-column="56" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/hybrid_lstm_dqn.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.5236967">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1318,15 +1291,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Experience/HybridTurnExperience.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1342,7 +1306,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.64047617">
           <caret line="72" column="97" selection-start-line="72" selection-start-column="97" selection-end-line="72" selection-end-column="97" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1350,15 +1313,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.020435967">
           <caret line="97" column="44" selection-start-line="97" selection-start-column="44" selection-end-line="97" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/HybridLstmExpQLearning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="66" column="48" selection-start-line="66" selection-start-column="48" selection-end-line="66" selection-end-column="48" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1366,7 +1320,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="22" column="42" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1374,11 +1327,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="440" column="37" selection-start-line="440" selection-start-column="37" selection-end-line="440" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#11360#11730#0" expanded="false" />
-            <element signature="e#11774#11850#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1386,7 +1334,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1394,7 +1341,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.56278026">
           <caret line="121" column="40" selection-start-line="121" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1418,7 +1364,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="27" column="70" selection-start-line="27" selection-start-column="70" selection-end-line="27" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1426,9 +1371,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="49" />
-          <folding>
-            <element signature="e#0#53#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1436,9 +1378,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4598338">
           <caret line="43" column="53" selection-start-line="39" selection-start-column="3" selection-end-line="43" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#18#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1446,7 +1385,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6666667">
           <caret line="959" column="25" selection-start-line="959" selection-start-column="25" selection-end-line="959" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1458,28 +1396,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/nat_turn_lstm_dqn.py">
+    <entry file="file://$PROJECT_DIR$/Experiments/turn_lstm_dqn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="60" column="0" selection-start-line="60" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.17021276">
+          <caret line="61" column="30" selection-start-line="61" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+          <folding>
+            <element signature="e#61#114#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.70212764">
+          <caret line="63" column="103" selection-start-line="62" selection-start-column="76" selection-end-line="63" selection-end-column="103" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Experiments/turn_lstm_dqn.py">
+    <entry file="file://$PROJECT_DIR$/Utils/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="61" column="30" selection-start-line="61" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
-          <folding>
-            <element signature="e#61#114#0" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="0.12765957">
+          <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Experience/TurnExperience.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.40425533">
           <caret line="50" column="48" selection-start-line="50" selection-start-column="48" selection-end-line="50" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Experiments/nat_turn_lstm_dqn.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="59" column="23" selection-start-line="59" selection-start-column="0" selection-end-line="60" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1487,15 +1441,15 @@
     <entry file="file://$PROJECT_DIR$/Experience/NatTurnExperience.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="54" column="66" selection-start-line="54" selection-start-column="66" selection-end-line="54" selection-end-column="66" />
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Agents/ExpQLearning.py">
+    <entry file="file://$PROJECT_DIR$/Experiments/hybrid_lstm_dqn.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="63" column="103" selection-start-line="62" selection-start-column="76" selection-end-line="63" selection-end-column="103" />
+          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1503,15 +1457,23 @@
     <entry file="file://$PROJECT_DIR$/Agents/NatTurnLstmExpQLearning.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="69" column="70" selection-start-line="69" selection-start-column="70" selection-end-line="69" selection-end-column="70" />
+          <caret line="64" column="99" selection-start-line="63" selection-start-column="43" selection-end-line="64" selection-end-column="99" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Utils/config.py">
+    <entry file="file://$PROJECT_DIR$/Experience/HybridTurnExperience.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6152344">
-          <caret line="41" column="42" selection-start-line="41" selection-start-column="41" selection-end-line="41" selection-end-column="42" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="62" column="0" selection-start-line="62" selection-start-column="0" selection-end-line="62" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Agents/HybridLstmExpQLearning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.8047338">
+          <caret line="66" column="22" selection-start-line="66" selection-start-column="22" selection-end-line="66" selection-end-column="22" />
           <folding />
         </state>
       </provider>

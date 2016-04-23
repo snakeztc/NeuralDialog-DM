@@ -9,8 +9,9 @@ class HybridTurnExperience (Experiences):
     max_len = None
     exp_ar = None
 
-    def __init__(self, exp_size, phi_s_size, max_len, mini_batch_size, use_priority, seed):
-        super(HybridTurnExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size, seed=seed)
+    def __init__(self, exp_size, phi_s_size, max_len, mini_batch_size, use_priority, alpha_priority, seed):
+        super(HybridTurnExperience, self).__init__(use_priority=use_priority, mini_batch_size=mini_batch_size,
+                                                   alpha_priority=alpha_priority, seed=seed)
 
         self.exp_ar = np.zeros((exp_size, 2))
         self.s_policies = [None] * exp_size
@@ -52,7 +53,12 @@ class HybridTurnExperience (Experiences):
 
     def sample_mini_batch(self):
         sample_size = np.min([self.exp_actual_size, self.exp_size])
-        prob = self.priority[0:sample_size] / np.sum(self.priority[0:sample_size])
+        if self.use_priority:
+            temp_prob = np.power(self.priority[0:sample_size], self.alpha_priority)
+            prob = temp_prob / np.sum(temp_prob)
+        else:
+            prob = np.ones(sample_size) / sample_size
+
         sample_indices = self.random_state.choice(a=sample_size, size=self.mini_batch_size, p=prob, replace=False)
 
         # allocate dense 3d tensor num_sample * max_len * dimension
