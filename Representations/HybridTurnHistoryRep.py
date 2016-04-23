@@ -14,7 +14,7 @@ class HybridTurnHistoryRep(Representation):
         # initialize the model
         self.model = None
         # user response ngram size + action number + prev_hypothesis + prev_db_count
-        self.state_features_num = self.domain.actions_num + 1 + self.domain.ngram_size
+        self.state_features_num = self.domain.actions_num + 1 + self.domain.ngram_size + 1
         self.ngram_base = self.domain.actions_num + 1
 
     # State Representation #
@@ -28,9 +28,10 @@ class HybridTurnHistoryRep(Representation):
         # !! we assume "s" is just one sample, can never be more than that
         t_hist = s[2]
         phi_s = np.zeros((len(t_hist["sys"]), self.state_features_num))
-        phi_s[:, self.ngram_base:] = t_hist["usr"].toarray()
+        phi_s[:, self.ngram_base:-1] = t_hist["usr"].toarray()
         sys_indices = [int(v + idx*self.state_features_num) for idx, v in enumerate(t_hist["sys"])]
         phi_s.flat[sys_indices] = 1
+        phi_s[:, -1] = t_hist["db"]
 
         # convert from 2d to 3d
         phi_s = np.reshape(phi_s, (1,) + phi_s.shape)

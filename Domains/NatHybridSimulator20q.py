@@ -118,10 +118,10 @@ class NatHybridSimulator20q (Domain):
     print "Number of actions is " + str(actions_num)
 
     # supervised signals
-    spl_str_name = ['prev-slot', 'db']
-    spl_indexs = [1, 2]
-    spl_modality = [len(resp_modality), 1]
-    spl_type = [Domain.categorical, Domain.discrete]
+    spl_str_name = ['prev-slot']
+    spl_indexs = [1]
+    spl_modality = [len(resp_modality)]
+    spl_type = [Domain.categorical]
 
     # raw state is
     # [[unasked yes no] [....] ... turn_cnt informed]
@@ -255,10 +255,8 @@ class NatHybridSimulator20q (Domain):
         # {usr: sys: prev_h: prev_db}
         usr = coo_matrix((1, self.ngram_size))
         sys = [0]  # first action is no action
-        #prev_h = [0]  # prev hypothesis is unasked
-        #prev_db = [1.0] # full data set
-        #t = {'usr': usr, "sys": sys, "prev_h": prev_h, "prev_db": prev_db}
-        t = {'usr': usr, "sys": sys}
+        db = [1.0]
+        t = {'usr': usr, "sys": sys, "db": db}
 
         return s, [self.eos], t
 
@@ -278,6 +276,7 @@ class NatHybridSimulator20q (Domain):
                 elif s[0, q_id] == self.hold_no :
                     filters.append((q_id, False))
             return list(self.search(filters) - set(self.wrong_keys))
+
     # filters a list (question_id, true or false)
     def search(self, filters):
         # return a list of person IDs
@@ -338,6 +337,15 @@ class NatHybridSimulator20q (Domain):
 
         # record action
         ns[0, self.prev_idx] = aID + 1
+
+        # update hypothesis using supervised signals
+        # only if the previous action is a question and turn > 0
+        # the prediction is for the previous action
+        spl_resp = []
+        if s[0, self.turn_idx] > 0 and preva_type == "question":
+            # update the slot for the previous action
+            spl_resp = self.index_computer[np.argmax(Qs[1])]
+            ns[0, self.question_count + s[0, self.prev_idx] - 1] = np.argmax(Qs[1])
 
         # based on action update
         if a_type == 'question':
@@ -408,15 +416,6 @@ class NatHybridSimulator20q (Domain):
             exit(1)
             return None
 
-        # update hypothesis using supervised signals
-        # only if the previous action is a question and turn > 0
-        # the prediction is for the previous action
-        spl_resp = []
-        if s[0, self.turn_idx] > 0 and preva_type == "question":
-            # update the slot for the previous action
-            spl_resp = self.index_computer[np.argmax(Qs[1])]
-            ns[0, self.question_count + s[0, self.prev_idx] - 1] = np.argmax(Qs[1])
-
         new_results = self.get_inform(ns)
         ns[0, self.comp_idx] = len(new_results) if new_results else 0
         cmp_resp = self.index_result.get(ns[0, self.comp_idx])
@@ -435,11 +434,18 @@ class NatHybridSimulator20q (Domain):
         else:
             n_nat_resp = coo_matrix((1, self.ngram_size))
 
+        # since in learning state the comp_idx will be 1-step ahead (based on oracle)
+        if self.performance_run:
+            n_db = ns[0, self.comp_idx]/(1.0 * len(self.corpus))
+        else:
+            n_db = s[0, self.comp_idx]/(1.0 * len(self.corpus))
+
         n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
-                    "sys": t_hist["sys"] + [aID+1]}
+                    "sys": t_hist["sys"] + [aID+1],
+                    "db": t_hist["db"] + [n_db]}
 
         # get supervised labels for s
-        spl_targets = [s[0, self.pans_idx], s[0, self.comp_idx]/float(len(self.corpus))]
+        spl_targets = [s[0, self.pans_idx]]
 
         return ns, n_w_hist, n_t_hist, spl_targets
 
