@@ -60,7 +60,8 @@ class ExpQLearning(Agent):
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)
         self.update_frequency = update_frequency
         self.experience = OracleStateExperience(exp_size=exp_size, phi_s_size=self.representation.state_features_num,
-                                                mini_batch_size=mini_batch, use_priority=True, seed=seed)
+                                                mini_batch_size=mini_batch, use_priority=generalConfig["use-prosample"],
+                                                alpha_priority=[generalConfig["max_alpha"]], seed=seed)
 
         self.update_cnt = 0
         self.freeze_frequency = freeze_frequency
