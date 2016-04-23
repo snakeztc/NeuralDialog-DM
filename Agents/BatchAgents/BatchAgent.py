@@ -62,7 +62,7 @@ class BatchAgent(object):
             indices = [int(actions[i] + i*policy_num) for i in valid_mask]
             td_error[valid_mask] = np.abs(raw_by[policy].flat[indices] - targets[valid_mask])
             y[policy].flat[indices] = targets[valid_mask]
-            #raw_by[policy].flat[indices] = targets[valid_mask]
+            # raw_by[policy].flat[indices] = targets[valid_mask]
 
         # update the priority
         experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
@@ -77,10 +77,10 @@ class BatchAgent(object):
         if spl_targets is not None:
             for s_idx, target in zip(self.domain.spl_indexs, spl_targets):
                 y[s_idx] = target
-                #raw_by[s_idx] = target
+                # raw_by[s_idx] = target
 
-        self.behavior_representation.model.train_on_batch(x=phi_s, y=y)
-        #self.behavior_representation.model.train_on_batch(x=phi_s, y=raw_by)
+        loss = self.behavior_representation.model.train_on_batch(x=phi_s, y=y)
+        # self.behavior_representation.model.train_on_batch(x=phi_s, y=raw_by)
 
     def update_target_model(self):
         """
