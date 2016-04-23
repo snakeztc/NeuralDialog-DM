@@ -384,6 +384,8 @@ class NatHybridSimulator20q (Domain):
                     exit(1)
 
         elif a_type == "inform":
+            # if inform then previous answer is 0
+            ns[0, self.pans_idx] = self.unasked
             # increment the inform count
             ns[0, self.icnt_idx] = s[0, self.icnt_idx] + 1
             # a is the inform
@@ -433,13 +435,11 @@ class NatHybridSimulator20q (Domain):
         else:
             n_nat_resp = coo_matrix((1, self.ngram_size))
 
-        #prev_h = ns[0, self.question_count + aID] if a_type == "question" else 0
-
         n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
                     "sys": t_hist["sys"] + [aID+1]}
 
         # get supervised labels for s
-        spl_targets = [ns[0, aID], ns[0, self.comp_idx]/float(len(self.corpus))]
+        spl_targets = [s[0, self.pans_idx], s[0, self.comp_idx]/float(len(self.corpus))]
 
         return ns, n_w_hist, n_t_hist, spl_targets
 
