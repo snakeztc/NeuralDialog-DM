@@ -26,6 +26,7 @@ class NatTurnExperience (Experiences):
 
         # experience is a list of 2D sparse matrix
         self.experience = [None] * self.exp_size
+        self.max_priority = 20.0
 
     def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority, spl_targets=None):
         if self.exp_head >= self.exp_size:
@@ -33,12 +34,12 @@ class NatTurnExperience (Experiences):
             self.exp_head = 0
 
         # pad phi_s and phi_ns with 0 zeros in the front
-        self.experience[self.exp_head] = (coo_matrix(phi_s["input"][0, :, :]), coo_matrix(phi_ns["input"][0, :, :]))
+        self.experience[self.exp_head] = (coo_matrix(phi_s[0, :, :]), coo_matrix(phi_ns[0, :, :]))
         self.exp_ar[self.exp_head, 0] = a
         self.exp_ar[self.exp_head, 1] = r
         self.s_policies[self.exp_head] = policy_s
         self.ns_policies[self.exp_head] = policy_ns
-        self.priority[self.exp_head] = 20.0
+        self.priority[self.exp_head] = self.max_priority + 1.0
 
         # increment the write head
         self.exp_head += 1
@@ -74,8 +75,8 @@ class NatTurnExperience (Experiences):
         rewards = self.exp_ar[sample_indices, 1]
         policy_ns = [self.ns_policies[i] for i in sample_indices]
         policy_s = [self.s_policies[i] for i in sample_indices]
-        return {"input": phi_s}, policy_s, actions, rewards, {"input": phi_ns}, policy_ns, sample_indices
+        return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
         if generalConfig["use-prosample"]:
-            self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0
+            self.priority[sample_indices] = np.clip(td_error, 0, self.max_priority) + 1.0
