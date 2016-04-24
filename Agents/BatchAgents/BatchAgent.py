@@ -1,8 +1,7 @@
 import logging
 import numpy as np
 import os.path
-import time
-
+import keras.objectives
 
 class BatchAgent(object):
 
@@ -39,6 +38,7 @@ class BatchAgent(object):
 
         # append next Qs into 1 matrix
         best_nqs = np.zeros(num_samples)
+
         if self.doubleDQN:
             nbqs = self.behavior_representation.Qs_phi_s(phi_ns)
             max_pos = {p:np.argmax(nbqs[p], axis=1) for p in self.domain.policy_names}
@@ -60,9 +60,9 @@ class BatchAgent(object):
             policy_num = self.domain.policy_action_num[policy]
             valid_mask = [i for i, v in enumerate(policy_s) if v == policy]
             indices = [int(actions[i] + i*policy_num) for i in valid_mask]
+            # NOTE: We need to calculate the TD error before update the y
             td_error[valid_mask] = np.abs(raw_by[policy].flat[indices] - targets[valid_mask])
             y[policy].flat[indices] = targets[valid_mask]
-            # raw_by[policy].flat[indices] = targets[valid_mask]
 
         # update the priority
         experiences.update_priority(sample_indices=sample_indices, td_error=td_error)
@@ -77,10 +77,9 @@ class BatchAgent(object):
         if spl_targets is not None:
             for s_idx, target in zip(self.domain.spl_indexs, spl_targets):
                 y[s_idx] = target
-                # raw_by[s_idx] = target
 
         loss = self.behavior_representation.model.train_on_batch(x=phi_s, y=y)
-        # self.behavior_representation.model.train_on_batch(x=phi_s, y=raw_by)
+        #print loss
 
     def update_target_model(self):
         """

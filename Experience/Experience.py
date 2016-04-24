@@ -11,6 +11,7 @@ class Experiences (object):
     random_state = None
     mini_batch_size = None
     alpha_priority = None
+    max_priority = None
 
     def __init__(self, use_priority, alpha_priority, mini_batch_size, seed):
         self.use_priority = use_priority

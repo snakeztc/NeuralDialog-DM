@@ -53,7 +53,7 @@ class BinaryCompactRep(Representation):
 
     def Qs_phi_s(self, phi_s):
         if self.model:
-            return self.model.predict({'input':phi_s})
+            return self.model.predict_on_batch(phi_s)
         else:
             result = [np.zeros((phi_s.shape[0], size)) for size in self.domain.policy_action_num]
             return result

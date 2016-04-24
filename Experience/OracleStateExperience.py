@@ -16,6 +16,7 @@ class OracleStateExperience (Experiences):
         self.exp_head = 0
         self.exp_actual_size = 0
         self.phi_s_size = phi_s_size
+        self.max_priority = 20.0
 
     def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority, spl_targets=None):
         if self.exp_head >= self.exp_size:
@@ -26,7 +27,7 @@ class OracleStateExperience (Experiences):
         self.experience[self.exp_head, self.phi_s_size] = a
         self.experience[self.exp_head, self.phi_s_size+1] = r
         self.experience[self.exp_head, self.phi_s_size+2:] = phi_ns
-        self.priority[self.exp_head] = 20.0
+        self.priority[self.exp_head] = self.max_priority + 1.0
         self.s_policies[self.exp_head] = policy_s
         self.ns_policies[self.exp_head] = policy_ns
 
@@ -56,9 +57,7 @@ class OracleStateExperience (Experiences):
         return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
-        self.priority[sample_indices] = np.clip(td_error, 0, 20.0) + 1.0
-
-
+        self.priority[sample_indices] = np.clip(td_error, 0, self.max_priority) + 1.0
 
 
 
