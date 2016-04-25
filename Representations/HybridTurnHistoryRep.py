@@ -55,7 +55,7 @@ class HybridTurnHistoryRep(Representation):
     def Qs_phi_s(self, phi_s):
         # we assume that phi_s is in the format of num_sample * time_stamp * dimension
         if self.model:
-            return self.model.predict(phi_s)
+            return self.model.predict_on_batch(phi_s)
         else:
             result = [np.zeros((phi_s.shape[0], size)) for size in self.domain.policy_action_num]
             result += [np.zeros((phi_s.shape[0], size)) for size in self.domain.spl_modality]

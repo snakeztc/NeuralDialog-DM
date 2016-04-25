@@ -27,6 +27,7 @@ class HybridTurnExperience (Experiences):
 
         # experience is a list of 2D sparse matrix
         self.experience = [None] * self.exp_size
+        self.max_priority = 20.0
 
     def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority, spl_targets=None):
         if self.exp_head >= self.exp_size:
@@ -39,7 +40,7 @@ class HybridTurnExperience (Experiences):
         self.exp_ar[self.exp_head, 1] = r
         self.s_policies[self.exp_head] = policy_s
         self.ns_policies[self.exp_head] = policy_ns
-        self.priority[self.exp_head] = 20.0
+        self.priority[self.exp_head] = self.max_priority + 1.0
         self.spl_targets[0][self.exp_head] = spl_targets[0]
         #self.spl_targets[1][self.exp_head] = spl_targets[1]
 
@@ -85,7 +86,7 @@ class HybridTurnExperience (Experiences):
         return phi_s, policy_s, actions, rewards, phi_ns, policy_ns, sample_indices
 
     def update_priority(self, sample_indices, td_error):
-        self.priority[sample_indices] = np.clip(td_error, 0, 20) + 1.0
+        self.priority[sample_indices] = np.clip(td_error, 0, self.max_priority) + 1.0
 
 
 

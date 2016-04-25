@@ -471,7 +471,7 @@ class NatHybridSimulator20q (Domain):
         return self.discount_factor * ns_potential - s_potential
 
     def is_terminal(self, s):
-        # either we already have informed or we used all the turns
+        # hybrid model only terminates when
         if s[0, self.end_idx] == self.game_success or s[0, self.turn_idx] >= self.episode_cap\
                 or s[0, self.icnt_idx] >= self.curConfig["max_inform"]:
             return True
