@@ -409,8 +409,9 @@ class NatHybridSimulator20q (Domain):
                     resp = self.index_response.get('wrong')
                     self.wrong_keys.add(guess)
             else:
-                guess = self.random_state.choice(results)
-                self.wrong_keys.add(guess)
+                if results and len(results) > 0:
+                    guess = self.random_state.choice(results)
+                    self.wrong_keys.add(guess)
                 agent_utt = self.index_inform.get("none")
                 resp = self.index_response.get('wrong')
         else:
