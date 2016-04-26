@@ -20,9 +20,9 @@ class NatTurnLstmExpQLearning(Agent):
             aID = self.learning_policy.choose_action(Qs[policy_name])
 
         # convert aID to global aID
-        flat_aID = aID + self.domain.policy_bases[policy_name]
+        flat_a = aID + self.domain.policy_bases[policy_name]
 
-        (r, shape, ns, terminal) = self.domain.step(s, flat_aID)
+        (r, shape, ns, terminal) = self.domain.step(s, flat_a)
 
         if not performance_run:
             r += shape
@@ -40,7 +40,16 @@ class NatTurnLstmExpQLearning(Agent):
             self.experience.add_experience(self.representation.phi_s(s), policy_name, aID, r,
                                            self.representation.phi_s(ns), self.domain.action_prune(ns))
 
-            # conduct data augmentation here if we are using dialog state tracking labels
+            # if aug_data, we simulate all possible other actions
+            if generalConfig["aug_data"] and self.domain.policy_str_name[policy_name] == "computer":
+                # simulate other actions
+                for sim_a in range(self.domain.policy_action_num[policy_name]):
+                    if sim_a == aID: # we don't need to add repeat action
+                        continue
+                    sim_flat_a = sim_a + self.domain.policy_bases[policy_name]
+                    (sim_r, sim_shape, sim_ns, sim_terminal) = self.domain.step(s, sim_flat_a)
+                    self.experience.add_experience(self.representation.phi_s(s), policy_name, sim_a, sim_r + sim_shape,
+                                                   self.representation.phi_s(sim_ns), self.domain.action_prune(sim_ns))
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:

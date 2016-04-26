@@ -39,7 +39,7 @@ class ExpQLearning(Agent):
             # check if exp_head is larger than buffer size
             self.experience.add_experience(self.representation.phi_s(s), policy_name, aID, r,
                                            self.representation.phi_s(ns),
-                                           self.domain.action_prune(ns), 20.0)
+                                           self.domain.action_prune(ns))
 
             if (self.experience.exp_actual_size > self.experience.mini_batch_size)\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:
