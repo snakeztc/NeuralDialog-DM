@@ -38,7 +38,9 @@ class NatTurnLstmExpQLearning(Agent):
         if not performance_run:
 
             self.experience.add_experience(self.representation.phi_s(s), policy_name, aID, r,
-                                           self.representation.phi_s(ns), self.domain.action_prune(ns), 20.0)
+                                           self.representation.phi_s(ns), self.domain.action_prune(ns))
+
+            # conduct data augmentation here if we are using dialog state tracking labels
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:

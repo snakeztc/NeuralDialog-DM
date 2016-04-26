@@ -18,7 +18,7 @@ class OracleStateExperience (Experiences):
         self.phi_s_size = phi_s_size
         self.max_priority = 20.0
 
-    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority, spl_targets=None):
+    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, spl_targets=None):
         if self.exp_head >= self.exp_size:
             print "** reset exp header **"
             self.exp_head = 0

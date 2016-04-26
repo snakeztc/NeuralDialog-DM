@@ -1,11 +1,13 @@
-from Domains.NatSlotSimulator20q import NatSlotSimulator20q
-from Agents.StructTurnLstmExpQLearning import StructTurnLstmExpQLearning
-from Agents.EvalAgent import EvalAgent
-from Representations.StructTurnHistoryRep import StructTurnHistoryRep
-import numpy as np
-import matplotlib.pyplot as plt
-from Utils.config import generalConfig, structDqnConfig, model_dir
 import pprint
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from Agents.EvalAgent import EvalAgent
+from Agents.OldAgents.StructTurnLstmExpQLearning import StructTurnLstmExpQLearning
+from Domains.NatSlotSimulator20q import NatSlotSimulator20q
+from Representations.StructTurnHistoryRep import StructTurnHistoryRep
+from Utils.config import generalConfig, structDqnConfig, model_dir
 
 
 def run():

@@ -2,7 +2,7 @@ import pprint
 
 from Agents.BatchAgents.LstmDnnQ import LstmDnnQ
 from Agents.EvalAgent import EvalAgent
-from Agents.QLearning import QLearning
+from Agents.OldAgents.QLearning import QLearning
 from Domains.CommandSimulator20q import CommandSimulator20q
 from Representations.WordHistoryRep import WordHistoryRep
 from Utils.config import *

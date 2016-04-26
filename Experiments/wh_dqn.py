@@ -2,7 +2,7 @@ import numpy as np
 
 from Agents.EvalAgent import EvalAgent
 from Agents.ExpQLearning import ExpQLearning
-from Agents.QLearning import QLearning
+from Agents.OldAgents.QLearning import QLearning
 from Domains.OldDomains.Simulator20q import Simulator20q
 from Representations.WhCompactRep import WhCompactRep
 

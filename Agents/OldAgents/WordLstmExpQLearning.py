@@ -1,6 +1,6 @@
-from Agent import Agent
+from Agents.Agent import Agent
 from Agents.BatchAgents.LstmDnnQ import LstmDnnQ
-from Experience.WordExperience import WordExperience
+from Experience.OldExp.WordExperience import WordExperience
 from Policies.Policy import EpsilonGreedyPolicy
 from Representations.WordHistoryRep import WordHistoryRep
 
@@ -23,7 +23,7 @@ class WordLstmExpQLearning(Agent):
 
         if not performance_run:
 
-            self.experience.add_experience(s[1], aID, r, ns[1], 20.0)
+            self.experience.add_experience(s[1], aID, r, ns[1])
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:

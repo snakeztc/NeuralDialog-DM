@@ -1,5 +1,5 @@
 import numpy as np
-from Experience import Experiences
+from Experience.Experience import Experiences
 from keras.preprocessing import sequence
 
 

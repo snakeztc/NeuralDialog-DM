@@ -79,7 +79,6 @@ class BatchAgent(object):
                 y[s_idx] = target
 
         loss = self.behavior_representation.model.train_on_batch(x=phi_s, y=y)
-        #print loss
 
     def update_target_model(self):
         """

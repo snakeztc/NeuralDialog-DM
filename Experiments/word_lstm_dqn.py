@@ -1,12 +1,14 @@
-from Domains.CommandSimulator20q import CommandSimulator20q
-from Agents.WordLstmExpQLearning import WordLstmExpQLearning
-from Agents.QLearning import QLearning
-from Agents.EvalAgent import EvalAgent
-from Representations.WordHistoryRep import WordHistoryRep
-import numpy as np
-import matplotlib.pyplot as plt
-from Utils.config import *
 import pprint
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from Agents.EvalAgent import EvalAgent
+from Agents.OldAgents.QLearning import QLearning
+from Agents.OldAgents.WordLstmExpQLearning import WordLstmExpQLearning
+from Domains.CommandSimulator20q import CommandSimulator20q
+from Representations.WordHistoryRep import WordHistoryRep
+from Utils.config import *
 
 
 def run():

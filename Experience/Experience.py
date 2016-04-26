@@ -23,7 +23,7 @@ class Experiences (object):
     def get_spl_experience(self, sample_indices):
         return None
 
-    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, priority, spl_targets=None):
+    def add_experience(self, phi_s, policy_s, a, r, phi_ns, policy_ns, spl_targets=None):
         raise NotImplementedError("add experience")
 
     def update_priority(self, sample_indices, td_error):

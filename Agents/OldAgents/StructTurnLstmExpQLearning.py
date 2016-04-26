@@ -1,7 +1,7 @@
-from Agent import Agent
-from Policies.Policy import EpsilonGreedyPolicy
+from Agents.Agent import Agent
 from Agents.BatchAgents.StructTurnLstmDnnQ import StructTurnLstmDnnQ
-from Experience.StructTurnExperience import StructTurnExperience
+from Experience.OldExp.StructTurnExperience import StructTurnExperience
+from Policies.Policy import EpsilonGreedyPolicy
 from Representations.StructTurnHistoryRep import StructTurnHistoryRep
 from Utils.config import generalConfig
 
@@ -38,7 +38,7 @@ class StructTurnLstmExpQLearning(Agent):
         if not performance_run:
 
             self.experience.add_experience(s[2], policy_name, aID, r,
-                                           ns[2], self.domain.action_prune(ns), 20.0)
+                                           ns[2], self.domain.action_prune(ns))
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:

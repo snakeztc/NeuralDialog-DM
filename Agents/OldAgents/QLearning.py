@@ -1,4 +1,4 @@
-from Agent import Agent
+from Agents.Agent import Agent
 from Policies.Policy import EpsilonGreedyPolicy
 
 class QLearning(Agent):
