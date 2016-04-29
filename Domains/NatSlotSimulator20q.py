@@ -91,7 +91,6 @@ class NatSlotSimulator20q (Domain):
     loss_reward = curConfig["loss_reward"]
     wrong_guess_reward = curConfig["wrong_guess_reward"]
     logic_error = curConfig["logic_error"]
-    logic_correct = curConfig["logic_correct"]
     step_reward = curConfig["step_reward"]
     win_reward = curConfig["win_reward"]
     episode_cap = curConfig["episode_cap"]
@@ -448,9 +447,6 @@ class NatSlotSimulator20q (Domain):
                 query_val = self.parse_computer_command(aID)
                 if ns[0, query_idx] -1 != query_val:
                     reward = self.logic_error
-                else:
-                    reward = self.logic_correct
-
         return reward
 
     def get_reward_shape(self, s, ns):
