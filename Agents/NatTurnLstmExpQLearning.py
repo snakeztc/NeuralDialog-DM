@@ -48,13 +48,17 @@ class NatTurnLstmExpQLearning(Agent):
                         continue
                     sim_flat_a = sim_a + self.domain.policy_bases[policy_name]
                     (sim_r, sim_shape, sim_ns, sim_terminal) = self.domain.step(s, sim_flat_a)
-                    self.experience.add_experience(self.representation.phi_s(s), policy_name, sim_a, sim_r + sim_shape,
-                                                   self.representation.phi_s(sim_ns), self.domain.action_prune(sim_ns))
+                    self.fic_experience.add_experience(self.representation.phi_s(s), policy_name, sim_a, sim_r + sim_shape,
+                                                       self.representation.phi_s(sim_ns), self.domain.action_prune(sim_ns))
 
             if self.experience.exp_actual_size > self.experience.mini_batch_size\
                     and (self.experience.exp_actual_size % self.update_frequency) == 0:
 
                 self.learner.learn(self.experience)
+                # learn from fictional data
+                if generalConfig["aug_data"] \
+                        and self.fic_experience.exp_actual_size > self.fic_experience.mini_batch_size:
+                    self.learner.learn(self.fic_experience)
                 # update target model
                 self.update_cnt += 1
 
@@ -74,6 +78,10 @@ class NatTurnLstmExpQLearning(Agent):
                                             max_len=domain.episode_cap, mini_batch_size=mini_batch,
                                             use_priority=generalConfig["use-prosample"],
                                             alpha_priority=[generalConfig["max_alpha"]], seed=seed)
+        self.fic_experience = NatTurnExperience(exp_size=exp_size,phi_s_size=representation.state_features_num,
+                                                max_len=domain.episode_cap, mini_batch_size=mini_batch,
+                                                use_priority=generalConfig["use-prosample"],
+                                                alpha_priority=[generalConfig["max_alpha"]], seed=seed)
         # freeze model
         self.freeze_frequency = freeze_frequency
         self.update_cnt = 0
