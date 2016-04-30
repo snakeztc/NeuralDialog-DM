@@ -383,10 +383,13 @@ class NatHybridSimulator20q (Domain):
                 # agent has answered this before
                 if s[0, aID] == self.hold_yes:
                     resp = self.index_response.get("yes")
+                    ns[0, self.pans_idx] = self.yes
                 elif s[0, aID] == self.hold_no:
                     resp = self.index_response.get("no")
+                    ns[0, self.pans_idx] = self.no
                 elif s[0, aID] == self.hold_unknown:
                     resp = self.index_response.get("unknown")
+                    ns[0, self.pans_idx] = self.unknown
                 else:
                     print "something wrong for question"
                     exit(1)
