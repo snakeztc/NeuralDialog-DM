@@ -256,7 +256,8 @@ class NatHybridSimulator20q (Domain):
         usr = coo_matrix((1, self.ngram_size))
         sys = [0]  # first action is no action
         db = [1.0]
-        t = {'usr': usr, "sys": sys, "db": db}
+        hyp = [0]
+        t = {'usr': usr, "sys": sys, "db": db, "hyp": hyp}
 
         return s, [self.eos], t
 
@@ -443,12 +444,15 @@ class NatHybridSimulator20q (Domain):
         # since in learning state the comp_idx will be 1-step ahead (based on oracle)
         if self.performance_run:
             n_db = ns[0, self.comp_idx]/(1.0 * len(self.corpus))
+            n_hyp = np.argmax(Qs[1])
         else:
             n_db = s[0, self.comp_idx]/(1.0 * len(self.corpus))
+            n_hyp = s[0, self.pans_idx]
 
         n_t_hist = {'usr': vstack([t_hist["usr"], n_nat_resp]),
                     "sys": t_hist["sys"] + [aID+1],
-                    "db": t_hist["db"] + [n_db]}
+                    "db": t_hist["db"] + [n_db],
+                    "hyp": t_hist["hyp"] + [n_hyp]}
 
         # get supervised labels for s
         spl_targets = [s[0, self.pans_idx]]
