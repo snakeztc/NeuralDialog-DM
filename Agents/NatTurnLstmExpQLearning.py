@@ -56,9 +56,10 @@ class NatTurnLstmExpQLearning(Agent):
 
                 self.learner.learn(self.experience)
                 # learn from fictional data
-                if generalConfig["aug_data"] \
+                if generalConfig["aug_data"] and self.experience.exp_actual_size < generalConfig["aug_turn_off"]\
                         and self.fic_experience.exp_actual_size > self.fic_experience.mini_batch_size:
                     self.learner.learn(self.fic_experience)
+
                 # update target model
                 self.update_cnt += 1
 
@@ -68,7 +69,7 @@ class NatTurnLstmExpQLearning(Agent):
         return r, ns, terminal
 
     def __init__(self, domain, representation, seed=1, epsilon=0.3, update_frequency=10,
-                 exp_size=10000, mini_batch=3000, freeze_frequency=100, doubleDQN=False, verbose=False):
+                 exp_size=10000, mini_batch=32, freeze_frequency=1000, doubleDQN=False, verbose=False):
 
         super(NatTurnLstmExpQLearning, self).__init__(domain, representation, seed)
         self.learning_policy = EpsilonGreedyPolicy(epsilon, seed)

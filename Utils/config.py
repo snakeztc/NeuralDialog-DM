@@ -11,6 +11,7 @@ generalConfig = {"global_seed": 100,
                  "max_alpha": 1.0,
                  "min_alpha": 0.7,
                  "aug_data": True,
+                 "aug_turn_off": 70000,
                  "q_verbal": False,
                  "save_model": False}
 
